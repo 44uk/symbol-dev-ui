@@ -1,0 +1,54 @@
+{
+  "private": true,
+  "name": "nem2-dev-ui",
+  "version": "0.0.1",
+  "description": "nem2 Dev Utility Interface",
+  "main": "index.js",
+  "dependencies": {
+    "@hyperapp/logger": "^0.5.0",
+    "@types/jest": "^23.3.11",
+    "hyperapp": "^1.2.9",
+    "hyperapp-hash-router": "^0.1.0",
+    "hyperapp-render": "^3.0.0",
+    "mini.css": "^3.0.1",
+    "nem2-library": "^0.9.5",
+    "nem2-sdk": "^0.10.1",
+    "rxjs": "^6.3.3",
+    "ts-jest": "^23.10.5"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "lynt": "^0.5.4",
+    "parcel": "^1.11.0",
+    "prettier": "^1.15.3",
+    "stylus": "^0.54.5",
+    "typescript": "^3.2.2"
+  },
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "rm build/* && parcel build src/index.html --out-dir build --public-url '.' --no-source-maps",
+    "clean": "rm -rf .cache dist build",
+    "lint": "lynt src",
+    "test": "jest"
+  },
+  "author": "Yoshiyuki Ieyama",
+  "license": "MIT",
+  "prettier": {
+    "semi": true,
+    "singleQuote": true
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}

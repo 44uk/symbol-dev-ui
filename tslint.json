@@ -1,0 +1,13 @@
+{
+    "defaultSeverity": "warn",
+    "extends": [
+        "tslint-config-lynt",
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+      "no-console": false
+    },
+    "rulesDirectory": []
+}
+

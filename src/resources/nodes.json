@@ -1,0 +1,7 @@
+[
+  {"name": "localhost", "value": "http://localhost:3000"},
+  {"name": "44uk"     , "value": "http://catapult-test.44uk.net:3000"},
+  {"name": "daoka"    , "value": "http://catapult-test.daoka.ml:3000"},
+  {"name": "planet"   , "value": "http://catapult48gh23s.xyz:3000"},
+  {"name": "soralis"  , "value": "http://catapult-test.soralis.org:3000"}
+]
