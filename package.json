@@ -26,7 +26,7 @@
   },
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "rm build/* && parcel build src/index.html --out-dir build --public-url '.' --no-source-maps",
+    "build": "rm -f build/* && parcel build src/index.html --out-dir build --public-url '.' --no-source-maps",
     "clean": "rm -rf .cache dist build",
     "lint": "lynt src",
     "test": "jest"

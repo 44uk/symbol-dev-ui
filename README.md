@@ -13,4 +13,17 @@ This is a tools for nem2.
 * Block Monitoring
 * Some Useful Tools
 
+## 🔨 Build
+
+```
+# install packages
+$ yarn
+
+# build
+$ yarn build
+
+# development
+$ yarn start
+```
+
 Good luck!
