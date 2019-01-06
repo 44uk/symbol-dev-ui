@@ -126,7 +126,7 @@ const view = () => (s: any, a: any) => (
           placeholder=""
           maxlength="64"
         />
-        <p class="note"><small>Input PrivateKey or push generate</small></p>
+        <p class="note"><small>Input PrivateKey or click Generate button.</small></p>
         <button
           class="primary"
           onclick={a.pki.generateAccount}
