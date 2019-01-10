@@ -8,6 +8,7 @@ import {
   NetworkType,
 } from "nem2-sdk";
 import Act from "../shims/Act";
+import { decodeAddress } from "../util/convert";
 import Output from "./Output";
 
 interface IState {
@@ -50,7 +51,7 @@ const actions: IActions = {
     return derive(value, s);
   },
   onChangeNetworkType: (ev: Event) => (s: IState, a: IActions) => {
-    const value = parseInt(ev.target.value) || NetworkType.MIJIN_TEST];
+    const value = parseInt(ev.target.value) || NetworkType.MIJIN_TEST;
     a.setNetworkType(value);
   },
   prettify: () => (s: IState) => {
@@ -95,7 +96,7 @@ const derive = (privateKey: string, state: IState): IState => {
     const account = Account.createFromPrivateKey(privateKey, state.networkType);
     const publicKey = account.publicKey.toString();
     const address = account.address[state.pretty ? "pretty" : "plain"]();
-    const hexAddress = libConvert.uint8ToHex(libAddress.stringToAddress(account.address.plain()));
+    const hexAddress = decodeAddress(account.address.plain());
     return {...state,
       address,
       errorMessage: "",
