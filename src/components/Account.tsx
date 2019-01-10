@@ -1,13 +1,10 @@
 import { h } from "hyperapp";
 import {
-  address as libAddress,
-  convert as libConvert,
-} from "nem2-library";
-import {
   AccountHttp, AccountInfo, Address,
   Listener, MosaicHttp, MosaicService, NamespaceHttp,
   NetworkType,
 } from "nem2-sdk";
+import { decodeAddress } from "../util/convert";
 import Output from "./Output";
 import Underconstruction from "./Underconstruction";
 
@@ -108,12 +105,9 @@ const subscribeChannel = (address: Address, url: string) => {
 };
 
 const reshapeData = (account: AccountInfo) => {
-  const hexAddress = libConvert.uint8ToHex(libAddress.stringToAddress(
-    account.address.plain(),
-  ));
   const data = {
     address: account.address.pretty(),
-    hexAddress,
+    hexAddress: decodeAddress(account.address.plain()),
     addressHeight: account.addressHeight.compact(),
     publicKey: account.publicKey,
     publicKeyHeight: account.publicKeyHeight.compact(),
