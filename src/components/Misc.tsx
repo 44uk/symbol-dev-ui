@@ -1,6 +1,17 @@
 import { ActionType, h } from "hyperapp";
-import { convert, uint64 } from "nem2-library";
 import Output from "../components/Output";
+import {
+  convertHexToNum,
+  convertHexToUint64,
+  convertNumToHex,
+  convertNumToUint64,
+  convertUint64ToHex,
+  convertUint64ToNum,
+  decodeAddress,
+  decodeHexToRaw,
+  encodeAddress,
+  encodeRawToHex,
+} from "../util/convert";
 
 interface IState {
   numFromHex?: string;
@@ -11,25 +22,14 @@ interface IState {
   numFromUint64?: string;
   hexMessage?: string;
   rawMessage?: string;
+  hexAddress?: string;
+  txtAddress?: string;
 }
 
 const initialState: IState = {
 };
 
 interface IAction {
-  onInputHex: ActionType<IAction, IState>;
-  onInputNum: ActionType<IAction, IState>;
-  onInputUint64: ActionType<IAction, IState>;
-  onInputHexMessage: ActionType<IAction, IState>;
-  onInputRawMessage: ActionType<IAction, IState>;
-  setNumFromHex: ActionType<IAction, IState>;
-  setUint64FromHex: ActionType<IAction, IState>;
-  setHexFromNum: ActionType<IAction, IState>;
-  setUint64FromNum: ActionType<IAction, IState>;
-  setHexFromUint64: ActionType<IAction, IState>;
-  setNumFromUint64: ActionType<IAction, IState>;
-  setHexMessage: ActionType<IAction, IState>;
-  setRawMessage: ActionType<IAction, IState>;
 }
 
 const actions = {
@@ -56,61 +56,20 @@ const actions = {
   },
   onInputRawMessage: (ev: Event) => (s: IState, a: IAction) => {
     const value = ev.target ? ev.target.value : "";
-    a.setHexMessage(encodeRawToHex(value));
+    return { hexMessage: encodeRawToHex(value) };
   },
   onInputHexMessage: (ev: Event) => (s: IState, a: IAction) => {
     const value = ev.target ? ev.target.value : "";
-    a.setRawMessage(decodeHexToRaw(value));
+    return { rawMessage: decodeHexToRaw(value) };
   },
-
-  setRawMessage: (rawMessage: string) => ({ rawMessage }),
-  setHexMessage: (hexMessage: string) => ({ hexMessage }),
-};
-
-const convertHexToNum = (hex: string) => parseInt(hex, 16);
-const convertHexToUint64 = (value: string) => {
-  try {
-    const uint64str = uint64.fromHex(value.trim()).toString();
-    return `[ ${uint64str} ]`;
-  } catch (err) {
-    console.error(err);
-    return;
-  }
-};
-
-const convertNumToHex = (num: string) => parseInt(num, 10).toString(16);
-const convertNumToUint64 = (value: string) => {
-  try {
-    const preped = parseInt(value);
-    const parsed = uint64.fromUint(preped).toString();
-    return `[ ${parsed} ]`;
-  } catch (err) {
-    return err.message;
-  }
-};
-
-const convertUint64ToHex = (value: string) => {
-  const preped = `[${value.replace(/[\[\]\s]/g, "")}]`;
-  const parsed = JSON.parse(preped);
-  return uint64.toHex(parsed);
-};
-const convertUint64ToNum = (value: string) => {
-  try {
-    const preped = `[${value.replace(/[\[\]\s]/g, "")}]`;
-    const parsed = JSON.parse(preped);
-    // TODO:
-    return uint64.compact(parsed).toString();
-  } catch (err) {
-    return err.message;
-  }
-};
-
-const decodeHexToRaw = (value: string) => {
-  const buf = Buffer.from(value, "hex");
-  return buf.toString("utf8");
-};
-const encodeRawToHex = (value: string) => {
-  return convert.utf8ToHex(value);
+  onInputHexAddress: (ev: Event) => (s: IState, a: IAction) => {
+    const value = ev.target ? ev.target.value : "";
+    return { txtAddress: encodeAddress(value) };
+  },
+  onInputTxtAddress: (ev: Event) => (s: IState, a: IAction) => {
+    const value = ev.target ? ev.target.value : "";
+    return { hexAddress: decodeAddress(value) };
+  },
 };
 
 const view = () => (s: any, a: any) => (
@@ -177,6 +136,31 @@ const view = () => (s: any, a: any) => (
       </div>
       <Output type="text" label="decoded" value={s.misc.rawMessage} />
     </fieldset>
+
+    <fieldset>
+      <legend>encode Address</legend>
+      <div class="input-group vertical">
+        <label>Hex</label>
+        <input type="text" name="hexAddress"
+          oninput={a.misc.onInputHexAddress}
+          placeholder="ex) 90F421A0..6234840E"
+        />
+      </div>
+      <Output type="text" label="encoded" value={s.misc.txtAddress} />
+    </fieldset>
+
+    <fieldset>
+      <legend>decode Address</legend>
+      <div class="input-group vertical">
+        <label>Txt</label>
+        <input type="text" name="txtAddress"
+          oninput={a.misc.onInputTxtAddress}
+          placeholder="ex) SAXXXX-XXXXXX-..-XXXX"
+        />
+      </div>
+      <Output type="text" label="decoded" value={s.misc.hexAddress} />
+    </fieldset>
+
   </div>
 );
 

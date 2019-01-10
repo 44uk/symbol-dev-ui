@@ -26,12 +26,12 @@ interface Opts {
 }
 
 const defaultOpts: Opts = {
-  truncated: true,
-  head: 6,
-  tail: 6,
-  root: "#",
   child: "└",
+  head: 6,
   referer: "<<",
+  root: "#",
+  tail: 6,
+  truncated: true,
 };
 
 export default (graph: Layer[], opts: Opts = {}) =>  {
@@ -88,7 +88,7 @@ const renderLine = (buf: string[], entry: any, level: number, end: boolean, refe
     ? ""
     : ` (${msig.minApproval}, ${msig.cosignatories.length})`;
   const identifier = opts.truncated
-    ? `${msig.account.slice(0, opts.head)}..${msig.account.slice(-1 * opts.tail)}`
+    ? `${msig.account.slice(0, opts.head)}..${msig.account.slice((opts.tail || 0) * -1)}`
     : msig.account;
   buf.push(`${pad}${identifier}${nOfm}${ref}`);
 };
