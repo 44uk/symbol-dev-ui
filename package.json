@@ -13,8 +13,7 @@
     "mini.css": "^3.0.1",
     "nem2-library": "^0.9.5",
     "nem2-sdk": "^0.10.1",
-    "rxjs": "^6.3.3",
-    "ts-jest": "^23.10.5"
+    "rxjs": "^6.3.3"
   },
   "devDependencies": {
     "jest": "^23.6.0",
@@ -22,7 +21,8 @@
     "parcel": "^1.11.0",
     "prettier": "^1.15.3",
     "stylus": "^0.54.5",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "ts-jest": "^23.10.5"
   },
   "scripts": {
     "start": "parcel src/index.html",
