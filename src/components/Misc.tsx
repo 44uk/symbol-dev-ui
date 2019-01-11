@@ -1,4 +1,4 @@
-import { ActionType, h } from "hyperapp";
+import { h } from "hyperapp";
 import Output from "../components/Output";
 import {
   convertHexToNum,

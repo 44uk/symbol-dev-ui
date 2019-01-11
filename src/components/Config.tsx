@@ -1,5 +1,8 @@
 import { ActionType, h } from "hyperapp";
 
+import PKG from "../../package.json";
+const STORAGE_KEY = `${PKG.name}/${PKG.version}`;
+
 interface IState {
   errorMessage?: string;
 }
@@ -13,7 +16,7 @@ interface IActions {
 
 const actions: IActions = {
   clearLocalstorage: () => {
-    window.localStorage.clear();
+    window.localStorage.removeItem(STORAGE_KEY);
   },
 };
 
