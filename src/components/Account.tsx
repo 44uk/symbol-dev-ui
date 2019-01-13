@@ -195,8 +195,9 @@ const view = ({url}: Props) => (s: State, a: any) => (
         <p class="note"><small>Hit ENTER key to load from Node.</small></p>
       </div>
     </fieldset>
+
     <fieldset>
-      <legend>Output</legend>
+      <legend>Account Info</legend>
       <Output type="text" disabled={s.account.loading} label="Address" value={s.account.address} />
       <Output type="text" disabled={s.account.loading} label="HexAddress" value={s.account.hexAddress} />
       <Output type="text" disabled={s.account.loading} label="Height at" value={s.account.addressHeight} />
