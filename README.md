@@ -18,6 +18,7 @@ This is a tools for nem2.
 * Distribute XEM for Addresses
 * Block Monitoring
 * Some Useful Tools
+* etc...
 
 ## 🔨 Build
 
