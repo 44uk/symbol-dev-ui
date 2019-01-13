@@ -21,6 +21,14 @@ import NODES from "./resources/nodes.json";
 
 const STORAGE_KEY = `${PKG.name}/${PKG.version}`;
 
+const resetState = () => (state: any) => {
+  console.log("state reseted!");
+  window.localStorage.removeItem(STORAGE_KEY);
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(initialState));
+  const newState = {...initialState};
+  return newState;
+};
+
 const saveState = () => (state: any) => {
   console.log("state saved!");
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -96,6 +104,7 @@ const actions: any = {
   config: Config.actions,
   saveState,
   loadState,
+  resetState,
 };
 
 const view = (s: IState, a: any) => (
@@ -152,4 +161,4 @@ if (process.env.NODE_ENV === "production") {
   main = withLogger(app)(initialState, actions, view, document.body);
 }
 main.init();
-window.__app = main;
+window.__app__nem2_dev_ui = main;

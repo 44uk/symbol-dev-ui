@@ -1,7 +1,4 @@
-import { ActionType, h } from "hyperapp";
-
-import PKG from "../../package.json";
-const STORAGE_KEY = `${PKG.name}/${PKG.version}`;
+import { h } from "hyperapp";
 
 interface IState {
   errorMessage?: string;
@@ -11,13 +8,9 @@ const initialState: IState = {
 };
 
 interface IActions {
-  clearLocalstorage: ActionType<IState, IActions>;
 }
 
 const actions: IActions = {
-  clearLocalstorage: () => {
-    window.localStorage.removeItem(STORAGE_KEY);
-  },
 };
 
 const view = () => (s: any, a: any) => (
@@ -31,7 +24,7 @@ const view = () => (s: any, a: any) => (
         <label for="privateKey">Clear</label>
         <button
           class="primary"
-          onclick={a.config.clearLocalstorage}
+          onclick={a.resetState}
         >Clear</button>
         <p class="note"><small>Clear stored data.</small></p>
       </div>
