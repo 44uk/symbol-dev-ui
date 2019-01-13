@@ -2,6 +2,7 @@ import { withLogger } from "@hyperapp/logger";
 import { app, h } from "hyperapp";
 import { Link, location, Route, Switch } from "hyperapp-hash-router";
 import Account from "./components/Account";
+import Blockchain from "./components/Blockchain";
 import Config from "./components/Config";
 import Faucet from "./components/Faucet";
 import Help from "./components/Help";
@@ -51,6 +52,7 @@ interface IState {
   mlms: any;
   namespace: any;
   mosaic: any;
+  block: any;
   transaction: any;
   node: any;
   faucet: any;
@@ -66,6 +68,7 @@ const initialState: IState = {
   mlms: MLMS.initialState,
   namespace: Namespace.initialState,
   mosaic: Mosaic.initialState,
+  block: Blockchain.initialState,
   transaction: Transaction.initialState,
   node: Node.initialState,
   faucet: Faucet.initialState,
@@ -97,6 +100,7 @@ const actions: any = {
   mlms: MLMS.actions,
   namespace: Namespace.actions,
   mosaic: Mosaic.actions,
+  block: Blockchain.actions,
   transaction: Transaction.actions,
   node: Node.actions,
   faucet: Faucet.actions,
@@ -124,6 +128,7 @@ const view = (s: IState, a: any) => (
           <Link class="button" to="/mlms">MLMS</Link>
           <Link class="button" to="/namespace">Namespace</Link>
           <Link class="button" to="/mosaic">Mosaic</Link>
+          <Link class="button" to="/block">Block</Link>
           <Link class="button" to="/transaction">Transaction</Link>
           <Link class="button" to="/node">Node</Link>
           <Link class="button" to="/faucet">Faucet</Link>
@@ -141,6 +146,7 @@ const view = (s: IState, a: any) => (
           <Route path="/mlms" render={() => <MLMS.view url={s.url} />} />
           <Route path="/namespace" render={() => <Namespace.view url={s.url} />} />
           <Route path="/mosaic" render={() => <Mosaic.view url={s.url} />} />
+          <Route path="/block" render={() => <Blockchain.view url={s.url} />} />
           <Route path="/transaction" render={() => <Transaction.view url={s.url} />} />
           <Route path="/node" render={() => <Node.view url={s.url} />} />
           <Route path="/faucet" render={() => <Faucet.view url={s.url} />} />
