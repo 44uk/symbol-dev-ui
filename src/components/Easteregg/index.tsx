@@ -1,15 +1,11 @@
 import { h } from "hyperapp";
-// import picostyle from "picostyle";
-// const ps = picostyle(h);
+import images from "./*.png";
 
 interface IProps {
   key: any;
   name: string;
   fileName: string;
 }
-
-import images from "./*.png";
-console.log(images);
 
 const Fig = ({key, name, fileName}: IProps) => (
   <figure key={key}>

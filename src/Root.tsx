@@ -46,7 +46,8 @@ const loadState = () => (state: any) => {
 // TODO: implement
 interface IState {
   location: any;
-  url: any;
+  url: string;
+  nodes: any[];
   pki: any;
   account: any;
   mlms: any;
@@ -63,6 +64,7 @@ interface IState {
 const initialState: IState = {
   location: location.state,
   url: NODES[0].value,
+  nodes: NODES,
   pki: PKI.initialState,
   account: Account.initialState,
   mlms: MLMS.initialState,
@@ -94,6 +96,13 @@ const actions: any = {
     const value = ev.target ? ev.target.value : "";
     return a.setUrl(value);
   },
+  onSaveNodes: (ev: Event) => (s: any, a: any) => {
+    const value = ev.target ? ev.target.value : "";
+    console.log(value);
+    // const nodes = [];
+    // return a.setNodes(nodes);
+  },
+  setNodes: (nodes: any) => ({ nodes }),
   setUrl: (url: string) => ({ url }),
   pki: PKI.actions,
   account: Account.actions,
@@ -116,7 +125,7 @@ const view = (s: IState, a: any) => (
     <div class="row">
       <div class="col-sm">
         <select name="url" onchange={a.onChangeUrl}>
-          {NODES.map((n) => <option value={n.value}>{n.value} ({n.name})</option>)}
+          {s.nodes.map((n) => <option value={n.value}>{n.value} ({n.name})</option>)}
         </select>
       </div>
     </div>
