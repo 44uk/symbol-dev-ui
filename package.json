@@ -26,9 +26,9 @@
   },
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "rm -f build/* && parcel build src/index.html --out-dir build --public-url '.' --no-source-maps",
+    "build": "parcel build src/index.html --out-dir build --public-url '.' --no-source-maps",
     "archive": "npm run build && zip -r build/archive.zip build/",
-    "netlify": "mv src/resources/nodes.https.json src/resources/nodes.json && npm run archive",
+    "netlify": "npm run archive && mv src/resources/nodes.https.json src/resources/nodes.json && npm run build",
     "clean": "rm -rf .cache dist build",
     "lint": "lynt src",
     "test": "jest"
