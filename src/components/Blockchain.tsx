@@ -1,20 +1,26 @@
 import { h } from "hyperapp";
 import {
   BlockchainHttp,
+  BlockchainStorageInfo,
   BlockInfo,
   QueryParams,
   Transaction,
 } from "nem2-sdk";
 import {
   forkJoin,
+  Subscription,
+  timer,
 } from "rxjs";
 import {
   map,
+  switchMap,
   tap,
 } from "rxjs/operators";
 import Output from "./Output";
 
 interface IState {
+  polling: boolean;
+  handler?: Subscription;
   value?: string;
   loading: boolean;
   errorMessage?: string;
@@ -23,6 +29,7 @@ interface IState {
 }
 
 const initialState: IState = {
+  polling: false,
   loading: false,
   transactions: [],
 };
@@ -37,6 +44,9 @@ interface IActions {
   setLoaded: ActionType<IState, IActions>;
   setErrorMessage: ActionType<IState, IActions>;
   unsetErrorMessage: ActionType<IState, IActions>;
+  startPolling: ActionType<IState, IActions>;
+  stopPolling: ActionType<IState, IActions>;
+  setDiagnosticStorage: ActionType<IState, IActions>;
 }
 
 interface BlockInfoWithTransactions {
@@ -75,6 +85,34 @@ const actions: IActions = {
   setData: (data: BlockInfoWithTransactions) => reshapeData(data),
   setLoading: () => ({ loading: true }),
   setLoaded: () => ({ loading: false }),
+  startPolling: (ev: Event) => (s: IState, a: IActions) => {
+    const url = ev.target ? ev.target.dataset.url : "";
+    const handler = timer(0, 5000).pipe(
+      switchMap((_) => loadDiagnosticStorageFromNode(url)),
+    ).subscribe(
+      (data: any) => a.setDiagnosticStorage(data),
+    );
+    console.log("Start polling.");
+    return { ...s, handler, polling: true };
+  },
+  stopPolling: (ev: Event) => (s: IState, a: IActions) => {
+    if (s.handler == null) { return; }
+    s.handler.unsubscribe();
+    console.log("Stop polling.");
+    return { ...s, handler: undefined, polling: false };
+  },
+  setDiagnosticStorage: (blockchainStorageInfo: BlockchainStorageInfo) => {
+    return {
+      numBlocks: blockchainStorageInfo.numBlocks,
+      numTransactions: blockchainStorageInfo.numTransactions,
+      numAccounts: blockchainStorageInfo.numAccounts,
+    };
+  },
+};
+
+const loadDiagnosticStorageFromNode = (url: string) => {
+  const blockchainHttp = new BlockchainHttp(url);
+  return blockchainHttp.getDiagnosticStorage();
 };
 
 const loadFromNode = (value: string, url: string) => {
@@ -106,6 +144,20 @@ const view = ({url}: Props) => (s: any, a: any) => (
       <span class="toast">{s.block.errorMessage}</span> }
 
     <fieldset>
+      <legend>Chain</legend>
+      <Output value={s.block.numBlocks} label="num of Blocks" />
+      <Output value={s.block.numTransactions} label="num of Transactions" />
+      <Output value={s.block.numAccounts} label="num of Accounts" />
+      {
+        s.block.polling
+        ? <button onclick={a.block.stopPolling}
+          >Stop Polling</button>
+        : <button onclick={a.block.startPolling} data-url={url}
+          >Start Polling</button>
+      }
+    </fieldset>
+
+    <fieldset>
       <legend>Input</legend>
       <div class="input-group vertical">
         <label>Block Height</label>
@@ -130,6 +182,7 @@ const view = ({url}: Props) => (s: any, a: any) => (
       <legend>Transactions</legend>
       <Output value={s.block.transactions && s.block.transactions.length} label="Number of Transactions" />
       <pre>{ JSON.stringify(s.block.transactions, null, 2) }</pre>
+      <p class="note"><small>It shows transactions by 100 limited.</small></p>
     </fieldset>
   </div>
 );
