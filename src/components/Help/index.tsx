@@ -1,6 +1,6 @@
 import { h } from "hyperapp";
-import imgArmyKnife from "../images/army_knife.png";
-import Easteregg from "./Easteregg";
+import Easteregg from "../Easteregg";
+import imageArmyKnife from "./army_knife.png";
 
 const view = () => (s: any, a: any) => (
   <div class="card fluid">
@@ -12,7 +12,7 @@ const view = () => (s: any, a: any) => (
       <p><a target="_blank" href="https://github.com/44uk/nem2-dev-ui">GitHub: 44uk/nem2-dev-ui</a></p>
 
       <figure>
-        <img src={imgArmyKnife} alt="ArmyKnife" width="120" />
+        <img src={imageArmyKnife} alt="ArmyKnife" width="120" />
         <figcaption><a target="_blank" rel="nofollow" href="https://www.irasutoya.com/2017/05/blog-post_395.html">十徳ナイフのイラスト | かわいいフリー素材集 いらすとや</a></figcaption>
       </figure>
 

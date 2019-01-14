@@ -6,10 +6,13 @@
   "main": "index.js",
   "dependencies": {
     "@hyperapp/logger": "^0.5.0",
+    "@types/crypto-js": "^3.1.43",
     "@types/jest": "^23.3.12",
+    "crypto-js": "^3.1.9-1",
     "hyperapp": "^1.2.9",
     "hyperapp-hash-router": "^0.1.0",
     "hyperapp-render": "^3.0.0",
+    "js-sha3": "^0.8.0",
     "mini.css": "^3.0.1",
     "nem2-library": "^0.9.5",
     "nem2-sdk": "^0.10.1",
