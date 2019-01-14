@@ -120,8 +120,9 @@ const view = ({url}: Props) => (s: State, a: any) => (
       <div class="input-group vertical">
         <textarea readonly
           rows="12"
+          placeholder="(This draws MLMS structure here in text.)"
         >{s.mlms.graph}</textarea>
-        <p class="note"><small>Symbols mean... "#" Root, "└" CoSigner, "&lt;&lt;" Referer, "(n, m)" (minCosign, cosigners)</small></p>
+        <p class="note"><small>Symbols mean -> "#" Root, "└" CoSigner, "&lt;&lt;" Referer, "(n, m)" (minCosign, cosigners)</small></p>
       </div>
     </fieldset>
   </div>
