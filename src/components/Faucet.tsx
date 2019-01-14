@@ -77,7 +77,7 @@ const actions: IAction = {
     const privateKey = s.privateKey || "";
     const account = Account.createFromPrivateKey(privateKey, s.networkType);
     const amount = XEM.createRelative(s.amount || 0);
-    const recipients = (s.recipients || "").split("\n");
+    const recipients = reshapeRecipients(s.recipients || "");
     const txHttp = new TransactionHttp(url);
     let txes: any[]; // : TransferTransaction[] | AggregateTransaction[] = [];
     if (s.aggregated) {
@@ -93,6 +93,13 @@ const actions: IAction = {
       );
     });
   },
+};
+
+const reshapeRecipients = (text: string) => {
+  const recipients = text.split("\n")
+    .filter((line) => /^[SMTN][0-9A-Z\-]{39,45}$/.test(line))
+  ;
+  return recipients;
 };
 
 const prepareTransferTransactions = (amount: XEM, recipients: string[], networkType: number) => {

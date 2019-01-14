@@ -5,7 +5,8 @@ import {
   UInt64,
 } from "nem2-sdk";
 import {
-  Subscription, timer,
+  Subscription,
+  timer,
 } from "rxjs";
 import {
   ajax,
@@ -60,7 +61,6 @@ const actions: IActions = {
     listener.open().then(() => {
       a.setMonitoring();
       listener.newBlock().subscribe((block) => {
-        console.log(block);
         a.appendLog(JSON.stringify(block));
       });
     });
