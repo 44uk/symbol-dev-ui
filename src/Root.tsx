@@ -6,6 +6,7 @@ import Blockchain from "./components/Blockchain";
 import Config from "./components/Config";
 import Faucet from "./components/Faucet";
 import Help from "./components/Help";
+import Links from "./components/Links";
 import Misc from "./components/Misc";
 import MLMS from "./components/MLMS";
 import Mosaic from "./components/Mosaic";
@@ -142,6 +143,7 @@ const view = (s: IState, a: any) => (
           <Link class="button" to="/node">Node</Link>
           <Link class="button" to="/faucet">Faucet</Link>
           <Link class="button" to="/misc">Misc</Link>
+          <Link class="button" to="/links">Links</Link>
           <Link class="button" to="/config">Config</Link>
           <Link class="button" to="/help">Help</Link>
         </header>
@@ -160,6 +162,7 @@ const view = (s: IState, a: any) => (
           <Route path="/node" render={() => <Node.view url={s.url} />} />
           <Route path="/faucet" render={() => <Faucet.view url={s.url} />} />
           <Route path="/misc" render={Misc.view} />
+          <Route path="/links" render={Links.view} />
           <Route path="/config" render={Config.view} />
           <Route path="/help" render={Help.view} />
           <Route render={PKI.view} />
