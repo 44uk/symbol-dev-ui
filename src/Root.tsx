@@ -25,9 +25,10 @@ const STORAGE_KEY = `${PKG.name}/${PKG.version}`;
 
 const resetState = () => (state: any) => {
   console.log("state reseted!");
+  const location = state.location;
   window.localStorage.removeItem(STORAGE_KEY);
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(initialState));
-  const newState = {...initialState};
+  const newState = {...initialState, location};
   return newState;
 };
 
