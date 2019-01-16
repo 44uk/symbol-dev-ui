@@ -1,7 +1,6 @@
 import { h } from "hyperapp";
 import {
   Listener,
-  NetworkHttp,
   UInt64,
 } from "nem2-sdk";
 import {
