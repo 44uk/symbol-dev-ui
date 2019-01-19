@@ -5,6 +5,7 @@ import {
   AggregateTransaction,
   Deadline,
   EmptyMessage,
+  Listener,
   NetworkType,
   PublicAccount,
   SignedTransaction,
@@ -21,6 +22,7 @@ interface IState {
   recipients?: string;
   aggregated: boolean;
   preparing: boolean;
+  message?: string;
 }
 
 const initialState: IState = {
@@ -41,6 +43,8 @@ interface IAction {
   setRecipients: ActionType<IState, IAction>;
   setAggregated: ActionType<IState, IAction>;
   sendToRecipients: ActionType<IState, IAction>;
+  setMessage: ActionType<IState, IActions>;
+  unsetMessage: ActionType<IState, IActions>;
 }
 
 const actions: IAction = {
@@ -53,7 +57,7 @@ const actions: IAction = {
     return a.setAggregated(checked);
   },
   onInputAmount: (ev: Event) => (s: IState, a: IAction) => {
-    const value = parseInt(ev.target.value) || 0;
+    const value = parseInt(ev.target.value) || undefined;
     return a.setAmount(value);
   },
   onInputRecipients: (ev: Event) => (s: IState, a: IAction) => {
@@ -73,7 +77,7 @@ const actions: IAction = {
   setRecipients: (recipients: string) => ({ recipients }),
   setAggregated: (aggregated: boolean) => ({ aggregated }),
   // setNetworkType: (network: number) => ({ network }),
-  sendToRecipients: (url: string) => (s: IState) => {
+  sendToRecipients: (url: string) => (s: IState, a: IAction) => {
     const privateKey = s.privateKey || "";
     const account = Account.createFromPrivateKey(privateKey, s.networkType);
     const amount = XEM.createRelative(s.amount || 0);
@@ -92,11 +96,33 @@ const actions: IAction = {
         (data: any) => console.log(data),
       );
     });
+
+    const wsUrl = url.replace(/^http/, "ws");
+    const listener = new Listener(wsUrl, WebSocket);
+    listener.open().then(() => {
+      listener.confirmed(account.address).subscribe(
+        (data) => {
+          a.setMessage("The transaction become confirmed!");
+          setTimeout(a.unsetMessage, 3000);
+          console.log("confirmed", data);
+          listener.close();
+        },
+      );
+      listener.unconfirmedAdded(account.address).subscribe(
+        (data) => {
+          console.log("unconfirmedAdded", data);
+          a.setMessage("The transaction become unconfirmed.");
+        },
+      );
+    });
   },
+  setMessage: (message: string) => ({ message }),
+  unsetMessage: () => ({ message: undefined }),
 };
 
 const reshapeRecipients = (text: string) => {
   const recipients = text.split("\n")
+    .map((line) => line.trim())
     .filter((line) => /^[SMTN][0-9A-Z\-]{39,45}$/.test(line))
   ;
   return recipients;
@@ -130,6 +156,9 @@ interface Props {
 
 export const view = ({url}: Props) => (s: any, a: any) => (
   <div>
+    { s.faucet.message &&
+      <span class="toast">{s.faucet.message}</span> }
+
     <fieldset>
       <legend>Distribute nem:xem</legend>
       <div class="input-group vertical">
@@ -150,7 +179,7 @@ export const view = ({url}: Props) => (s: any, a: any) => (
         <input type="number" name="amount"
           value={s.faucet.amount}
           onchange={a.faucet.onInputAmount}
-          placeholder="ex) 1000000 (1 nem:xem)"
+          placeholder="ex) 1 (1 nem:xem, input relative value)"
         />
       </div>
       <div class="input-group vertical">

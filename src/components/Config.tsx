@@ -29,6 +29,7 @@ const actions: IActions = {
 
 const reshapeNodes = (text: string) => {
   const nodes = text.split("\n")
+    .map((line) => line.trim())
     .filter((line) => /https?:\/\/.+?,.+/.test(line))
     .map((line) => {
       const parts = line.split(",");
