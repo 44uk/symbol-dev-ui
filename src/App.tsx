@@ -6,8 +6,10 @@ import {
   Link
 } from "react-router-dom";
 
-import logo from './logo.svg';
+import 'mini.css'
 import './App.css';
+
+import logo from './logo.svg';
 
 import Example from './pages/Example';
 
