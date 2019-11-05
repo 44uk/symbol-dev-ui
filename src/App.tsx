@@ -6,7 +6,6 @@ import {
   Link
 } from "react-router-dom";
 
-import 'mini.css'
 
 
 import Example from './pages/Example';
