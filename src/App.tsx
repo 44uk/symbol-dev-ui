@@ -1,40 +1,45 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
 
+import Nav from './components/Nav';
 
-
-import Example from './pages/Example';
+import PKI from './pages/PKI';
+import Account from './pages/Account/';
+import MLMS from './pages/MLMS/';
+import Namespace from './pages/Namespace/';
+import Mosaic from './pages/Mosaic/';
+import Block from './pages/Block/';
+import Transaction from './pages/Transaction/';
+import Node from './pages/Node/';
+import Faucet from './pages/Faucet/';
+import Config from './pages/Config/';
+import Misc from './pages/Misc/';
+import Reference from './pages/Reference/';
+import Help from './pages/Help/';
 
 const App: React.FC = () => {
   return (<Router>
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <ul>
-          <li><Link to="/example">Example</Link></li>
-        </ul>
-      </header>
+    <div className="container">
+      <Nav></Nav>
       <main>
         <Switch>
-          <Route path="/example">
-            <Example />
-          </Route>
+          <Route path="/pki"><PKI /></Route>
+          <Route path="/account"><Account /></Route>
+          <Route path="/mlms"><MLMS /></Route>
+          <Route path="/block"><Block /></Route>
+          <Route path="/config"><Config /></Route>
+          <Route path="/faucet"><Faucet /></Route>
+          <Route path="/misc"><Misc /></Route>
+          <Route path="/mosaic"><Mosaic /></Route>
+          <Route path="/namespace"><Namespace /></Route>
+          <Route path="/node"><Node /></Route>
+          <Route path="/reference"><Reference /></Route>
+          <Route path="/transaction"><Transaction /></Route>
+          <Route path="/help"><Help /></Route>
         </Switch>
       </main>
     </div>
