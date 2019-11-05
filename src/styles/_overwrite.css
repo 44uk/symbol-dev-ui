@@ -1,0 +1,21 @@
+* {
+  font-size: 0.80rem;
+}
+
+header {
+  height: 2.1875rem;
+}
+
+header .button, header [role="button"] {
+  height: calc(2.1875rem + var(--universal-padding) / 2);
+  line-height: calc(2.1875rem - var(--universal-padding) * 1.5);
+}
+
+.input-group p.note {
+  margin-top: 0;
+  line-height: 1;
+}
+
+small, sup, sub, figcaption {
+  font-size: 0.85rem;
+}
