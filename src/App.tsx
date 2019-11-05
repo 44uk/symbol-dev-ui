@@ -5,21 +5,21 @@ import {
   Route,
 } from "react-router-dom";
 
-import Nav from './components/Nav';
+import Nav from 'components/Nav';
 
-import PKI from './pages/PKI';
-import Account from './pages/Account/';
-import MLMS from './pages/MLMS/';
-import Namespace from './pages/Namespace/';
-import Mosaic from './pages/Mosaic/';
-import Block from './pages/Block/';
-import Transaction from './pages/Transaction/';
-import Node from './pages/Node/';
-import Faucet from './pages/Faucet/';
-import Config from './pages/Config/';
-import Misc from './pages/Misc/';
-import Reference from './pages/Reference/';
-import Help from './pages/Help/';
+import PKI from 'pages/PKI';
+import Account from 'pages/Account/';
+import MLMS from 'pages/MLMS/';
+import Namespace from 'pages/Namespace/';
+import Mosaic from 'pages/Mosaic/';
+import Block from 'pages/Block/';
+import Transaction from 'pages/Transaction/';
+import Node from 'pages/Node/';
+import Faucet from 'pages/Faucet/';
+import Config from 'pages/Config/';
+import Misc from 'pages/Misc/';
+import Reference from 'pages/Reference/';
+import Help from 'pages/Help/';
 
 const App: React.FC = () => {
   return (<Router>
