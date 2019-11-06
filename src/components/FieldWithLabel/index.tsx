@@ -4,6 +4,7 @@ interface IProps {
   label?: string
   name?: string
   readonly?: boolean
+  disabled?: boolean
   value: string
   note?: string
 }
@@ -12,6 +13,7 @@ export const FieldWithLabel: React.FC<IProps> = ({
   label,
   name,
   readonly = false,
+  disabled = false,
   value,
   note
 }) => {
@@ -19,7 +21,9 @@ export const FieldWithLabel: React.FC<IProps> = ({
   return (
 <div className="input-group vertical">
   { label ? <label htmlFor={name}>{label}</label> : null }
-  <input type="text" readOnly={readonly}
+  <input type="text"
+    readOnly={readonly}
+    disabled={disabled}
     name={name}
     value={value}
   />
