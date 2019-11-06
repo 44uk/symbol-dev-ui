@@ -4,7 +4,7 @@ import {
   Account, NetworkType,
 } from 'nem2-sdk'
 
-import FieldWithLabel from './FieldWithLabel'
+import FieldWithLabel from 'components/FieldWithLabel'
 
 interface IProps {
   account: Account | undefined
