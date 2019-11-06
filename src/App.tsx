@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   HashRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
 
+import createPersistedState from 'use-persisted-state'
+
 import Nav from 'components/Nav';
+import GatewaySelector from 'components/GatewaySelector';
 
 import PKI from 'pages/PKI';
 import Account from 'pages/Account/';
@@ -21,9 +24,18 @@ import Misc from 'pages/Misc/';
 import Reference from 'pages/Reference/';
 import Help from 'pages/Help/';
 
+const useCurrentNodeState = createPersistedState('current-node')
+
 const App: React.FC = () => {
+  const [node] = useCurrentNodeState<string | null>(null)
+
+  useEffect(() => {
+    console.debug('current node has changed.')
+  }, [node])
+
   return (<Router>
     <div className="container">
+      <GatewaySelector></GatewaySelector>
       <Nav></Nav>
       <main>
         <Switch>
