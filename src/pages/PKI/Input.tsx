@@ -60,6 +60,7 @@ export const Input: React.FC<IProps> = ({
   <div className="input-group vertical">
     <label htmlFor="privateKey">PrivateKey</label>
     <input type="text"
+      autoFocus
       value={privateKey || ''}
       pattern="[a-fA-F\d]+"
       maxLength={64}
