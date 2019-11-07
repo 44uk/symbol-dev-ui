@@ -32,22 +32,14 @@ export const Input: React.FC<IProps> = ({
   onSetAccount,
   onSetPretty
 }) => {
-  // const [account, setAccount] = useState<Account | undefined>(undefined)
   const [privateKey, setPrivateKey] = useState('')
   const [networkType, setNetworkType] = useState(NetworkType.MIJIN_TEST)
   const [pretty, setPretty] = useState(true)
 
- // useEffect(() => {
- //   if(account === undefined) { return; }
- //   setPrivateKey(account.privateKey)
- // }, [account])
-
   useEffect(() => {
-    if(privateKey.length > 0) {
-      const newAccount = generateNewAccount(networkType, privateKey)
-      // setAccount(newAccount)
-      onSetAccount(newAccount)
-    }
+    if(privateKey.length !== 64) { return }
+    const newAccount = generateNewAccount(networkType, privateKey)
+    onSetAccount(newAccount)
   }, [privateKey, networkType, onSetAccount])
 
   useEffect(() => {
@@ -61,7 +53,7 @@ export const Input: React.FC<IProps> = ({
     <label htmlFor="privateKey">PrivateKey</label>
     <input type="text"
       autoFocus
-      value={privateKey || ''}
+      value={privateKey}
       pattern="[a-fA-F\d]+"
       maxLength={64}
       onChange={(_) => setPrivateKey(_.target.value)}
