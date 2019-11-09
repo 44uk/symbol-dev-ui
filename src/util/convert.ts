@@ -5,72 +5,72 @@ import {
   keccak256,
   sha3_256,
 } from "js-sha3";
-
-// import {
-//   address as libAddress,
-//   convert as libConvert,
-//   UInt64,
-// } from "nem2-library";
 import {
   Address,
-  UInt64
+  RawAddress,
+  UInt64,
+  Convert
 } from "nem2-sdk";
 
-export const convertHexToNum = (hex: string) => parseInt(hex, 16);
+export const convertHexToNum = (value: string) => parseInt(value, 16);
 export const convertHexToUInt64 = (value: string) => {
   try {
-    const uint64str = UInt64.fromHex(value.trim()).toString();
-    return `[ ${uint64str} ]`;
-  } catch (err) {
-    console.error(err);
-    return;
+    const uint64 = UInt64.fromHex(value.trim());
+    return `[${uint64.lower},${uint64.higher}]`;
+  } catch (error) {
+    console.error(error);
+    return "";
   }
 };
 
-export const convertNumToHex = (num: string) => parseInt(num, 10).toString(16);
+export const convertNumToHex = (value: string) => parseInt(value, 10).toString(16).toUpperCase();
 export const convertNumToUInt64 = (value: string) => {
   try {
-    const preped = parseInt(value);
-    const parsed = UInt64.fromUint(preped).toString();
-    return `[ ${parsed} ]`;
-  } catch (err) {
-    return err.message;
+    const uint64= UInt64.fromNumericString(value)
+    return `[${uint64.lower},${uint64.higher}]`;
+  } catch (error) {
+    console.error(error);
+    return ""
   }
 };
 
 export const convertUInt64ToHex = (value: string) => {
   const preped = `[${value.replace(/[\[\]\s]/g, "")}]`;
-  const parsed = JSON.parse(preped);
-  return 'WIP'
-  // return UInt64.toHex(parsed);
-};
-export const convertUInt64ToNum = (value: string) => {
   try {
-    const preped = `[${value.replace(/[\[\]\s]/g, "")}]`;
-    const parsed = JSON.parse(preped);
-    return 'WIP'
-    // return UInt64.compact(parsed).toString();
-  } catch (err) {
-    return err.message;
+    const loHi = JSON.parse(preped);
+    return (new UInt64(loHi)).toHex()
+  } catch (error) {
+    console.error(error);
+    return ""
+  }
+};
+
+export const convertUInt64ToNum = (value: string) => {
+  const preped = `[${value.replace(/[\[\]\s]/g, "")}]`;
+  try {
+    const loHi = JSON.parse(preped);
+    return parseInt((new UInt64(loHi)).toString(), 10)
+  } catch (error) {
+    console.error(error);
+    return ""
   }
 };
 
 export const encodeRawToHex = (value: string) => {
-  return 'WIP'
-  // return libConvert.utf8ToHex(value);
+  return Convert.utf8ToHex(value);
 };
+
 export const decodeHexToRaw = (value: string) => {
   return Buffer.from(value, "hex").toString("utf8");
 };
 
 export const encodeAddress = (value: string) => {
-  return 'WIP'
-  // return libAddress.addressToString(libConvert.hexToUint8(value));
+  return RawAddress.addressToString(Convert.hexToUint8(value));
 };
+
 export const decodeAddress = (value: string) => {
   const plain = Address.createFromRawAddress(value).plain();
-  return 'WIP'
-  // return libConvert.uint8ToHex(libAddress.stringToAddress(plain));
+  return Convert.uint8ToHex(RawAddress.stringToAddress(plain));
 };
 
 export const hashBySha3 = (input: string) => {

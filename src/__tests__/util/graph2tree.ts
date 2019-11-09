@@ -1,39 +1,39 @@
 import graph2tree, { buildTree } from "util/graph2tree";
 
 test("reference from Root", () => {
-  const expected = `# A01CF3..CC43E2 (3, 3) <<
-    └ 061934..400772 (1, 2)
-        └ 465D40..CF2F68
-        └ 4FCBC9..FED28D
-    └ 92BE08..C1E910
-    └ 9835C3..CC92C2 (2, 3)
-        └ 4F7222..E4B27F
-        └ 8BFDE2..7C93E0 (1, 1)
-            └ A8443C..0ECC47
-        └ 92BE08..C1E910`;
+  const expected = `# A01CF346..43E2 (3, 3) <<
+    └ 06193475..0772 (1, 2)
+        └ 465D4063..2F68
+        └ 4FCBC947..D28D
+    └ 92BE08D5..E910
+    └ 9835C3BA..92C2 (2, 3)
+        └ 4F722246..B27F
+        └ 8BFDE2C8..93E0 (1, 1)
+            └ A8443CB1..CC47
+        └ 92BE08D5..E910`;
   expect(graph2tree(require("./graph/fromLevel0.json"))).toBe(expected);
 });
 
 test("reference from Level1", () => {
-  const expected = `# A01CF3..CC43E2 (3, 3)
-    └ 061934..400772 (1, 2) <<
-        └ 465D40..CF2F68
-        └ 4FCBC9..FED28D`;
+  const expected = `# A01CF346..43E2 (3, 3)
+    └ 06193475..0772 (1, 2) <<
+        └ 465D4063..2F68
+        └ 4FCBC947..D28D`;
   expect(graph2tree(require("./graph/fromLevel1.json"))).toBe(expected);
 });
 
 test("reference from Level2", () => {
-  const expected = `# A01CF3..CC43E2 (3, 3)
-    └ 061934..400772 (1, 2)
-        └ 465D40..CF2F68 <<`;
+  const expected = `# A01CF346..43E2 (3, 3)
+    └ 06193475..0772 (1, 2)
+        └ 465D4063..2F68 <<`;
   expect(graph2tree(require("./graph/fromLevel2.json"))).toBe(expected);
 });
 
 test("reference from Level3", () => {
-  const expected = `# A01CF3..CC43E2 (3, 3)
-    └ 9835C3..CC92C2 (2, 3)
-        └ 8BFDE2..7C93E0 (1, 1)
-            └ A8443C..0ECC47 <<`;
+  const expected = `# A01CF346..43E2 (3, 3)
+    └ 9835C3BA..92C2 (2, 3)
+        └ 8BFDE2C8..93E0 (1, 1)
+            └ A8443CB1..CC47 <<`;
   expect(graph2tree(require("./graph/fromLevel3.json"))).toBe(expected);
 });
 

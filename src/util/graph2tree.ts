@@ -25,12 +25,14 @@ interface Opts {
   referer?: string;
 }
 
+type NodeTuple = [number, Entry, any[]]
+
 const defaultOpts: Opts = {
   child: "└",
-  head: 6,
+  head: 8,
   referer: "<<",
   root: "#",
-  tail: 6,
+  tail: 4,
   truncated: true,
 };
 
@@ -42,13 +44,13 @@ export const graph2tree = (graph: Layer[], opts: Opts = {}) =>  {
 };
 
 export const buildTree = (graph: Layer[]) => {
-  const tree: any = [];
+  const tree: NodeTuple[] = [];
   for (const layer of graph) {
     if (tree.length === 0) {
       const entry = layer.multisigEntries[0];
       tree.push([layer.level, entry, []]);
     } else {
-      layer.multisigEntries.forEach((entry) => {
+      layer.multisigEntries.forEach(entry => {
         const parentNode = findParentNode(tree, entry.multisig.account, layer.level);
         parentNode[2].push([layer.level, entry, []]);
       });
@@ -65,20 +67,20 @@ const findParentNode = (tree: any, account: string, level: number) => {
   ;
 };
 
-const buildOutput = (tree: any, referer: string, opts: Opts) => {
+const buildOutput = (tree: NodeTuple[], referer: string, opts: Opts) => {
   const buf: string[] = [];
   putIntoBuf(buf, tree[0], 0, true, referer, opts);
   return buf.join("\n");
 };
 
-const putIntoBuf = (buf: string[], node: any, level: number, end: boolean, referer: string, opts: Opts) => {
+const putIntoBuf = (buf: string[], node: NodeTuple, level: number, end: boolean, referer: string, opts: Opts) => {
   renderLine(buf, node[1], level, end, referer, opts); level++;
   for (let i = 0; i < node[2].length; i++) {
     putIntoBuf(buf, node[2][i], level, node[2].length - 1 === i, referer, opts);
   }
 };
 
-const renderLine = (buf: string[], entry: any, level: number, end: boolean, referer: string, opts: Opts) => {
+const renderLine = (buf: string[], entry: Entry, level: number, end: boolean, referer: string, opts: Opts) => {
   const pad = "  ".repeat(level * 2) + (level === 0 ? `${opts.root} ` : `${opts.child} `);
   const msig = entry.multisig;
   const ref = msig.account === referer
