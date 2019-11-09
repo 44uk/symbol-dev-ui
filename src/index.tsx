@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import 'mini.css';
+import './index.css';
 import './styles/_overwrite.css';
 
 import App from './App';
