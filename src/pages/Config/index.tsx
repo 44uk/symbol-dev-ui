@@ -7,7 +7,7 @@ const useGeneratedKeyListState = createPersistedState('generated-key-list')
 
 export const Config: React.FC = () => {
   const [gwList, setGwList] = useGatewayListState(GATEWAY_LIST)
-  const [_, setGeneratedKeyList] = useGeneratedKeyListState<string[]>([])
+  const [, setGeneratedKeyList] = useGeneratedKeyListState<string[]>([])
   const [gwText, setGwText] = useState(gwList.join("\n"))
 
   function resetPersistedState() {
