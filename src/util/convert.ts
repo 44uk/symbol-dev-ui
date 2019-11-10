@@ -65,12 +65,21 @@ export const decodeHexToRaw = (value: string) => {
 };
 
 export const encodeAddress = (value: string) => {
-  return RawAddress.addressToString(Convert.hexToUint8(value));
+  try {
+    console.log(Convert.hexToUint8(value))
+    return RawAddress.addressToString(Convert.hexToUint8(value));
+  } catch(error) {
+    return ""
+  }
 };
 
 export const decodeAddress = (value: string) => {
-  const plain = Address.createFromRawAddress(value).plain();
-  return Convert.uint8ToHex(RawAddress.stringToAddress(plain));
+  try {
+    const plain = Address.createFromRawAddress(value).plain();
+    return Convert.uint8ToHex(RawAddress.stringToAddress(plain));
+  } catch(error) {
+    return ""
+  }
 };
 
 export const hashBySha3 = (input: string) => {
