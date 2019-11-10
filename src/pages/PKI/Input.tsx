@@ -1,24 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 import {
   Account,
   NetworkType
-} from 'nem2-sdk'
+} from "nem2-sdk"
 
 interface IProps {
   onSetAccount: React.Dispatch<React.SetStateAction<Account | undefined>>
   onSetPretty: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function generateNewPrivateKey(networkType = NetworkType.MIJIN_TEST) {
-  return Account.generateNewAccount(networkType).privateKey
+function generateNewPrivateKey(networkType = NetworkType.MIJIN_TEST, vanity?: string) {
+  let account = Account.generateNewAccount(networkType)
+  while(vanity && vanity !== "N" && account.address.plain()[1] !== vanity) {
+    account = Account.generateNewAccount(networkType)
+  }
+  return account.privateKey
 }
 
-function generateNewAccount(networkType = NetworkType.MIJIN_TEST, str?: string) {
+function generateNewAccount(networkType = NetworkType.MIJIN_TEST, key?: string) {
   let account: Account | undefined = undefined;
-  if(str) {
+  if(key) {
     try {
-      account = Account.createFromPrivateKey(str, networkType)
+      account = Account.createFromPrivateKey(key, networkType)
     } catch(error) {
       console.error(error)
     }
@@ -30,14 +34,15 @@ function generateNewAccount(networkType = NetworkType.MIJIN_TEST, str?: string) 
 
 export const Input: React.FC<IProps> = ({
   onSetAccount,
-  onSetPretty
+  onSetPretty,
 }) => {
-  const [privateKey, setPrivateKey] = useState('')
+  const [privateKey, setPrivateKey] = useState("")
   const [networkType, setNetworkType] = useState(NetworkType.MIJIN_TEST)
   const [pretty, setPretty] = useState(true)
+  const [vanity, setVanity] = useState("N")
 
   useEffect(() => {
-    if(privateKey.length !== 64) { return }
+    if(privateKey.length < 64) { return }
     const newAccount = generateNewAccount(networkType, privateKey)
     onSetAccount(newAccount)
   }, [privateKey, networkType, onSetAccount])
@@ -63,7 +68,7 @@ export const Input: React.FC<IProps> = ({
     <p className="note"><small>Input PrivateKey or click Generate button.</small></p>
     <button
       className="primary"
-      onClick={(_) => setPrivateKey(generateNewPrivateKey(networkType))}
+      onClick={(_) => setPrivateKey(generateNewPrivateKey(networkType, vanity))}
     >Generate New Account</button>
   </div>
 
@@ -99,6 +104,29 @@ export const Input: React.FC<IProps> = ({
       onChange={() => setPretty(false)}
       checked={!pretty}
     /><label htmlFor="plain">Plain</label>
+  </div>
+
+  <div>
+    <input type="radio" id="n"
+      onChange={() => setVanity("N")}
+      checked={vanity === "N"}
+    /><label htmlFor="n">None</label>
+    <input type="radio" id="a"
+      onChange={() => setVanity("A")}
+      checked={vanity === "A"}
+    /><label htmlFor="a">A</label>
+    <input type="radio" id="b"
+      onChange={() => setVanity("B")}
+      checked={vanity === "B"}
+    /><label htmlFor="b">B</label>
+    <input type="radio" id="a"
+      onChange={() => setVanity("C")}
+      checked={vanity === "C"}
+    /><label htmlFor="c">C</label>
+    <input type="radio" id="a"
+      onChange={() => setVanity("D")}
+      checked={vanity === "D"}
+    /><label htmlFor="d">D</label>
   </div>
 </fieldset>
   )
