@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
-import createPersistedState from 'use-persisted-state'
-import GATEWAY_LIST from 'resources/gateway.json'
+import React, { useState, useContext } from 'react';
 
-const useGatewayListState = createPersistedState('gateway-list')
-const useGeneratedKeyListState = createPersistedState('generated-key-list')
+import {
+  gateways,
+  Context as GatewayContext
+} from 'contexts/gateway'
 
 export const Config: React.FC = () => {
-  const [gwList, setGwList] = useGatewayListState(GATEWAY_LIST)
-  const [, setGeneratedKeyList] = useGeneratedKeyListState<string[]>([])
-  const [gwText, setGwText] = useState(gwList.join("\n"))
+  const gwContext = useContext(GatewayContext)
+  const [gwText, setGwText] = useState(gwContext.urlList.join("\n"))
 
   function resetPersistedState() {
-    setGwList(GATEWAY_LIST)
-    setGwText(GATEWAY_LIST.join("\n"))
-    setGeneratedKeyList([])
+    gwContext.setUrlList([])
+    setGwText(gateways.join("\n"))
   }
 
   function saveGatewayList() {
@@ -21,7 +19,7 @@ export const Config: React.FC = () => {
       .map((line) => line.trim())
       .filter((line) => /https?:\/\/.+?/.test(line))
     const gwList = Array.from(new Set(_tmp))
-    setGwList(gwList)
+    gwContext.setUrlList(gwList)
     setGwText(gwList.join("\n"))
   }
 

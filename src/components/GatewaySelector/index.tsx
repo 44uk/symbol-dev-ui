@@ -1,46 +1,41 @@
-import GATEWAY_LIST from 'resources/gateway.json'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import createPersistedState from 'use-persisted-state'
+import {
+  gateways,
+  Context as GatewayContext
+} from 'contexts/gateway'
 
-const useCurrentGatewayState = createPersistedState('current-gateway')
 const useGatewayListState = createPersistedState('gateway-list')
 
 interface IProps {
   onAvailable?: () => void
 }
 
-interface INodeInfo {
-
-}
-
-export const NodeSelector: React.FC = (
+export const GatewaySelector: React.FC = (
   onAvailable
 ) => {
-  const [gw, setGw] = useCurrentGatewayState(GATEWAY_LIST[0])
-  const [gwList] = useGatewayListState(GATEWAY_LIST)
+  const gwContext = useContext(GatewayContext)
+  const [gwList] = useGatewayListState(gateways)
   const [availability, setAvailability] = useState(false)
 
   useEffect(() => {
-    const url = `${gw}/node/info`
+    const url = `${gwContext.url}/node/info`
     setAvailability(false)
     fetch(url)
       .then(resp => resp.json())
-      .then(resp => {
-        // console.debug(resp.networkIdentifier)
-        setAvailability(true)
-      })
+      .then(_ => setAvailability(true))
       .catch(error => {
         console.error(error)
         setAvailability(false)
       })
       .finally(() => 0)
-  }, [gw])
+  }, [gwContext.url])
 
   return (
 <div className="col-sm">
   <select
-    value={gw}
-    onChange={(ev) => setGw(ev.target.value)}
+    value={gwContext.url}
+    onChange={(ev) => { gwContext.changeUrl(ev.target.value) } }
   >
     {gwList.map((n: string) => (
       <option key={n} value={n} >{n}</option>
@@ -54,4 +49,4 @@ export const NodeSelector: React.FC = (
   )
 };
 
-export default NodeSelector;
+export default GatewaySelector;
