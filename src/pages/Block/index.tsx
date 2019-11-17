@@ -2,12 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import {
   UInt64,
   BlockInfo,
-  BlockHttp,
   ChainHttp,
   Listener
 } from 'nem2-sdk';
+
 import { Context as GatewayContext } from 'contexts/gateway'
-import { useBlockInfo } from 'hooks/useBlockInfo'
+import { Context as HttpContext } from 'contexts/http'
+
+import { useBlockData } from 'hooks/useBlockData'
 import { useBlockListener } from 'hooks/useBlockInfoListener'
 import { TextOutput } from 'components/TextOutput'
 
@@ -42,25 +44,26 @@ block:
 
 export const Block: React.FC = () => {
   const gwContext = useContext(GatewayContext)
-  const [blockHeight, setBlockHeight] = useState('')
+  const httpContext = useContext(HttpContext)
 
-  const http = new BlockHttp(gwContext.url)
-  const {block, setHeight, loading, error} = useBlockInfo(http)
+  const { blockHttp, metadataHttp } = httpContext.httpInstance
+  const {blockData, setHeight, loading, error} = useBlockData({ blockHttp, metadataHttp })
 
   const listener = new Listener(gwContext.url.replace(/^http/, "ws"), WebSocket)
   const blockListener = useBlockListener(listener)
 
+  const [blockHeight, setBlockHeight] = useState("")
   const [output, setOutput] = useState("")
 
   useEffect(() => {
     let _block = blockListener.following ?
       blockListener.block :
-      block
+      blockData && blockData.blockInfo
     if(_block ) {
       setBlockHeight(_block.height.toString())
       setOutput(stringifyBlockInfo(_block))
     }
-  }, [block, blockListener.block])
+  }, [blockData, blockListener.block])
 
   const fetchBlockInfo = async () => {
     let height: UInt64

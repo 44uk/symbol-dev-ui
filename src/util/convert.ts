@@ -8,9 +8,18 @@ import {
 import {
   Address,
   RawAddress,
+  NamespaceId,
   UInt64,
   Convert
 } from "nem2-sdk";
+
+export const encodeNamespace = (value: string) => {
+  try {
+    return new NamespaceId(value).toHex()
+  } catch(error) {
+    return ""
+  }
+}
 
 export const convertHexToNum = (value: string) => parseInt(value, 16);
 export const convertHexToUInt64 = (value: string) => {
@@ -35,9 +44,9 @@ export const convertNumToUInt64 = (value: string) => {
 };
 
 export const convertUInt64ToHex = (value: string) => {
-  const preped = `[${value.replace(/[\[\]\s]/g, "")}]`;
+  const prepared = `[${value.replace(/[\[\]\s]/g, "")}]`;
   try {
-    const loHi = JSON.parse(preped);
+    const loHi = JSON.parse(prepared);
     return (new UInt64(loHi)).toHex()
   } catch (error) {
     console.error(error);
@@ -46,9 +55,9 @@ export const convertUInt64ToHex = (value: string) => {
 };
 
 export const convertUInt64ToNum = (value: string) => {
-  const preped = `[${value.replace(/[\[\]\s]/g, "")}]`;
+  const prepared = `[${value.replace(/[\[\]\s]/g, "")}]`;
   try {
-    const loHi = JSON.parse(preped);
+    const loHi = JSON.parse(prepared);
     return parseInt((new UInt64(loHi)).toString(), 10)
   } catch (error) {
     console.error(error);

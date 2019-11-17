@@ -10,6 +10,10 @@ import {
   gateways,
   Context as GatewayContext
 } from 'contexts/gateway'
+import {
+  createHttpInstance,
+  Context as HttpContext
+} from 'contexts/http'
 
 const useGatewayListState = createPersistedState('gateway-list')
 const useCurrentGatewayState = createPersistedState('current-gateway')
@@ -29,8 +33,14 @@ const App: React.FC = () => {
     setGwRef.current(url)
   }, [url])
 
+  const httpContextValue = {
+    url,
+    httpInstance: createHttpInstance(url)
+  }
+
   return (
 <GatewayContext.Provider value={gwContextValue}>
+<HttpContext.Provider value={httpContextValue}>
   <div className="container">
     <GatewaySelector></GatewaySelector>
     <Nav></Nav>
@@ -38,6 +48,7 @@ const App: React.FC = () => {
       <Content></Content>
     </main>
   </div>
+</HttpContext.Provider>
 </GatewayContext.Provider>
   );
 }

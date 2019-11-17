@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  AccountHttp, AccountInfo,
-} from 'nem2-sdk';
+import { AccountInfo } from 'nem2-sdk';
 
 import TextOutput from 'components/TextOutput'
 import Input from './Input'
 
 import { Context as GatewayContext } from 'contexts/gateway'
-import { useAccountInfo } from 'hooks/useAccountInfo'
+import { Context as HttpContext } from 'contexts/http'
+
+import { useAccountData } from 'hooks/useAccountData'
 
 function stringifyAccountInfo(ai: AccountInfo) {
-  return `:
+  return `Account:
   Address: ${ai.address.plain()}
   HexAddress: ${ai.address.encoded()}
     Height at: ${ai.addressHeight}
@@ -23,14 +23,21 @@ function stringifyAccountInfo(ai: AccountInfo) {
 
 export const Account: React.FC = () => {
   const gwContext = useContext(GatewayContext)
-  const http = new AccountHttp(gwContext.url)
+  const httpContext = useContext(HttpContext)
+
+  const { accountHttp, mosaicHttp, metadataHttp } = httpContext.httpInstance
+  const { accountInfo, setIdentifier, loading, error } = useAccountData({
+    accountHttp,
+    mosaicHttp,
+    metadataHttp
+  })
+
   const [output, setOutput] = useState("")
-  const { accountInfo, setIdentifier, loading, error } = useAccountInfo(http)
 
   useEffect(() => {
     if(! accountInfo) return
     setOutput(stringifyAccountInfo(accountInfo))
-  }, [accountInfo, http])
+  }, [accountInfo])
 
   return (
 <div>

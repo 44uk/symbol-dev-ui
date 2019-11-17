@@ -6,7 +6,7 @@ import {
 } from "nem2-sdk"
 
 interface IProps {
-  onSetAccount: React.Dispatch<React.SetStateAction<Account | undefined>>
+  onSetAccount: React.Dispatch<React.SetStateAction<Account | null>>
   onSetPretty: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -19,7 +19,7 @@ function generateNewPrivateKey(networkType = NetworkType.MIJIN_TEST, vanity?: st
 }
 
 function generateNewAccount(networkType = NetworkType.MIJIN_TEST, key?: string) {
-  let account: Account | undefined = undefined;
+  let account: Account | null = null;
   if(key) {
     try {
       account = Account.createFromPrivateKey(key, networkType)

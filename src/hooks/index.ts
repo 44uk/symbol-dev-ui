@@ -1,4 +1,4 @@
-export * from './useAccountInfo'
-export * from './useNamespace'
-export * from './useBlockInfo'
+export * from './useAccountData'
+export * from './useNamespaceData'
+export * from './useBlockData'
 export * from './useBlockInfoListener'

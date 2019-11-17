@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface IProps {
   label?: string
@@ -29,7 +29,6 @@ export const TextOutput: React.FC<IProps> = ({
     rows={_rows}
     readOnly={true}
     disabled={loading}
-    className=""
     style={{width: "100%"}}
     value={_value}
   ></textarea>

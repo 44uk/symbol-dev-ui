@@ -7,7 +7,7 @@ import {
 import FieldWithLabel from 'components/FieldWithLabel'
 
 interface IProps {
-  account: Account | undefined
+  account: Account | null
   pretty: boolean
 }
 
