@@ -9,7 +9,7 @@ export const Input: React.FC<IProps> = ({
   url,
   onSubmit
 }) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState("")
   const _value = value.replace(/-/g, "")
 
   function submit() {

@@ -58,23 +58,23 @@ export const Output: React.FC<IProps> = ({
   } = {
     publicKey: account ?
       account.publicKey :
-      '',
+      "",
     address: account ?
       account.address[pretty ? 'pretty' : 'plain']() :
-      '',
+      "",
     hexAddress: account ?
       account.address.encoded() :
-      '',
+      "",
     networkType: account ?
       account.networkType.toString() :
-      '',
+      "",
     networkName: account ?
       NetworkType[account.networkType].toString() :
-      '',
+      "",
   }
 
   const [format, setFormat] = useState<'json' | 'text'>('json')
-  const [output, setOutput] = useState('')
+  const [output, setOutput] = useState("")
 
   useEffect(() => {
     if(!account) { return }
@@ -87,7 +87,7 @@ export const Output: React.FC<IProps> = ({
         text = toText(account, pretty);
         break;
       default:
-        text = ''
+        text = ""
         break;
     }
     setOutput(text)
