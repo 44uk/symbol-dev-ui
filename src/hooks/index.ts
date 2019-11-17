@@ -1,4 +1,5 @@
 export * from './useAccountData'
 export * from './useNamespaceData'
+export * from './useMosaicData'
 export * from './useBlockData'
 export * from './useBlockInfoListener'

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AccountInfo } from 'nem2-sdk';
 
 import TextOutput from 'components/TextOutput'
 import Input from './Input'
@@ -7,10 +6,16 @@ import Input from './Input'
 import { Context as GatewayContext } from 'contexts/gateway'
 import { Context as HttpContext } from 'contexts/http'
 
-import { useAccountData } from 'hooks/useAccountData'
+import { IAccountData, useAccountData } from 'hooks/useAccountData'
 
-function stringifyAccountInfo(ai: AccountInfo) {
-  return `Account:
+function stringifyAccountData(data: IAccountData) {
+  const {
+    accountInfo: ai,
+    metadata: md,
+    mosaicAmountViews: mav,
+    multisigAccountInfo: mai
+  } = data
+  return `Info:
   Address: ${ai.address.plain()}
   HexAddress: ${ai.address.encoded()}
     Height at: ${ai.addressHeight}
@@ -18,6 +23,10 @@ function stringifyAccountInfo(ai: AccountInfo) {
     Height at: ${ai.publicKeyHeight}
   Importance: ${ai.importance}
     Height at: ${ai.importanceHeight}
+Metadata:
+${md.map(d => "  - " + d.metadataEntry.value).join("\n")}
+Mosaics:
+${mav.map(v => "  - " + `${v.fullName()}:${v.relativeAmount()}`).join("\n")}
 `
 }
 
@@ -26,7 +35,7 @@ export const Account: React.FC = () => {
   const httpContext = useContext(HttpContext)
 
   const { accountHttp, mosaicHttp, metadataHttp } = httpContext.httpInstance
-  const { accountInfo, setIdentifier, loading, error } = useAccountData({
+  const { accountData, setIdentifier, loading, error } = useAccountData({
     accountHttp,
     mosaicHttp,
     metadataHttp
@@ -35,9 +44,9 @@ export const Account: React.FC = () => {
   const [output, setOutput] = useState("")
 
   useEffect(() => {
-    if(! accountInfo) return
-    setOutput(stringifyAccountInfo(accountInfo))
-  }, [accountInfo])
+    if(! accountData) return
+    setOutput(stringifyAccountData(accountData))
+  }, [accountData])
 
   return (
 <div>
@@ -47,7 +56,7 @@ export const Account: React.FC = () => {
   ></Input>
 
   <TextOutput
-    label="Account Info"
+    label="Account Data"
     value={output}
     loading={loading}
     error={error}

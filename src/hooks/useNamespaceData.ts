@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { NamespaceHttp, NamespaceId, NamespaceInfo } from "nem2-sdk";
+import { NamespaceHttp, NamespaceId, NamespaceInfo, MetadataHttp, Metadata } from "nem2-sdk";
 import { forkJoin } from "rxjs";
 import { map } from "rxjs/operators";
 
@@ -18,13 +18,21 @@ function createNsIdFromIdentifier(value: string) {
 
 export interface INamespaceData {
   namespaceInfo: NamespaceInfo
+  metadata: Metadata[]
 }
 
-export const useNamespaceData = (http: NamespaceHttp) => {
+interface IHttpInstance {
+  namespaceHttp: NamespaceHttp,
+  metadataHttp: MetadataHttp
+}
+
+export const useNamespaceData = (httpInstance: IHttpInstance) => {
   const [namespaceData, setNamespaceData] = useState<INamespaceData | null>(null)
   const [identifier, setIdentifier] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+
+  const { namespaceHttp, metadataHttp } = httpInstance
 
   useEffect(() => {
     if(! identifier) return
@@ -33,11 +41,13 @@ export const useNamespaceData = (http: NamespaceHttp) => {
 
     setLoading(true)
     forkJoin([
-      http.getNamespace(nsId)
+      namespaceHttp.getNamespace(nsId),
+      metadataHttp.getNamespaceMetadata(nsId)
     ])
       .pipe(
         map(resp => ({
-          namespaceInfo: resp[0]
+          namespaceInfo: resp[0],
+          metadata: resp[1]
         }))
       )
       .subscribe(
@@ -52,7 +62,7 @@ export const useNamespaceData = (http: NamespaceHttp) => {
           setError(null)
         }
       )
-  }, [identifier])
+  }, [identifier, namespaceHttp, metadataHttp])
 
   return { namespaceData, setIdentifier, loading, error }
 }

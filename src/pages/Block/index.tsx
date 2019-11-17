@@ -109,7 +109,7 @@ export const Block: React.FC = () => {
   </fieldset>
 
   <TextOutput
-    label="Block Info"
+    label="Block Data"
     value={output}
     loading={loading}
     error={error}

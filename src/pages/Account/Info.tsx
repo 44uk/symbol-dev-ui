@@ -36,7 +36,7 @@ export const Info: React.FC<IProps> = ({
 
   return (
 <fieldset>
-  <legend>Account Info</legend>
+  <legend>Account Data</legend>
   <FieldWithLabel readonly={true} disabled={loading} label="Address"    value={info.address} />
   <FieldWithLabel readonly={true} disabled={loading} label="HexAddress" value={info.hexAddress} />
   <FieldWithLabel readonly={true} disabled={loading} label="Height at"  value={info.addressHeight} />

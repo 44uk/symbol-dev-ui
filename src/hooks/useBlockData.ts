@@ -47,7 +47,7 @@ export const useBlockData = (httpInstance: IHttpInstance) => {
           setError(null)
         }
       )
-  }, [height])
+  }, [height, blockHttp])
 
   return {blockData, setHeight, loading, error}
 }

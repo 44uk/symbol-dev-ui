@@ -73,7 +73,7 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
           setError(null)
         }
       )
-  }, [identifier])
+  }, [identifier, accountHttp, mosaicHttp, metadataHttp])
 
   return { accountData, accountInfo, setIdentifier, loading, error }
 }

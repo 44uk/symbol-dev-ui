@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Context as GatewayContext } from 'contexts/gateway'
+import { Context as HttpContext } from 'contexts/http'
 import {
-  NamespaceHttp,
   NamespaceInfo,
   NamespaceId,
 } from "nem2-sdk";
@@ -47,10 +47,15 @@ function valueToHex(value: string) {
 
 export const Namespace: React.FC = () => {
   const gwContext = useContext(GatewayContext)
-  const http = new NamespaceHttp(gwContext.url)
-  const {namespaceData, setIdentifier, loading, error} = useNamespaceData(http)
+  const httpContext = useContext(HttpContext)
 
-  const [value, setValue] = useState('')
+  const {namespaceHttp, metadataHttp} = httpContext.httpInstance
+  const {namespaceData, setIdentifier, loading, error} = useNamespaceData({
+    namespaceHttp,
+    metadataHttp
+  })
+
+  const [value, setValue] = useState("")
   const [output, setOutput] = useState("")
 
   function submit() {
@@ -60,7 +65,7 @@ export const Namespace: React.FC = () => {
   useEffect(() => {
     if(! namespaceData) return
     setOutput(stringifyNamespaceInfo(namespaceData.namespaceInfo))
-  }, [namespaceData, http])
+  }, [namespaceData])
 
   return (
 <div>
@@ -89,7 +94,7 @@ export const Namespace: React.FC = () => {
   </fieldset>
 
   <TextOutput
-    label="Namespace Info"
+    label="Namespace Data"
     value={output}
     loading={loading}
     error={error}

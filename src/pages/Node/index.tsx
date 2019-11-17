@@ -48,7 +48,7 @@ export const Node: React.FC = () => {
   </fieldset>
 
   <TextOutput
-    label="Node Info"
+    label="Node Data"
     value={output}
     loading={loading}
     error={error}
