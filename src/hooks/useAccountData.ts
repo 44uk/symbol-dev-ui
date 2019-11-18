@@ -31,8 +31,6 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
   const [identifier, setIdentifier] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-
-  const [accountInfo, setAccountInfo] = useState<AccountInfo | null>(null)
   const [accountData, setAccountData] = useState<IAccountData | null>(null)
 
   const { accountHttp, mosaicHttp, metadataHttp } = httpInstance
@@ -42,8 +40,8 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
     if(! identifier) return
     const address = createAddressFromIdentifier(identifier)
     if(! address) return
-    setLoading(true)
 
+    setLoading(true)
     forkJoin([
       accountHttp.getAccountInfo(address),
       mosaicService.mosaicsAmountViewFromAddress(address),
@@ -59,14 +57,11 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
         }))
       )
       .subscribe(
-        (data) => {
-          setAccountInfo(data.accountInfo)
-          setAccountData(data)
-        },
+        setAccountData,
         (error) => {
           setLoading(false)
           setError(error)
-          setAccountInfo(null)
+          setAccountData(null)
         },
         () => {
           setLoading(false)
@@ -75,5 +70,5 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
       )
   }, [identifier, accountHttp, mosaicHttp, metadataHttp])
 
-  return { accountData, accountInfo, setIdentifier, loading, error }
+  return { accountData, setIdentifier, loading, error }
 }

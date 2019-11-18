@@ -36,7 +36,7 @@ export const useBlockData = (httpInstance: IHttpInstance) => {
         }))
       )
       .subscribe(
-        data =>  setBlockData(data),
+        setBlockData,
         (error) => {
           setLoading(false)
           setError(error)

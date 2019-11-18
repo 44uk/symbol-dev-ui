@@ -1,10 +1,72 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+
+import TextOutput from 'components/TextOutput'
+
+import { Context as GatewayContext } from 'contexts/gateway'
+import { Context as HttpContext } from 'contexts/http'
+
+import { useMultisigData, IMultisigData } from 'hooks/useMultisigData'
+
+import  { graph2tree }from "util/graph2tree"
+
+function stringifyMultisigData(data: IMultisigData) {
+  return graph2tree(data.graphInfo)
+}
 
 export const MLMS: React.FC = () => {
+  const gwContext = useContext(GatewayContext)
+  // const httpContext = useContext(HttpContext)
+
+  const { multisigData, setIdentifier, loading, error } = useMultisigData(gwContext.url)
+
+  const [value, setValue] = useState("")
+  const _value = value.replace(/-/g, "")
+
+  const [output, setOutput] = useState("")
+
+  function submit() {
+    setIdentifier(value)
+  }
+
+  useEffect(() => {
+    if(! multisigData) return
+    setOutput(stringifyMultisigData(multisigData))
+  }, [multisigData])
+
   return (
-    <div>
-      <p>MLMS Page.</p>
+<div>
+  <fieldset>
+    <legend>Input</legend>
+    <div className="input-group vertical">
+      <label>Address/PublicKey</label>
+      <input type="text" name="addressOrPublicKey"
+        autoFocus
+        pattern="[a-fA-F\d-]+"
+        value={value}
+        onChange={(_) => setValue(_.currentTarget.value)}
+        onKeyPress={(_) => _.key === "Enter" && submit()}
+        placeholder="ex) Address or PublicKey"
+        maxLength={64}
+      />
+      <p className="note"><small>Hit ENTER key to load from Node.</small></p>
     </div>
+    <p>
+    { value
+      ? <a href={`${gwContext.url}/account/${_value}/multisig/graph`}
+          target="_blank" rel="noopener noreferrer"
+        >{`${gwContext.url}/account/${_value}/multisig/graph`}</a>
+      : <span>{`${gwContext.url}/account/{AddressOrPublicKey}/multisig/graph`}</span>
+    }
+    </p>
+  </fieldset>
+
+  <TextOutput
+    label="Multisig Data"
+    value={output}
+    loading={loading}
+    error={error}
+  ></TextOutput>
+</div>
   );
 }
 

@@ -17,7 +17,7 @@ export const useBlockInfoListener = (listener: Listener) => {
     listener.open().then(() => {
       subscription = listener.newBlock()
         .subscribe(
-          resp => setBlockInfo(resp),
+          setBlockInfo,
           (error) => {
             setFollowing(false)
             setError(error)

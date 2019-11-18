@@ -5,7 +5,7 @@ import {
   NamespaceInfo,
   NamespaceId,
 } from "nem2-sdk";
-import { useNamespaceData } from 'hooks';
+import { useNamespaceData, INamespaceData } from 'hooks';
 import { TextOutput } from 'components';
 import { convertUInt64ToHex } from 'util/convert';
 
@@ -22,9 +22,26 @@ function convertToNsUInt64(value: string) {
   // uint64 string
 }
 
-function stringifyNamespaceInfo(ni: NamespaceInfo) {
-  return `
-  ${ni.endHeight}
+function stringifyNamespaceData(data: INamespaceData) {
+  const {
+    namespaceInfo: ni,
+    metadata: md
+  } = data
+  return `Meta:
+  active: ${ni.active}
+  index: ${ni.index}
+  id: ${ni.id.toHex()}
+Info:
+  ${ni.depth}
+  ${ni.levels[0]}
+  ${ni.alias.type}
+  ${ni.alias.address}
+  ${ni.owner.publicKey}
+  ${ni.owner.address.plain()}
+  ${ni.isRoot}
+  ${ni.isSubnamespace}
+  startHeight: ${ni.startHeight.toString()}
+  endHeight: ${ni.endHeight.toString()}
 `
 }
 
@@ -64,7 +81,7 @@ export const Namespace: React.FC = () => {
 
   useEffect(() => {
     if(! namespaceData) return
-    setOutput(stringifyNamespaceInfo(namespaceData.namespaceInfo))
+    setOutput(stringifyNamespaceData(namespaceData))
   }, [namespaceData])
 
   return (

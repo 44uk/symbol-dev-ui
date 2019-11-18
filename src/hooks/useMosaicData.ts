@@ -47,7 +47,7 @@ export const useMosaicData = (httpInstance: IHttpInstance) => {
         }))
       )
       .subscribe(
-        data => setMosaicData(data),
+        setMosaicData,
         (error) => {
           setLoading(false)
           setError(error)
