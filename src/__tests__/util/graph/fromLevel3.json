@@ -4,16 +4,16 @@
         "multisigEntries": [
             {
                 "multisig": {
-                    "account": "A01CF3467B7DC07C3C4EB0BFEE4D9E4DF572425BE04D306C1ECBC0580ECC43E2",
+                    "accountPublicKey": "A01CF3467B7DC07C3C4EB0BFEE4D9E4DF572425BE04D306C1ECBC0580ECC43E2",
                     "accountAddress": "9012F8BC49EB30CB01D8B96574175464C00DB11FA1EE330CB5",
                     "minApproval": 3,
                     "minRemoval": 1,
-                    "cosignatories": [
+                    "cosignatoryPublicKeys": [
                         "06193475C600A7A841AAB67F325198DA1EAE8ED7EC9ECFA75882B31D99400772",
                         "92BE08D5395330645E0AFA6746748F350F839F606B149B38D7326A8FDEC1E910",
                         "9835C3BA22D2A04F0358F41946E0C7621E46CB2388B5A4CCD74846EAE0CC92C2"
                     ],
-                    "multisigAccounts": []
+                    "multisigPublicKeys": []
                 }
             }
         ]
@@ -23,16 +23,16 @@
         "multisigEntries": [
             {
                 "multisig": {
-                    "account": "9835C3BA22D2A04F0358F41946E0C7621E46CB2388B5A4CCD74846EAE0CC92C2",
+                    "accountPublicKey": "9835C3BA22D2A04F0358F41946E0C7621E46CB2388B5A4CCD74846EAE0CC92C2",
                     "accountAddress": "90904B287566D95B51A236E17253D26B39EBFD24A7B50FF8DE",
                     "minApproval": 2,
                     "minRemoval": 1,
-                    "cosignatories": [
+                    "cosignatoryPublicKeys": [
                         "4F722246464BF31C64BB58422B05556FEA19250CE0DD4149979A3B1D39E4B27F",
                         "8BFDE2C8ADB53DA66387A73F154E0D9974868295C9849F0735C06BD5957C93E0",
                         "92BE08D5395330645E0AFA6746748F350F839F606B149B38D7326A8FDEC1E910"
                     ],
-                    "multisigAccounts": [
+                    "multisigPublicKeys": [
                         "A01CF3467B7DC07C3C4EB0BFEE4D9E4DF572425BE04D306C1ECBC0580ECC43E2"
                     ]
                 }
@@ -44,14 +44,14 @@
         "multisigEntries": [
             {
                 "multisig": {
-                    "account": "8BFDE2C8ADB53DA66387A73F154E0D9974868295C9849F0735C06BD5957C93E0",
+                    "accountPublicKey": "8BFDE2C8ADB53DA66387A73F154E0D9974868295C9849F0735C06BD5957C93E0",
                     "accountAddress": "906F53CF8395E331C8EABA0912C42DDA840C0D1B05D242CCC6",
                     "minApproval": 1,
                     "minRemoval": 1,
-                    "cosignatories": [
+                    "cosignatoryPublicKeys": [
                         "A8443CB1C4F90630A4C8A4FAB81FE2D2C2C5760DF75440B710DDCFEA9F0ECC47"
                     ],
-                    "multisigAccounts": [
+                    "multisigPublicKeys": [
                         "9835C3BA22D2A04F0358F41946E0C7621E46CB2388B5A4CCD74846EAE0CC92C2"
                     ]
                 }
@@ -63,12 +63,12 @@
         "multisigEntries": [
             {
                 "multisig": {
-                    "account": "A8443CB1C4F90630A4C8A4FAB81FE2D2C2C5760DF75440B710DDCFEA9F0ECC47",
+                    "accountPublicKey": "A8443CB1C4F90630A4C8A4FAB81FE2D2C2C5760DF75440B710DDCFEA9F0ECC47",
                     "accountAddress": "90F0BFB1749F172208541B08273C53922F4D7E4F23B13EE265",
                     "minApproval": 0,
                     "minRemoval": 0,
-                    "cosignatories": [],
-                    "multisigAccounts": [
+                    "cosignatoryPublicKeys": [],
+                    "multisigPublicKeys": [
                         "8BFDE2C8ADB53DA66387A73F154E0D9974868295C9849F0735C06BD5957C93E0"
                     ]
                 }
