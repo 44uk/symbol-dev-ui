@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-
-import createPersistedState from 'use-persisted-state'
-
-import Nav from 'components/Nav';
-import Content from 'components/Content';
-import GatewaySelector from 'components/GatewaySelector';
-
+import {
+  Nav,
+  Content,
+  GatewaySelector,
+} from 'components';
 import {
   gateways,
   Context as GatewayContext
@@ -14,6 +12,11 @@ import {
   createHttpInstance,
   Context as HttpContext
 } from 'contexts/http'
+import {
+  createWebSockInstance,
+  Context as WebSockContext
+} from 'contexts/websock'
+import createPersistedState from 'use-persisted-state'
 
 const useGatewayListState = createPersistedState('gateway-list')
 const useCurrentGatewayState = createPersistedState('current-gateway')
@@ -37,10 +40,15 @@ const App: React.FC = () => {
     url,
     httpInstance: createHttpInstance(url)
   }
+  const webSockContextValue = {
+    url,
+    webSockInstance: createWebSockInstance(url)
+  }
 
   return (
 <GatewayContext.Provider value={gwContextValue}>
 <HttpContext.Provider value={httpContextValue}>
+<WebSockContext.Provider value={webSockContextValue}>
   <div className="container">
     <GatewaySelector></GatewaySelector>
     <Nav></Nav>
@@ -48,6 +56,7 @@ const App: React.FC = () => {
       <Content></Content>
     </main>
   </div>
+</WebSockContext.Provider>
 </HttpContext.Provider>
 </GatewayContext.Provider>
   );

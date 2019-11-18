@@ -1,22 +1,21 @@
 import { useState, useEffect } from "react"
-import { BlockHttp, BlockInfo, MetadataHttp, Metadata } from "nem2-sdk"
+import { BlockHttp, BlockInfo, Statement } from "nem2-sdk"
 import { map } from "rxjs/operators"
 import { forkJoin } from "rxjs"
 
 export interface IBlockData {
   blockInfo: BlockInfo
-  metadata: Metadata[]
+  receipt: Statement
 }
 
 interface IHttpInstance {
   blockHttp: BlockHttp
-  metadataHttp: MetadataHttp
 }
 
 export const useBlockData = (httpInstance: IHttpInstance) => {
   const [height, setHeight] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<Error | null>(null)
 
   const [blockData, setBlockData] = useState<IBlockData | null>(null)
 
@@ -27,12 +26,13 @@ export const useBlockData = (httpInstance: IHttpInstance) => {
 
     setLoading(true)
     forkJoin([
-      blockHttp.getBlockByHeight(height)
+      blockHttp.getBlockByHeight(height),
+      blockHttp.getBlockReceipts(height)
     ])
       .pipe(
         map(resp => ({
           blockInfo: resp[0],
-          metadata: []
+          receipt: resp[1]
         }))
       )
       .subscribe(

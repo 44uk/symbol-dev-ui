@@ -6,14 +6,15 @@ import { Context as HttpContext } from 'contexts/http'
 import { INodeData, useNodeData } from 'hooks/useNodeData'
 
 import { TextOutput } from 'components/TextOutput'
+import { UInt64 } from 'nem2-sdk';
 
 function stringifyNodeData(nd: INodeData) {
   return `NodeInfo:
   host: ${nd.nodeInfo.host}
   friendlyName: ${nd.nodeInfo.friendlyName}
 NodeTime:
-  receive: ${nd.nodeTime.receiveTimeStamp}
-  send: ${nd.nodeTime.sendTimeStamp}
+  receive: ${new UInt64(nd.nodeTime.receiveTimeStamp as number[]).toString()}
+  send: ${new UInt64(nd.nodeTime.sendTimeStamp as number[]).toString()}
 `
 }
 
