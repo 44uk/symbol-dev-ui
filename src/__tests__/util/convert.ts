@@ -9,7 +9,12 @@ import {
   encodeAddress,
   decodeHexToRaw,
   encodeRawToHex,
+  convertIdentifierToNamespaceId,
+  convertIdentifierToNamespaceHex,
+  convertIdentifierToMosaicId,
+  convertIdentifierToMosaicHex,
 } from "util/convert";
+import { NamespaceId, MosaicId } from "nem2-sdk";
 
 test("Hex to Num", () => {
   expect(convertHexToNum("0000000000000000")).toBe(0);
@@ -60,4 +65,42 @@ test("decode Hex to Raw", () => {
 
 test("encode Raw to Hex", () => {
   expect(encodeRawToHex("GOOD LUCK!")).toBe("474F4F44204C55434B21");
+});
+
+test("convertIdentifierToNamespaceId", () => {
+  const id = new NamespaceId("cat.currency").id
+  expect(convertIdentifierToNamespaceId("cat.currency").id).toEqual(id)
+  expect(convertIdentifierToNamespaceId("[3294802500, 2243684972]").id).toEqual(id)
+  expect(convertIdentifierToNamespaceId("3294802500, 2243684972").id).toEqual(id)
+  expect(convertIdentifierToNamespaceId("85BBEA6CC462B244").id).toEqual(id)
+  expect(() => convertIdentifierToNamespaceId("__INVALID_STRING__")).toThrowError()
+});
+
+test("convertIdentifierToNamespaceHex", () => {
+  const hex ="85BBEA6CC462B244"
+  expect(convertIdentifierToNamespaceHex("cat.currency")).toEqual(hex)
+  expect(convertIdentifierToNamespaceHex("[3294802500, 2243684972]")).toEqual(hex)
+  expect(convertIdentifierToNamespaceHex("3294802500, 2243684972")).toEqual(hex)
+  expect(convertIdentifierToNamespaceHex("85BBEA6CC462B244")).toEqual(hex)
+  expect(convertIdentifierToNamespaceHex("__INVALID_STRING__")).toEqual("")
+});
+
+test("convertIdentifierToMosaicId", () => {
+  const id = new MosaicId("0069AE078A2E51A9").id
+  expect(convertIdentifierToMosaicId("0069AE078A2E51A9").id).toEqual(id)
+  expect(convertIdentifierToMosaicId("[2318291369,6925831]").id).toEqual(id)
+  expect(() => convertIdentifierToMosaicId("__INVALID_STRING__")).toThrowError()
+});
+
+test("convertIdentifierToMosaicHex", () => {
+  const hex = new MosaicId("0069AE078A2E51A9").toHex()
+  expect(convertIdentifierToMosaicHex("0069AE078A2E51A9")).toEqual(hex)
+  expect(convertIdentifierToMosaicHex("[2318291369,6925831]")).toEqual(hex)
+  expect(convertIdentifierToMosaicHex("__INVALID_STRING__")).toEqual("")
+});
+
+test("datetimeStringToNemTimestamp", () => {
+});
+
+test("nemTimestampToDatetimeString", () => {
 });
