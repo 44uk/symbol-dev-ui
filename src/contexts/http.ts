@@ -6,10 +6,13 @@ import {
   DiagnosticHttp,
   MetadataHttp,
   MosaicHttp,
+  MultisigHttp,
   NamespaceHttp,
   NetworkHttp,
   NodeHttp,
-  RestrictionHttp,
+  ReceiptHttp,
+  RestrictionAccountHttp,
+  RestrictionMosaicHttp,
   TransactionHttp
 } from "nem2-sdk"
 
@@ -20,10 +23,13 @@ interface IHttpInstance {
   diagnosticHttp: DiagnosticHttp
   metadataHttp: MetadataHttp
   mosaicHttp: MosaicHttp
+  multisigHttp: MultisigHttp
   namespaceHttp: NamespaceHttp
   networkHttp: NetworkHttp
   nodeHttp: NodeHttp
-  restrictionHttp: RestrictionHttp
+  receiptHttp: ReceiptHttp
+  restrictionAccountHttp: RestrictionAccountHttp
+  restrictionMosaicHttp: RestrictionMosaicHttp
   transactionHttp: TransactionHttp
 }
 
@@ -37,10 +43,13 @@ export function createHttpInstance(url: string): IHttpInstance {
   const diagnosticHttp = new DiagnosticHttp(url)
   const metadataHttp = new MetadataHttp(url)
   const mosaicHttp = new MosaicHttp(url)
+  const multisigHttp = new MultisigHttp(url)
   const namespaceHttp = new NamespaceHttp(url)
   const networkHttp = new NetworkHttp(url)
   const nodeHttp = new NodeHttp(url)
-  const restrictionHttp = new RestrictionHttp(url)
+  const receiptHttp = new ReceiptHttp(url)
+  const restrictionAccountHttp = new RestrictionAccountHttp(url)
+  const restrictionMosaicHttp = new RestrictionMosaicHttp(url)
   const transactionHttp = new TransactionHttp(url)
 
   return {
@@ -50,10 +59,13 @@ export function createHttpInstance(url: string): IHttpInstance {
     diagnosticHttp,
     metadataHttp,
     mosaicHttp,
+    multisigHttp,
     namespaceHttp,
     networkHttp,
     nodeHttp,
-    restrictionHttp,
+    receiptHttp,
+    restrictionMosaicHttp,
+    restrictionAccountHttp,
     transactionHttp
   }
 }
