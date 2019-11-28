@@ -15,7 +15,7 @@ export const Nav: React.FC = () => (
   <Link className="button" to={paths.receipt}>Receipt</Link>
   <Link className="button" to={paths.meta}>Meta</Link>
   <Link className="button" to={paths.node}>Node</Link>
-  <Link className="button" to={paths.faucet}>Faucet</Link>
+  <Link className="button" to={paths.distribute}>Distribute</Link>
   <Link className="button" to={paths.announce}>Announce</Link>
   <Link className="button" to={paths.misc}>Misc</Link>
   <Link className="button" to={paths.reference}>Reference</Link>
