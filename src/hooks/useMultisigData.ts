@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { NetworkType, Address, AccountHttp, MultisigAccountGraphInfo } from "nem2-sdk";
-import { forkJoin } from "rxjs";
+import { NetworkType, Address } from "nem2-sdk";
+import { forkJoin, from, Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
 import {
@@ -33,11 +33,14 @@ export const useMultisigData = (url: string) => {
 
   const [multisigData, setMultisigData] = useState<IMultisigData | null>(null)
 
-  function getJSON<T>(url: string): Promise<T> {
-    return fetch(url).then<T>(resp => resp.json())
+  function getJSON<T>(url: string): Observable<T> {
+    return from(fetch(url)
+      .then<T>(resp => resp.json()
+      .catch(error => error)
+    ))
   }
 
-  useEffect(() => {
+  const handler = () => {
     if(! identifier) return
     const address = createAddressFromIdentifier(identifier)
     if(! address) return
@@ -47,10 +50,10 @@ export const useMultisigData = (url: string) => {
       getJSON<ILayer[]>(`${url}/account/${address.plain()}/multisig/graph`)
     ])
       .pipe(
+        tap(console.debug),
         map(resp => ({
           graphInfo: resp[0],
         }))
-        ,tap(console.debug)
       )
       .subscribe(
         setMultisigData,
@@ -64,7 +67,9 @@ export const useMultisigData = (url: string) => {
           setError(null)
         }
       )
-  }, [identifier, url])
+  }
 
-  return { multisigData, setIdentifier, loading, error }
+  useEffect(handler, [identifier, url])
+
+  return { multisigData, identifier, setIdentifier, handler, loading, error }
 }

@@ -34,7 +34,7 @@ export const Mosaic: React.FC = () => {
   const httpContext = useContext(HttpContext)
 
   const { mosaicHttp, metadataHttp, restrictionMosaicHttp } = httpContext.httpInstance
-  const { mosaicData, setIdentifier, loading, error } = useMosaicData({
+  const { mosaicData, identifier, setIdentifier, handler, loading, error } = useMosaicData({
     mosaicHttp,
     metadataHttp,
     restrictionMosaicHttp
@@ -44,7 +44,9 @@ export const Mosaic: React.FC = () => {
   const [output, setOutput] = useState("")
 
   function submit() {
-    setIdentifier(value)
+    identifier === value ?
+      handler() :
+      setIdentifier(value)
   }
 
   useEffect(() => {

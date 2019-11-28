@@ -3,17 +3,23 @@ import React, { useState, useEffect } from 'react';
 interface IProps {
   url: string
   onSubmit: React.Dispatch<React.SetStateAction<string | null>>
+  identifier: string | null
+  handler: () => void
 }
 
 export const Input: React.FC<IProps> = ({
   url,
-  onSubmit
+  onSubmit,
+  identifier,
+  handler,
 }) => {
   const [value, setValue] = useState("")
   const _value = value.replace(/-/g, "")
 
   function submit() {
-    onSubmit(value)
+    identifier === value ?
+      handler() :
+      onSubmit(value)
   }
 
   useEffect(() => {

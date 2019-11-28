@@ -36,7 +36,7 @@ export const useNamespaceData = (httpInstance: IHttpInstance) => {
 
   const { namespaceHttp, metadataHttp } = httpInstance
 
-  useEffect(() => {
+  const handler = () => {
     if(! identifier) return
     const nsId = createNsIdFromIdentifier(identifier)
     if(! nsId) return
@@ -68,7 +68,9 @@ export const useNamespaceData = (httpInstance: IHttpInstance) => {
           setError(null)
         }
       )
-  }, [identifier, namespaceHttp, metadataHttp])
+  }
 
-  return { namespaceData, setIdentifier, loading, error }
+  useEffect(handler, [identifier, namespaceHttp, metadataHttp])
+
+  return { namespaceData, identifier, setIdentifier, handler, loading, error }
 }

@@ -3,9 +3,8 @@ import React, { useContext, useState, useEffect } from 'react';
 import TextOutput from 'components/TextOutput'
 
 import { Context as GatewayContext } from 'contexts/gateway'
-import { Context as HttpContext } from 'contexts/http'
 
-import { useMultisigData, IMultisigData } from 'hooks/useMultisigData'
+import { useMultisigData, IMultisigData } from 'hooks'
 
 import  { graph2tree }from "util/graph2tree"
 
@@ -15,9 +14,8 @@ function stringifyMultisigData(data: IMultisigData) {
 
 export const MLMS: React.FC = () => {
   const gwContext = useContext(GatewayContext)
-  // const httpContext = useContext(HttpContext)
 
-  const { multisigData, setIdentifier, loading, error } = useMultisigData(gwContext.url)
+  const { multisigData, identifier, setIdentifier, handler, loading, error } = useMultisigData(gwContext.url)
 
   const [value, setValue] = useState("")
   const _value = value.replace(/-/g, "")
@@ -25,10 +23,13 @@ export const MLMS: React.FC = () => {
   const [output, setOutput] = useState("")
 
   function submit() {
-    setIdentifier(value)
+    identifier === value ?
+      handler() :
+      setIdentifier(value)
   }
 
   useEffect(() => {
+    console.log("HOGE: %o", multisigData)
     if(! multisigData) return
     setOutput(stringifyMultisigData(multisigData))
   }, [multisigData])

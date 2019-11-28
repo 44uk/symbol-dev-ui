@@ -49,14 +49,28 @@ export const Block: React.FC = () => {
   const webSockContext = useContext(WebSockContext)
 
   const { blockHttp, receiptHttp } = httpContext.httpInstance
-  const {blockData, setHeight, loading, error} = useBlockData({ blockHttp, receiptHttp })
-
+  const { blockData, setHeight, loading, error } = useBlockData({
+    blockHttp,
+    receiptHttp
+  })
   const { listener } = webSockContext.webSockInstance
   const blockListener = useBlockInfoListener(listener)
 
-  const [prependLoading, setPrependLoading] = useState(false)
   const [blockHeight, setBlockHeight] = useState("")
   const [output, setOutput] = useState("")
+  const [prependLoading, setPrependLoading] = useState(false)
+
+  const fetch = async () => {
+    let height: UInt64
+    if(blockHeight.length === 0) {
+      const chainHttp = new ChainHttp(gwContext.url)
+      height = await chainHttp.getBlockchainHeight().toPromise()
+      setBlockHeight(height.toString())
+    } else {
+      height = UInt64.fromNumericString(blockHeight)
+    }
+    setHeight(height.compact())
+  }
 
   useEffect(() => {
     if(! blockData) { return }
@@ -71,40 +85,27 @@ export const Block: React.FC = () => {
     setHeight(blockInfo.height.compact())
   }, [blockListener.blockInfo])
 
-  const fetchBlockInfo = async () => {
-    let height: UInt64
-    if(blockHeight.length === 0) {
-      const chainHttp = new ChainHttp(gwContext.url)
-      height = await chainHttp.getBlockchainHeight().toPromise()
-      setBlockHeight(height.toString())
-    } else {
-      height = UInt64.fromNumericString(blockHeight)
-    }
-    setHeight(height.compact())
-  }
-
   return (
 <div>
   <fieldset>
     <legend>Block</legend>
     <div className="input-group vertical">
       <label htmlFor="blockHeight">Block Height</label>
-      <input type="number" autoFocus
-        disabled={blockListener.following}
-        min={1} pattern="[0-9]*"
+      <input type="number"
+        autoFocus
         value={blockHeight}
         onChange={(_) => setBlockHeight(_.target.value)}
-      ></input>
-      <button className="primary"
+        onKeyPress={(_) => _.key === "Enter" && fetch()}
+        min={1} pattern="[1-9][0-9]*"
         disabled={blockListener.following}
-        onClick={() => fetchBlockInfo()}
-      >Fetch</button>
+      ></input>
+      <p className="note"><small>Hit ENTER key to load from Gateway.</small></p>
       { blockListener.following
         ? <button className="secondary"
-            onClick={() => {setPrependLoading(false); fetchBlockInfo(); blockListener.setFollowing(false)}}
+            onClick={() => {setPrependLoading(false); fetch(); blockListener.setFollowing(false)}}
           >Stop</button>
         : <button className="primary"
-            onClick={() => {setPrependLoading(true); fetchBlockInfo(); blockListener.setFollowing(true)}}
+            onClick={() => {setPrependLoading(true); fetch(); blockListener.setFollowing(true)}}
           >Follow</button>
       }
       <p>

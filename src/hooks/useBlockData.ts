@@ -22,7 +22,7 @@ export const useBlockData = (httpInstance: IHttpInstance) => {
 
   const { blockHttp, receiptHttp } = httpInstance
 
-  useEffect(() => {
+  const handler = () => {
     if(! height) return
 
     setLoading(true)
@@ -48,7 +48,9 @@ export const useBlockData = (httpInstance: IHttpInstance) => {
           setError(null)
         }
       )
-  }, [height, blockHttp])
+  }
 
-  return {blockData, setHeight, loading, error}
+  useEffect(handler, [height, blockHttp])
+
+  return { blockData, height, setHeight, handler, loading, error }
 }

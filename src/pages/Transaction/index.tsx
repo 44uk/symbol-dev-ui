@@ -12,7 +12,7 @@ export const Transaction: React.FC = () => {
   const httpContext = useContext(HttpContext)
 
   const { transactionHttp } = httpContext.httpInstance
-  const { transactionData, setIdentifier, handler, loading, error } = useTransactionData({
+  const { transactionData, identifier, setIdentifier, handler, loading, error } = useTransactionData({
     transactionHttp
   })
 
@@ -20,7 +20,9 @@ export const Transaction: React.FC = () => {
   const [output, setOutput] = useState("")
 
   function submit() {
-    setIdentifier(value)
+    identifier === value ?
+      handler() :
+      setIdentifier(value)
   }
 
   useEffect(() => {

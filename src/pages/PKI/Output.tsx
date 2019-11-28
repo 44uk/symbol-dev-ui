@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import YAML from 'yaml'
 
 import {
   Account, NetworkType,
 } from 'nem2-sdk'
+
+import { Context as GatewayContext } from "contexts/gateway"
 
 import FieldWithLabel from 'components/FieldWithLabel'
 
@@ -12,24 +14,24 @@ interface IProps {
   pretty: boolean
 }
 
-function toJson(account: Account, pretty = false) {
+function toJson(account: Account, url: string, pretty = false) {
   const obj = {
     privateKey: account.privateKey,
     publicKey: account.publicKey,
     address: account.address[pretty ? 'pretty' : 'plain'](),
     networkType: account.networkType,
-    url: '--WIP--',
+    url: url,
     networkGenerationHash: '--WIP--',
   };
   return JSON.stringify(obj, null, 4);
 }
 
-function toText(account: Account, pretty = false) {
+function toText(account: Account, url: string, pretty = false) {
   return `privateKey: ${account.privateKey}
 publicKey: ${account.publicKey}
 address: ${account.address[pretty ? 'pretty' : 'plain']()}
 networkType: ${account.networkType}
-url: --WIP--
+url: ${url}
 networkGenerationHash: --WIP--`;
 }
 
@@ -50,6 +52,8 @@ export const Output: React.FC<IProps> = ({
   account,
   pretty
 }) => {
+  const gwContext = useContext(GatewayContext)
+
   const {
     publicKey,
     address,
@@ -82,10 +86,10 @@ export const Output: React.FC<IProps> = ({
     let text;
     switch (format) {
       case 'json':
-        text = toJson(account, pretty);
+        text = toJson(account, gwContext.url, pretty);
         break;
       case 'text':
-        text = toText(account, pretty);
+        text = toText(account, gwContext.url, pretty);
         break;
       default:
         text = ""

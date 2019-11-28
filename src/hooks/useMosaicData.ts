@@ -26,7 +26,7 @@ export const useMosaicData = (httpInstance: IHttpInstance) => {
 
   const { mosaicHttp, metadataHttp, restrictionMosaicHttp } = httpInstance
 
-  useEffect(() => {
+  const handler = () => {
     if(! identifier) return
     let mosaicId;
     try {
@@ -61,7 +61,9 @@ export const useMosaicData = (httpInstance: IHttpInstance) => {
           setError(null)
         }
       )
-  }, [identifier, mosaicHttp, metadataHttp])
+  }
 
-  return { mosaicData, setIdentifier, loading, error }
+  useEffect(handler, [identifier, mosaicHttp, metadataHttp])
+
+  return { mosaicData, identifier, setIdentifier, handler, loading, error }
 }

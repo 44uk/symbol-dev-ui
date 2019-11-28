@@ -23,7 +23,6 @@ export const PKI: React.FC = () => {
 
   return (
   <div>
-    <span className="toast">Error Message</span>
     <Input
       onSetAccount={setAccount}
       onSetPretty={setPretty}

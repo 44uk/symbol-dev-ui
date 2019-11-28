@@ -23,7 +23,7 @@ export const useNodeData = (httpInstance: IHttpInstance) => {
 
   const { nodeHttp, diagnosticHttp } = httpInstance
 
-  useEffect(() => {
+  const handler = () => {
     setLoading(true)
     forkJoin([
       nodeHttp.getNodeInfo(),
@@ -51,7 +51,9 @@ export const useNodeData = (httpInstance: IHttpInstance) => {
           setError(null)
         }
       )
-  }, [nodeHttp])
+  }
 
-  return {nodeData, loading, error}
+  useEffect(handler, [nodeHttp])
+
+  return { nodeData, handler, loading, error }
 }

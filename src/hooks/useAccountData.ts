@@ -37,7 +37,7 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
   const { accountHttp, mosaicHttp, metadataHttp, multisigHttp } = httpInstance
   const mosaicService = new MosaicService(accountHttp, mosaicHttp)
 
-  useEffect(() => {
+  const handler = () => {
     if(! identifier) return
     const address = createAddressFromIdentifier(identifier)
     if(! address) return
@@ -69,7 +69,9 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
           setError(null)
         }
       )
-  }, [identifier, accountHttp, mosaicHttp, metadataHttp])
+  }
 
-  return { accountData, setIdentifier, loading, error }
+  useEffect(handler, [identifier, accountHttp, mosaicHttp, metadataHttp])
+
+  return { accountData, identifier, setIdentifier, handler, loading, error }
 }

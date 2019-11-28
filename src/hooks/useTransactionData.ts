@@ -21,9 +21,8 @@ export const useTransactionData = (httpInstance: IHttpInstance) => {
 
   const { transactionHttp  } = httpInstance
 
-  useEffect(() => {
-    console.log(identifier)
-    if(! (identifier && /[0-9A-Z]{64}/.test(identifier))) return
+  const handler = () => {
+    if(! (identifier && /([0-9A-Z]{64}|)/.test(identifier))) return
 
     setLoading(true)
     forkJoin([
@@ -50,7 +49,9 @@ export const useTransactionData = (httpInstance: IHttpInstance) => {
           setError(null)
         }
       )
-  }, [identifier, transactionHttp])
+  }
 
-  return { transactionData, setIdentifier, loading, error }
+  useEffect(handler, [identifier, transactionHttp])
+
+  return { transactionData, identifier, setIdentifier, handler, loading, error }
 }

@@ -57,7 +57,7 @@ export const Namespace: React.FC = () => {
   const httpContext = useContext(HttpContext)
 
   const {namespaceHttp, metadataHttp} = httpContext.httpInstance
-  const {namespaceData, setIdentifier, loading, error} = useNamespaceData({
+  const {namespaceData, identifier, setIdentifier, handler, loading, error} = useNamespaceData({
     namespaceHttp,
     metadataHttp
   })
@@ -66,7 +66,9 @@ export const Namespace: React.FC = () => {
   const [output, setOutput] = useState("")
 
   function submit() {
-    setIdentifier(value)
+    identifier === value ?
+      handler() :
+      setIdentifier(value)
   }
 
   useEffect(() => {

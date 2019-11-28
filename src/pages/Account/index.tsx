@@ -37,7 +37,7 @@ export const Account: React.FC = () => {
   const httpContext = useContext(HttpContext)
 
   const { accountHttp, mosaicHttp, metadataHttp, multisigHttp } = httpContext.httpInstance
-  const { accountData, setIdentifier, loading, error } = useAccountData({
+  const { accountData, identifier, setIdentifier, handler, loading, error } = useAccountData({
     accountHttp,
     mosaicHttp,
     metadataHttp,
@@ -56,6 +56,8 @@ export const Account: React.FC = () => {
   <Input
     url={gwContext.url}
     onSubmit={setIdentifier}
+    identifier={identifier}
+    handler={handler}
   ></Input>
 
   <TextOutput
