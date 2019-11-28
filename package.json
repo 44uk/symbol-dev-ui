@@ -33,7 +33,7 @@
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "archive": "npm run build && zip -r build/archive.zip build/",
-    "netlify": "cp src/resources/gateway.json.example src/resources/gateway.json && npm run build"
+    "netlify": "npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
