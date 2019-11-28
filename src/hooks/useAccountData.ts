@@ -18,7 +18,7 @@ export interface IAccountData {
   accountInfo: AccountInfo
   mosaicAmountViews: MosaicAmountView[]
   metadata: Metadata[]
-  multisigAccountInfo: MultisigAccountInfo | null
+  // multisigAccountInfo: MultisigAccountInfo | null
 }
 
 interface IHttpInstance {
@@ -47,14 +47,14 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
       accountHttp.getAccountInfo(address),
       mosaicService.mosaicsAmountViewFromAddress(address),
       metadataHttp.getAccountMetadata(address),
-      multisigHttp.getMultisigAccountInfo(address).pipe(catchError(_ => of(null)))
+      // multisigHttp.getMultisigAccountInfo(address).pipe(catchError(_ => of(null)))
     ])
       .pipe(
         map(resp => ({
           accountInfo: resp[0],
           mosaicAmountViews: resp[1],
           metadata: resp[2],
-          multisigAccountInfo: resp[3],
+          // multisigAccountInfo: resp[3],
         }))
       )
       .subscribe(
