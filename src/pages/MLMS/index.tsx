@@ -1,10 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from "react"
 
-import TextOutput from 'components/TextOutput'
+import TextOutput from "components/TextOutput"
 
-import { Context as GatewayContext } from 'contexts/gateway'
+import { Context as GatewayContext } from "contexts/gateway"
 
-import { useMultisigData, IMultisigData } from 'hooks'
+import { useMultisigData, IMultisigData } from "hooks"
 
 import  { graph2tree }from "util/graph2tree"
 
@@ -68,7 +68,7 @@ export const MLMS: React.FC = () => {
     error={error}
   ></TextOutput>
 </div>
-  );
+  )
 }
 
-export default MLMS;
+export default MLMS

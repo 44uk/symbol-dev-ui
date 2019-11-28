@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from "react"
 
 import {
   gateways,
   Context as GatewayContext
-} from 'contexts/gateway'
+} from "contexts/gateway"
 
 export const Config: React.FC = () => {
   const gwContext = useContext(GatewayContext)
@@ -42,7 +42,7 @@ export const Config: React.FC = () => {
     </div>
   </fieldset>
 </div>
-  );
+  )
 }
 
-export default Config;
+export default Config

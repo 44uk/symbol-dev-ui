@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react';
-import YAML from 'yaml'
-import { Context as GatewayContext } from 'contexts/gateway'
-import { Context as HttpContext } from 'contexts/http'
-import { INodeData, useNodeData } from 'hooks/useNodeData'
-import { TextOutput } from 'components/TextOutput'
+import React, { useContext, useState, useEffect } from "react"
+import YAML from "yaml"
+import { Context as GatewayContext } from "contexts/gateway"
+import { Context as HttpContext } from "contexts/http"
+import { INodeData, useNodeData } from "hooks/useNodeData"
+import { TextOutput } from "components/TextOutput"
 
 function stringifyNodeData(data: INodeData) {
   return YAML.stringify(data)
@@ -64,7 +64,7 @@ export const Node: React.FC = () => {
     error={error}
   ></TextOutput>
 </div>
-  );
+  )
 }
 
-export default Node;
+export default Node

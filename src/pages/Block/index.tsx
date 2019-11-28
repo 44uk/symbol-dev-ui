@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
-import YAML from 'yaml'
+import React, { useState, useEffect, useContext } from "react"
+import YAML from "yaml"
 import {
   UInt64,
   ChainHttp,
-} from 'nem2-sdk';
+} from "nem2-sdk"
 
-import { Context as GatewayContext } from 'contexts/gateway'
-import { Context as HttpContext } from 'contexts/http'
-import { Context as WebSockContext } from 'contexts/websock'
+import { Context as GatewayContext } from "contexts/gateway"
+import { Context as HttpContext } from "contexts/http"
+import { Context as WebSockContext } from "contexts/websock"
 
-import { useBlockData, IBlockData } from 'hooks/useBlockData'
-import { useBlockInfoListener } from 'hooks/useBlockInfoListener'
-import { TextOutput } from 'components/TextOutput'
+import { useBlockData, IBlockData } from "hooks/useBlockData"
+import { useBlockInfoListener } from "hooks/useBlockInfoListener"
+import { TextOutput } from "components/TextOutput"
 
 function stringifyBlockData(data: IBlockData) {
   return YAML.stringify(data)
@@ -40,7 +40,7 @@ function stringifyBlockData(data: IBlockData) {
 // `
 }
 
-//const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16);
+//const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16)
 //return new BlockInfo_1.BlockInfo(blockDTO.meta.hash, blockDTO.meta.generationHash, UInt64_1.UInt64.fromNumericString(blockDTO.meta.totalFee), blockDTO.meta.numTransactions, blockDTO.block.signature, PublicAccount_1.PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, networkType), networkType, parseInt(blockDTO.block.version.toString(16).substr(2, 2), 16), // Tx version
 
 export const Block: React.FC = () => {
@@ -126,7 +126,7 @@ export const Block: React.FC = () => {
     error={error}
   ></TextOutput>
 </div>
-  );
+  )
 }
 
-export default Block;
+export default Block

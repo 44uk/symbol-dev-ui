@@ -1,36 +1,40 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react"
 import {
   Nav,
   Content,
-  GatewaySelector,
-} from 'components';
+  GatewaySelector
+} from "components"
 import {
   gateways,
   Context as GatewayContext
-} from 'contexts/gateway'
+} from "contexts/gateway"
 import {
   createHttpInstance,
   Context as HttpContext
-} from 'contexts/http'
+} from "contexts/http"
 import {
   createWebSockInstance,
   Context as WebSockContext
-} from 'contexts/websock'
-import createPersistedState from 'use-persisted-state'
+} from "contexts/websock"
+import createPersistedState from "use-persisted-state"
+import { NetworkType } from "nem2-sdk"
 
-const useGatewayListState = createPersistedState('gateway-list')
-const useCurrentGatewayState = createPersistedState('current-gateway')
+const useGatewayListState = createPersistedState("gateway-list")
+const useCurrentGatewayState = createPersistedState("current-gateway")
 
 const App: React.FC = () => {
   const [urlList, setUrlList] = useGatewayListState(gateways)
   const [gw, setGw] = useCurrentGatewayState(urlList[0])
-  const [url, changeUrl] = useState(gw)
+
+  const [url, setUrl] = useState(gw)
+  const [networkType, setNetworkType] = useState<number>(NetworkType.MIJIN_TEST)
+  const [genHash, setGenHash] = useState<string>("")
   const setGwRef = useRef(setGw)
   const gwContextValue = {
-    url,
-    changeUrl,
-    urlList,
-    setUrlList
+    urlList, setUrlList,
+    url, setUrl,
+    genHash, setGenHash,
+    networkType, setNetworkType
   }
   useEffect(() => {
     setGwRef.current(url)
@@ -59,7 +63,7 @@ const App: React.FC = () => {
 </WebSockContext.Provider>
 </HttpContext.Provider>
 </GatewayContext.Provider>
-  );
+  )
 }
 
-export default App;
+export default App

@@ -1,6 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Context as GatewayContext } from 'contexts/gateway'
-import { NetworkType } from 'nem2-sdk';
+import React, { useEffect, useState, useContext } from "react"
+import { Context as GatewayContext } from "contexts/gateway"
+import { NetworkType } from "nem2-sdk"
+import { forkJoin, from, of } from "rxjs"
+import { map } from "rxjs/operators"
 
 interface IProps {
   onAvailable?: () => void
@@ -10,30 +12,59 @@ export const GatewaySelector: React.FC<IProps> = (
   onAvailable
 ) => {
   const gwContext = useContext(GatewayContext)
+  const {
+    setUrl,
+    setGenHash,
+    setNetworkType
+  } = gwContext
+
   const [network, setNetwork] = useState("")
   const [available, setAvailability] = useState(false)
 
   useEffect(() => {
-    const url = `${gwContext.url}/node/info`
+    const nodeInfoUrl = `${gwContext.url}/node/info`
+    const blockInfoUrl = `${gwContext.url}/block/1`
     setAvailability(false)
-    fetch(url)
-      .then(resp => resp.json())
-      .then(resp => {
-        setNetwork(NetworkType[resp.networkIdentifier])
-        setAvailability(true)
-      })
-      .catch(error => {
-        console.error(error)
-        setAvailability(false)
-      })
-      .finally(() => 0)
+
+    forkJoin([
+      from(fetch(nodeInfoUrl).then(_ => _.json())),
+      from(fetch(blockInfoUrl).then(_ => _.json())),
+    ])
+      .pipe(
+        map(resp => ({ node: resp[0], block: resp[1] })),
+      )
+      .subscribe(
+        ({ node, block }) => {
+          setGenHash(block.meta.generationHash)
+          setNetworkType(node.networkIdentifier)
+          setNetwork(NetworkType[node.networkIdentifier])
+          setAvailability(true)
+        },
+        error => {
+          console.error(error)
+          setAvailability(false)
+        }
+      )
+
+    // from(fetch(nodeInfoUrl)
+    //   .then(resp => resp.json())
+    //   .then(resp => {
+    //     setNetworkType(resp.networkIdentifier)
+    //     setNetwork(NetworkType[resp.networkIdentifier])
+    //     setAvailability(true)
+    //   })
+    //   .catch(error => {
+    //     console.error(error)
+    //     setAvailability(false)
+    //   })
+    //   .finally(() => 0)
   }, [gwContext.url])
 
   return (
 <div className="col-sm">
   <select
     value={gwContext.url}
-    onChange={(ev) => { gwContext.changeUrl(ev.target.value) } }
+    onChange={(ev) => { setUrl(ev.target.value) } }
   >
     {gwContext.urlList.map((n: string) => (
       <option key={n} value={n} >{n}</option>
@@ -45,6 +76,6 @@ export const GatewaySelector: React.FC<IProps> = (
   }
 </div>
   )
-};
+}
 
-export default GatewaySelector;
+export default GatewaySelector

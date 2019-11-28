@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react"
 
 interface IProps {
   label?: string
@@ -45,6 +45,6 @@ export const IOField: React.FC<IProps> = ({
   />
   { note && <p className="note"><small>{note}</small></p> }
 </div>
-  );
-};
-export default IOField;
+  )
+}
+export default IOField

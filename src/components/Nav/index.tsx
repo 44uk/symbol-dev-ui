@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React from "react"
+import { Link } from "react-router-dom"
 
 import paths from "paths"
 
@@ -24,4 +24,4 @@ export const Nav: React.FC = () => (
 </header>
 )
 
-export default Nav;
+export default Nav

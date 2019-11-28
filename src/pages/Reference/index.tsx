@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react"
 
 export const Reference: React.FC = () => {
   return (
@@ -41,7 +41,7 @@ export const Reference: React.FC = () => {
     </div>
   </div>
 </div>
-  );
+  )
 }
 
-export default Reference;
+export default Reference

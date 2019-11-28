@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { NamespaceHttp, NamespaceId, NamespaceInfo, MetadataHttp, Metadata, MosaicId, Address } from "nem2-sdk";
-import { forkJoin, of } from "rxjs";
-import { map, catchError } from "rxjs/operators";
+import { NamespaceHttp, NamespaceId, NamespaceInfo, MetadataHttp, Metadata, MosaicId, Address } from "nem2-sdk"
+import { forkJoin, of } from "rxjs"
+import { map, catchError } from "rxjs/operators"
 
 function createNsIdFromIdentifier(value: string) {
   try {

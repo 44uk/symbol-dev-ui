@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react"
 
 export const Example: React.FC = () => {
   return (
     <div>
       <p>Example Page.</p>
     </div>
-  );
+  )
 }
 
-export default Example;
+export default Example

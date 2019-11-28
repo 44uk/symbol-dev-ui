@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { MosaicInfo, Metadata, MosaicHttp, MetadataHttp, MosaicId, RestrictionMosaicHttp, MosaicGlobalRestriction } from "nem2-sdk";
-import { forkJoin, of } from "rxjs";
-import { map, catchError } from "rxjs/operators";
+import { MosaicInfo, Metadata, MosaicHttp, MetadataHttp, MosaicId, RestrictionMosaicHttp, MosaicGlobalRestriction } from "nem2-sdk"
+import { forkJoin, of } from "rxjs"
+import { map, catchError } from "rxjs/operators"
 import {
   convertIdentifierToMosaicId
 } from "util/convert"
@@ -28,7 +28,7 @@ export const useMosaicData = (httpInstance: IHttpInstance) => {
 
   const handler = () => {
     if(! identifier) return
-    let mosaicId;
+    let mosaicId
     try {
       mosaicId = convertIdentifierToMosaicId(identifier)
     } catch {

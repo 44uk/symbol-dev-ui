@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react"
 
-import IOField from 'components/IOField'
+import IOField from "components/IOField"
 
 import {
   decodeHexToRaw,
@@ -12,7 +12,7 @@ import {
   convertUInt64ToHex,
   datetimeStringToNemTimestamp,
   nemTimestampToDatetimeString
-} from 'util/convert'
+} from "util/convert"
 
 
 export const Misc: React.FC = () => {
@@ -66,7 +66,7 @@ export const Misc: React.FC = () => {
       ></IOField>
 
     </div>
-  );
+  )
 }
 
-export default Misc;
+export default Misc

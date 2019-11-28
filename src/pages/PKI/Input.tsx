@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"
 
 import {
   Account,
@@ -19,7 +19,7 @@ function generateNewPrivateKey(networkType = NetworkType.MIJIN_TEST, vanity?: st
 }
 
 function generateNewAccount(networkType = NetworkType.MIJIN_TEST, key?: string) {
-  let account: Account | null = null;
+  let account: Account | null = null
   if(key) {
     try {
       account = Account.createFromPrivateKey(key, networkType)
@@ -132,4 +132,4 @@ export const Input: React.FC<IProps> = ({
   )
 }
 
-export default Input;
+export default Input

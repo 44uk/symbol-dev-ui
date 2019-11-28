@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
-import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MultisigAccountInfo, MosaicAmountView, Metadata, MultisigHttp } from "nem2-sdk";
-import { forkJoin, of } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MultisigAccountInfo, MosaicAmountView, Metadata, MultisigHttp } from "nem2-sdk"
+import { forkJoin, of } from "rxjs"
+import { catchError, map } from "rxjs/operators"
 
 function createAddressFromIdentifier(value: string, networkType = NetworkType.MIJIN_TEST) {
   try {
     return /^[SMTN][0-9A-Z-]{39,45}$/.test(value)
       ? Address.createFromRawAddress(value)
       : Address.createFromPublicKey(value, networkType)
-    ;
+
   } catch(error) {
     return null
   }

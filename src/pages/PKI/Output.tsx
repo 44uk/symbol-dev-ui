@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-import YAML from 'yaml'
+import React, { useState, useEffect, useContext } from "react"
+import YAML from "yaml"
 
 import {
   Account, NetworkType,
-} from 'nem2-sdk'
+} from "nem2-sdk"
 
 import { Context as GatewayContext } from "contexts/gateway"
 
-import FieldWithLabel from 'components/FieldWithLabel'
+import FieldWithLabel from "components/FieldWithLabel"
 
 interface IProps {
   account: Account | null
@@ -18,21 +18,21 @@ function toJson(account: Account, url: string, pretty = false) {
   const obj = {
     privateKey: account.privateKey,
     publicKey: account.publicKey,
-    address: account.address[pretty ? 'pretty' : 'plain'](),
+    address: account.address[pretty ? "pretty" : "plain"](),
     networkType: account.networkType,
     url: url,
-    networkGenerationHash: '--WIP--',
-  };
-  return JSON.stringify(obj, null, 4);
+    networkGenerationHash: "--WIP--",
+  }
+  return JSON.stringify(obj, null, 4)
 }
 
 function toText(account: Account, url: string, pretty = false) {
   return `privateKey: ${account.privateKey}
 publicKey: ${account.publicKey}
-address: ${account.address[pretty ? 'pretty' : 'plain']()}
+address: ${account.address[pretty ? "pretty" : "plain"]()}
 networkType: ${account.networkType}
 url: ${url}
-networkGenerationHash: --WIP--`;
+networkGenerationHash: --WIP--`
 }
 
 function copyToClipboard(text: string) {
@@ -45,7 +45,7 @@ function copyToClipboard(text: string) {
       console.log(text)
     })
     .catch((error) => console.error("Your browser doesn't support copy to clipboard"))
-  ;
+
 }
 
 export const Output: React.FC<IProps> = ({
@@ -65,7 +65,7 @@ export const Output: React.FC<IProps> = ({
       account.publicKey :
       "",
     address: account ?
-      account.address[pretty ? 'pretty' : 'plain']() :
+      account.address[pretty ? "pretty" : "plain"]() :
       "",
     hexAddress: account ?
       account.address.encoded() :
@@ -78,22 +78,22 @@ export const Output: React.FC<IProps> = ({
       "",
   }
 
-  const [format, setFormat] = useState<'json' | 'text'>('json')
+  const [format, setFormat] = useState<"json" | "text">("json")
   const [output, setOutput] = useState("")
 
   useEffect(() => {
     if(!account) { return }
-    let text;
+    let text
     switch (format) {
-      case 'json':
-        text = toJson(account, gwContext.url, pretty);
-        break;
-      case 'text':
-        text = toText(account, gwContext.url, pretty);
-        break;
+      case "json":
+        text = toJson(account, gwContext.url, pretty)
+        break
+      case "text":
+        text = toText(account, gwContext.url, pretty)
+        break
       default:
         text = ""
-        break;
+        break
     }
     setOutput(text)
   }, [format, account, pretty])
@@ -113,12 +113,12 @@ export const Output: React.FC<IProps> = ({
         <div className="input-group vertical">
           <div>
             <input type="radio" id="json"
-              onChange={() => setFormat('json')}
-              checked={format === 'json'}
+              onChange={() => setFormat("json")}
+              checked={format === "json"}
             /><label htmlFor="json">toJSON</label>
             <input type="radio" id="text"
-              onChange={() => setFormat('text')}
-              checked={format === 'text'}
+              onChange={() => setFormat("text")}
+              checked={format === "text"}
             /><label htmlFor="text">toText</label>
           </div>
           <textarea readOnly={true} rows={8} value={output}></textarea>
@@ -127,6 +127,6 @@ export const Output: React.FC<IProps> = ({
         </div>
       </div>
     </fieldset>
-  );
+  )
 }
-export default Output;
+export default Output

@@ -1,11 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react'
-import YAML from 'yaml'
+import React, { useContext, useState, useEffect } from "react"
+import YAML from "yaml"
 
-import { Context as GatewayContext } from 'contexts/gateway'
-import { Context as HttpContext } from 'contexts/http'
+import { Context as GatewayContext } from "contexts/gateway"
+import { Context as HttpContext } from "contexts/http"
 
-import { TextOutput } from 'components';
-import { useTransactionData, ITransactionData } from 'hooks';
+import { TextOutput } from "components"
+import { useTransactionData, ITransactionData } from "hooks"
 
 export const Transaction: React.FC = () => {
   const gwContext = useContext(GatewayContext)

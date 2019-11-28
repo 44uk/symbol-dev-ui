@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react"
 
 interface IProps {
   label?: string
@@ -33,7 +33,7 @@ export const TextOutput: React.FC<IProps> = ({
     value={_value}
   ></textarea>
 </fieldset>
-  );
+  )
 }
 
-export default TextOutput;
+export default TextOutput

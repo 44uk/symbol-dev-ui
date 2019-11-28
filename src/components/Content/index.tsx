@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react"
 import {
   Switch,
   Route,
   Redirect
-} from "react-router-dom";
+} from "react-router-dom"
 
 import {
   PKI,
@@ -19,7 +19,7 @@ import {
   Misc,
   Reference,
   Help,
-} from '../../pages'
+} from "../../pages"
 
 import paths from "../../paths"
 
@@ -42,4 +42,4 @@ export const Content: React.FC = () => (
 </Switch>
 )
 
-export default Content;
+export default Content

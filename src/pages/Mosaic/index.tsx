@@ -1,12 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react';
-import YAML from 'yaml'
+import React, { useState, useContext, useEffect } from "react"
+import YAML from "yaml"
 
-import { Context as GatewayContext } from 'contexts/gateway'
-import { Context as HttpContext } from 'contexts/http'
+import { Context as GatewayContext } from "contexts/gateway"
+import { Context as HttpContext } from "contexts/http"
 
-import { TextOutput } from 'components';
-import { useMosaicData, IMosaicData } from 'hooks';
-import { convertIdentifierToMosaicHex } from 'util/convert';
+import { TextOutput } from "components"
+import { useMosaicData, IMosaicData } from "hooks"
+import { convertIdentifierToMosaicHex } from "util/convert"
 
 function stringifyMosaicData(data: IMosaicData) {
   return YAML.stringify(data)
@@ -87,7 +87,7 @@ export const Mosaic: React.FC = () => {
     error={error}
   ></TextOutput>
 </div>
-  );
+  )
 }
 
-export default Mosaic;
+export default Mosaic

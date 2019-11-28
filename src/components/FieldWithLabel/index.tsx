@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react"
 
 interface IProps {
   label?: string
@@ -29,6 +29,6 @@ export const FieldWithLabel: React.FC<IProps> = ({
   />
   { note && <p className="note"><small>{note}</small></p> }
 </div>
-  );
-};
-export default FieldWithLabel;
+  )
+}
+export default FieldWithLabel

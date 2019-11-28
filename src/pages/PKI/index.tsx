@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import createPersistedState from 'use-persisted-state'
+import React, { useState, useEffect } from "react"
+import createPersistedState from "use-persisted-state"
 
 import {
   Account,
-} from 'nem2-sdk'
+} from "nem2-sdk"
 
-import Input from './Input'
-import Output from './Output'
+import Input from "./Input"
+import Output from "./Output"
 
-const useGeneratedKeyListState = createPersistedState('generated-key-list')
+const useGeneratedKeyListState = createPersistedState("generated-key-list")
 
 export const PKI: React.FC = () => {
   const [account, setAccount] = useState<Account | null>(null)
@@ -39,7 +39,7 @@ export const PKI: React.FC = () => {
       ))}
     </div>
   </div>
-  );
+  )
 }
 
-export default PKI;
+export default PKI

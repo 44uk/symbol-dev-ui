@@ -1,12 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react';
-import YAML from 'yaml'
+import React, { useState, useContext, useEffect } from "react"
+import YAML from "yaml"
 
-import { Context as GatewayContext } from 'contexts/gateway'
-import { Context as HttpContext } from 'contexts/http'
+import { Context as GatewayContext } from "contexts/gateway"
+import { Context as HttpContext } from "contexts/http"
 
-import { useNamespaceData, INamespaceData } from 'hooks';
-import { TextOutput } from 'components';
-import { convertIdentifierToNamespaceHex } from 'util/convert';
+import { useNamespaceData, INamespaceData } from "hooks"
+import { TextOutput } from "components"
+import { convertIdentifierToNamespaceHex } from "util/convert"
 
 function stringifyNamespaceData(data: INamespaceData) {
   return YAML.stringify(data)
@@ -109,7 +109,7 @@ export const Namespace: React.FC = () => {
     error={error}
   ></TextOutput>
 </div>
-  );
+  )
 }
 
-export default Namespace;
+export default Namespace

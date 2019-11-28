@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { NetworkType, Address } from "nem2-sdk";
-import { forkJoin, from, Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { NetworkType, Address } from "nem2-sdk"
+import { forkJoin, from, Observable } from "rxjs"
+import { map, tap } from "rxjs/operators"
 
 import {
   ILayer,
@@ -12,7 +12,7 @@ function createAddressFromIdentifier(value: string, networkType = NetworkType.MI
     return /^[SMTN][0-9A-Z-]{39,45}$/.test(value)
       ? Address.createFromRawAddress(value)
       : Address.createFromPublicKey(value, networkType)
-    ;
+
   } catch(error) {
     return null
   }

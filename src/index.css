@@ -1,4 +1,4 @@
 @font-face {
-  font-family: 'FiraCode-Light';
-  src: local('FiraCode-Light'), url(./fonts/FiraCode-Light.woff) format('woff');
+  font-family: "FiraCode-Light";
+  src: local("FiraCode-Light"), url(./fonts/FiraCode-Light.woff) format("woff");
 }

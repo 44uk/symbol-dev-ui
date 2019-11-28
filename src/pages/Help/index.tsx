@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react"
 
-import ImageArmyKnife from './army_knife.png'
+import ImageArmyKnife from "./army_knife.png"
 
 export const Help: React.FC = () => {
   console.info("Do you know of KONAMI Command?")
@@ -19,7 +19,7 @@ export const Help: React.FC = () => {
     </figure>
   </div>
 </div>
-  );
+  )
 }
 
-export default Help;
+export default Help

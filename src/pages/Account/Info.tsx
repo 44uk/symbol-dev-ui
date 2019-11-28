@@ -1,7 +1,7 @@
-import React from 'react';
-import { AccountInfo } from 'nem2-sdk'
+import React from "react"
+import { AccountInfo } from "nem2-sdk"
 
-import FieldWithLabel from 'components/FieldWithLabel'
+import FieldWithLabel from "components/FieldWithLabel"
 
 interface IProps {
   accountInfo: AccountInfo | undefined
@@ -13,13 +13,13 @@ export const Info: React.FC<IProps> = ({
   loading = false
 }) => {
   let info = {
-    address: '',
-    hexAddress: '',
-    addressHeight: '',
-    publicKey: '',
-    publicKeyHeight: '',
-    importance: '',
-    importanceHeight: '',
+    address: "",
+    hexAddress: "",
+    addressHeight: "",
+    publicKey: "",
+    publicKeyHeight: "",
+    importance: "",
+    importanceHeight: "",
   }
   if(accountInfo) {
     const address = accountInfo.address
@@ -45,7 +45,7 @@ export const Info: React.FC<IProps> = ({
   <FieldWithLabel readonly={true} disabled={loading} label="Importance" value={info.importance} />
   <FieldWithLabel readonly={true} disabled={loading} label="Height at"  value={info.importanceHeight} />
 </fieldset>
-  );
+  )
 }
 
-export default Info;
+export default Info
