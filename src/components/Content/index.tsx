@@ -14,7 +14,7 @@ import {
   Block,
   Transaction,
   Node,
-  Faucet,
+  Distribute,
   Config,
   Misc,
   Reference,
@@ -30,7 +30,7 @@ export const Content: React.FC = () => (
   <Route path={paths.mlms}><MLMS /></Route>
   <Route path={paths.block}><Block /></Route>
   <Route path={paths.config}><Config /></Route>
-  <Route path={paths.distribute}><Faucet /></Route>
+  <Route path={paths.distribute}><Distribute /></Route>
   <Route path={paths.misc}><Misc /></Route>
   <Route path={paths.mosaic}><Mosaic /></Route>
   <Route path={paths.namespace}><Namespace /></Route>

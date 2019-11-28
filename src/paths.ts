@@ -9,7 +9,7 @@ export const paths = {
   receipt: "/receipt",
   meta: "/meta",
   node: "/node",
-  faucet: "/faucet",
+  distribute: "/distribute",
   announce: "/announce",
   misc: "/misc",
   reference: "/reference",
