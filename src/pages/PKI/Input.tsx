@@ -96,17 +96,6 @@ export const Input: React.FC<IProps> = ({
   </div>
 
   <div>
-    <input type="radio" id="pretty"
-      onChange={() => setPretty(true)}
-      checked={pretty}
-    /><label htmlFor="pretty">Pretty</label>
-    <input type="radio" id="plain"
-      onChange={() => setPretty(false)}
-      checked={!pretty}
-    /><label htmlFor="plain">Plain</label>
-  </div>
-
-  <div>
     <input type="radio" id="n"
       onChange={() => setVanity("N")}
       checked={vanity === "N"}
@@ -127,6 +116,17 @@ export const Input: React.FC<IProps> = ({
       onChange={() => setVanity("D")}
       checked={vanity === "D"}
     /><label htmlFor="d">D</label>
+  </div>
+
+  <div>
+    <input type="radio" id="pretty"
+      onChange={() => setPretty(true)}
+      checked={pretty}
+    /><label htmlFor="pretty">Pretty</label>
+    <input type="radio" id="plain"
+      onChange={() => setPretty(false)}
+      checked={!pretty}
+    /><label htmlFor="plain">Plain</label>
   </div>
 </fieldset>
   )

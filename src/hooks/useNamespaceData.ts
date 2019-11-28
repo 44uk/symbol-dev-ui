@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { NamespaceHttp, NamespaceId, NamespaceInfo, MetadataHttp, Metadata } from "nem2-sdk";
-import { forkJoin } from "rxjs";
-import { map } from "rxjs/operators";
+import { NamespaceHttp, NamespaceId, NamespaceInfo, MetadataHttp, Metadata, MosaicId, Address } from "nem2-sdk";
+import { forkJoin, of } from "rxjs";
+import { map, catchError } from "rxjs/operators";
 
 function createNsIdFromIdentifier(value: string) {
   try {
@@ -19,6 +19,8 @@ function createNsIdFromIdentifier(value: string) {
 export interface INamespaceData {
   namespaceInfo: NamespaceInfo
   metadata: Metadata[]
+  mosaicId: MosaicId | null
+  address: Address | null
 }
 
 interface IHttpInstance {
@@ -42,12 +44,16 @@ export const useNamespaceData = (httpInstance: IHttpInstance) => {
     setLoading(true)
     forkJoin([
       namespaceHttp.getNamespace(nsId),
-      metadataHttp.getNamespaceMetadata(nsId)
+      metadataHttp.getNamespaceMetadata(nsId),
+      namespaceHttp.getLinkedMosaicId(nsId).pipe(catchError(()=> of(null))),
+      namespaceHttp.getLinkedAddress(nsId).pipe(catchError(()=> of(null)))
     ])
       .pipe(
         map(resp => ({
           namespaceInfo: resp[0],
-          metadata: resp[1]
+          metadata: resp[1],
+          mosaicId: resp[2],
+          address: resp[3]
         }))
       )
       .subscribe(

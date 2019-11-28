@@ -1,65 +1,55 @@
 import React, { useState, useContext, useEffect } from 'react';
+import YAML from 'yaml'
+
 import { Context as GatewayContext } from 'contexts/gateway'
 import { Context as HttpContext } from 'contexts/http'
-import {
-  NamespaceInfo,
-  NamespaceId,
-} from "nem2-sdk";
+
 import { useNamespaceData, INamespaceData } from 'hooks';
 import { TextOutput } from 'components';
-import { convertUInt64ToHex } from 'util/convert';
-
-/**
- *
- * ネームスペース情報取得
- * ネームスペース検索
- */
-
-function convertToNsUInt64(value: string) {
-  // namespace name
-  // hex id
-  // uint64 array
-  // uint64 string
-}
+import { convertIdentifierToNamespaceHex } from 'util/convert';
 
 function stringifyNamespaceData(data: INamespaceData) {
-  const {
-    namespaceInfo: ni,
-    metadata: md
-  } = data
-  return `Meta:
-  active: ${ni.active}
-  index: ${ni.index}
-  id: ${ni.id.toHex()}
-Info:
-  ${ni.depth}
-  ${ni.levels[0]}
-  ${ni.alias.type}
-  ${ni.alias.address}
-  ${ni.owner.publicKey}
-  ${ni.owner.address.plain()}
-  ${ni.isRoot}
-  ${ni.isSubnamespace}
-  startHeight: ${ni.startHeight.toString()}
-  endHeight: ${ni.endHeight.toString()}
-`
-}
-
-function valueToHex(value: string) {
-  if(/[0-9a-fA-F]{16}/.test(value)) {
-    return value
-  }
-  try {
-    return new NamespaceId(value).toHex()
-  } catch(error) {
-  }
-  try {
-    const hex = convertUInt64ToHex(value)
-    return NamespaceId.createFromEncoded(hex || value).toHex()
-  } catch(error) {
-    console.error(error)
-    return ""
-  }
+  return YAML.stringify(data)
+//   const info = (
+// `Meta:
+//   active: ${ni.active}
+//   index: ${ni.index}
+//   id: ${ni.id.toHex()}
+// Info:
+//   Depth: ${ni.depth}
+//   Type: ${ni.isRoot ? "root" : "sub"}
+//   Levels:
+//     ${ni.levels[0]}
+//   Alias
+//     Type: ${ni.alias.type}
+//     Mosaic: ${ni.alias.mosaicId}
+//     Address: ${ni.alias.address}
+//   Owner:
+//     publicKey: ${ni.owner.publicKey}
+//     address: ${ni.owner.address.plain()}
+//   startHeight: ${ni.startHeight.toString()}
+//   endHeight: ${ni.endHeight.toString()}
+// `)
+//
+//   let mosaicInfo = ""
+//   if(mId) {
+//     mosaicInfo = `MosaicId:
+//   ${mId.toHex()}
+// `
+//   }
+//
+//   let address = ""
+//   if(addr) {
+//     address = `Address:
+// ${addr.pretty()}
+// `
+//   }
+//
+//   return `
+//   ${info}
+//   ${mosaicInfo}
+//   ${address}
+//   `
 }
 
 export const Namespace: React.FC = () => {
@@ -102,9 +92,9 @@ export const Namespace: React.FC = () => {
     </div>
     <p>
     { value
-      ? <a href={`${gwContext.url}/namespace/${valueToHex(value)}`}
+      ? <a href={`${gwContext.url}/namespace/${convertIdentifierToNamespaceHex(value)}`}
           target="_blank" rel="noopener noreferrer"
-        >{`${gwContext.url}/namespace/${valueToHex(value)}`}</a>
+        >{`${gwContext.url}/namespace/${convertIdentifierToNamespaceHex(value)}`}</a>
       : <span>{`${gwContext.url}/namespace/`}</span>
     }
     </p>

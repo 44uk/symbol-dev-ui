@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react"
-import { MosaicInfo, Metadata, MosaicHttp, MetadataHttp, MosaicId } from "nem2-sdk";
-import { forkJoin } from "rxjs";
-import { map } from "rxjs/operators";
-
-function createMosaicIdFromIdentifier(value: string) {
-  try {
-    return new MosaicId(value)
-  } catch(error) {
-    // for continuing if value is not namespace name string
-    return null
-  }
-}
+import { MosaicInfo, Metadata, MosaicHttp, MetadataHttp, MosaicId, RestrictionMosaicHttp, MosaicGlobalRestriction } from "nem2-sdk";
+import { forkJoin, of } from "rxjs";
+import { map, catchError } from "rxjs/operators";
+import {
+  convertIdentifierToMosaicId
+} from "util/convert"
 
 export interface IMosaicData {
   mosaicInfo: MosaicInfo
   metadata: Metadata[]
+  globalRestriction: MosaicGlobalRestriction | null
 }
 
 interface IHttpInstance {
   mosaicHttp: MosaicHttp,
   metadataHttp: MetadataHttp
+  restrictionMosaicHttp: RestrictionMosaicHttp
 }
 
 export const useMosaicData = (httpInstance: IHttpInstance) => {
@@ -28,22 +24,29 @@ export const useMosaicData = (httpInstance: IHttpInstance) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const { mosaicHttp, metadataHttp } = httpInstance
+  const { mosaicHttp, metadataHttp, restrictionMosaicHttp } = httpInstance
 
   useEffect(() => {
     if(! identifier) return
-    const mosaicId = createMosaicIdFromIdentifier(identifier)
+    let mosaicId;
+    try {
+      mosaicId = convertIdentifierToMosaicId(identifier)
+    } catch {
+      mosaicId = null
+    }
     if(! mosaicId) return
 
     setLoading(true)
     forkJoin([
       mosaicHttp.getMosaic(mosaicId),
-      metadataHttp.getMosaicMetadata(mosaicId)
+      metadataHttp.getMosaicMetadata(mosaicId),
+      restrictionMosaicHttp.getMosaicGlobalRestriction(mosaicId).pipe(catchError(() => of(null)))
     ])
       .pipe(
         map(resp => ({
           mosaicInfo: resp[0],
-          metadata: resp[1]
+          metadata: resp[1],
+          globalRestriction: resp[2]
         }))
       )
       .subscribe(

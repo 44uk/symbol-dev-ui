@@ -1,29 +1,38 @@
 import React, { useContext, useState, useEffect } from 'react';
-
+import YAML from 'yaml'
 import { Context as GatewayContext } from 'contexts/gateway'
 import { Context as HttpContext } from 'contexts/http'
-
 import { INodeData, useNodeData } from 'hooks/useNodeData'
-
 import { TextOutput } from 'components/TextOutput'
-import { UInt64 } from 'nem2-sdk';
 
-function stringifyNodeData(nd: INodeData) {
-  return `NodeInfo:
-  host: ${nd.nodeInfo.host}
-  friendlyName: ${nd.nodeInfo.friendlyName}
-NodeTime:
-  receive: ${new UInt64(nd.nodeTime.receiveTimeStamp as number[]).toString()}
-  send: ${new UInt64(nd.nodeTime.sendTimeStamp as number[]).toString()}
-`
+function stringifyNodeData(data: INodeData) {
+  return YAML.stringify(data)
+//   return `NodeInfo:
+//   host: ${nodeInfo.host}
+//   friendlyName: ${nodeInfo.friendlyName}
+//   networkIdentifier: ${NetworkType[nodeInfo.networkIdentifier]}(${nodeInfo.networkIdentifier})
+//   port: ${nodeInfo.port}
+//   publicKey: ${nodeInfo.publicKey}
+//   roles: ${nodeInfo.roles}
+//   version: ${nodeInfo.version}
+// NodeTime:
+//   receive: ${new UInt64(nodeTime.receiveTimeStamp as number[]).toString()}
+//   send: ${new UInt64(nodeTime.sendTimeStamp as number[]).toString()}
+// ServerInfo:
+//   REST Ver.: ${serverInfo.restVersion}
+//   SDK Ver.: ${serverInfo.sdkVersion}
+// Storage:
+//   Num Accounts: ${storage.numAccounts}
+//   Num Blocks: ${storage.numBlocks}
+//   Num Transactions: ${storage.numTransactions}
 }
 
 export const Node: React.FC = () => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
 
-  const { nodeHttp } = httpContext.httpInstance
-  const {nodeData, loading, error} = useNodeData({ nodeHttp })
+  const { nodeHttp, diagnosticHttp } = httpContext.httpInstance
+  const {nodeData, loading, error} = useNodeData({ nodeHttp, diagnosticHttp })
 
   const [output, setOutput] = useState("")
 

@@ -9,7 +9,9 @@ import {
   encodeAddress,
   encodeNamespace,
   convertHexToUInt64,
-  convertUInt64ToHex
+  convertUInt64ToHex,
+  datetimeStringToNemTimestamp,
+  nemTimestampToDatetimeString
 } from 'util/convert'
 
 
@@ -17,6 +19,16 @@ export const Misc: React.FC = () => {
   return (
     <div>
       <p>Misc Page.</p>
+
+      <IOField func={nemTimestampToDatetimeString}
+        label="NEM Timestamp => DateTime"
+        placeholder="ex) 1459468800000"
+      ></IOField>
+
+      <IOField func={datetimeStringToNemTimestamp}
+        label="DateTime => NEM Timestamp"
+        placeholder="ex) 2016-04-01 00:00:00"
+      ></IOField>
 
       <IOField func={convertHexToUInt64}
         label="Hex => [Lower,Higher]"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MultisigAccountInfo, MosaicAmountView, Metadata } from "nem2-sdk";
+import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MultisigAccountInfo, MosaicAmountView, Metadata, MultisigHttp } from "nem2-sdk";
 import { forkJoin, of } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 
@@ -22,9 +22,10 @@ export interface IAccountData {
 }
 
 interface IHttpInstance {
-  accountHttp: AccountHttp,
-  mosaicHttp: MosaicHttp,
+  accountHttp: AccountHttp
+  mosaicHttp: MosaicHttp
   metadataHttp: MetadataHttp
+  multisigHttp: MultisigHttp
 }
 
 export const useAccountData = (httpInstance: IHttpInstance) => {
@@ -33,7 +34,7 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
   const [error, setError] = useState(null)
   const [accountData, setAccountData] = useState<IAccountData | null>(null)
 
-  const { accountHttp, mosaicHttp, metadataHttp } = httpInstance
+  const { accountHttp, mosaicHttp, metadataHttp, multisigHttp } = httpInstance
   const mosaicService = new MosaicService(accountHttp, mosaicHttp)
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export const useAccountData = (httpInstance: IHttpInstance) => {
       accountHttp.getAccountInfo(address),
       mosaicService.mosaicsAmountViewFromAddress(address),
       metadataHttp.getAccountMetadata(address),
-      accountHttp.getMultisigAccountInfo(address).pipe<MultisigAccountInfo | null>(catchError(_ => of(null)))
+      multisigHttp.getMultisigAccountInfo(address).pipe<MultisigAccountInfo | null>(catchError(_ => of(null)))
     ])
       .pipe(
         map(resp => ({

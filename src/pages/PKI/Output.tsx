@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import YAML from 'yaml'
 
 import {
   Account, NetworkType,

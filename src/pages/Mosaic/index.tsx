@@ -1,37 +1,43 @@
 import React, { useState, useContext, useEffect } from 'react';
+import YAML from 'yaml'
 
 import { Context as GatewayContext } from 'contexts/gateway'
 import { Context as HttpContext } from 'contexts/http'
 
 import { TextOutput } from 'components';
 import { useMosaicData, IMosaicData } from 'hooks';
-import { MosaicId } from 'nem2-sdk';
-
-function valueToHex(value: string) {
-  if(/[0-9a-fA-F]{16}/.test(value)) {
-    return value
-  }
-  try {
-    return new MosaicId(value).toHex()
-  } catch(error) {
-    return ""
-  }
-}
+import { convertIdentifierToMosaicHex } from 'util/convert';
 
 function stringifyMosaicData(data: IMosaicData) {
-  return `
-${data.mosaicInfo.id.toHex()}
-`
+  return YAML.stringify(data)
+//   const { mosaicInfo, metadata } = data
+//   return `
+// ${mosaicInfo.id.toHex()}
+// ${mosaicInfo.height}
+// ${mosaicInfo.divisibility}
+// ${mosaicInfo.duration}
+// ${mosaicInfo.flags.restrictable}
+// ${mosaicInfo.flags.supplyMutable}
+// ${mosaicInfo.flags.transferable}
+// ${mosaicInfo.isRestrictable()}
+// ${mosaicInfo.isSupplyMutable()}
+// ${mosaicInfo.isTransferable()}
+// ${mosaicInfo.owner.publicKey}
+// ${mosaicInfo.owner.address.pretty()}
+// ${mosaicInfo.revision}
+// ${mosaicInfo.supply}
+// `
 }
 
 export const Mosaic: React.FC = () => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
 
-  const {mosaicHttp, metadataHttp} = httpContext.httpInstance
-  const {mosaicData, setIdentifier, loading, error} = useMosaicData({
+  const { mosaicHttp, metadataHttp, restrictionMosaicHttp } = httpContext.httpInstance
+  const { mosaicData, setIdentifier, loading, error } = useMosaicData({
     mosaicHttp,
-    metadataHttp
+    metadataHttp,
+    restrictionMosaicHttp
   })
 
   const [value, setValue] = useState("")
@@ -57,16 +63,16 @@ export const Mosaic: React.FC = () => {
         value={value}
         onChange={(_) => setValue(_.currentTarget.value)}
         onKeyPress={(_) => _.key === "Enter" && submit()}
-        placeholder="ex) nem.xem, [HEX], [Lower,Higher]"
+        placeholder="ex) [HEX], [Lower,Higher]"
         maxLength={64}
       />
       <p className="note"><small>Hit ENTER key to load from Gateway.</small></p>
     </div>
     <p>
     { value
-      ? <a href={`${gwContext.url}/mosaic/${valueToHex(value)}`}
+      ? <a href={`${gwContext.url}/mosaic/${convertIdentifierToMosaicHex(value)}`}
           target="_blank" rel="noopener noreferrer"
-        >{`${gwContext.url}/mosaic/${valueToHex(value)}`}</a>
+        >{`${gwContext.url}/mosaic/${convertIdentifierToMosaicHex(value)}`}</a>
       : <span>{`${gwContext.url}/mosaic/`}</span>
     }
     </p>

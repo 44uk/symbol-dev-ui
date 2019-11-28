@@ -1,29 +1,27 @@
 import React, { useEffect, useState, useContext } from 'react';
-import createPersistedState from 'use-persisted-state'
-import {
-  gateways,
-  Context as GatewayContext
-} from 'contexts/gateway'
-
-const useGatewayListState = createPersistedState('gateway-list')
+import { Context as GatewayContext } from 'contexts/gateway'
+import { NetworkType } from 'nem2-sdk';
 
 interface IProps {
   onAvailable?: () => void
 }
 
-export const GatewaySelector: React.FC = (
+export const GatewaySelector: React.FC<IProps> = (
   onAvailable
 ) => {
   const gwContext = useContext(GatewayContext)
-  const [gwList] = useGatewayListState(gateways)
-  const [availability, setAvailability] = useState(false)
+  const [network, setNetwork] = useState("")
+  const [available, setAvailability] = useState(false)
 
   useEffect(() => {
     const url = `${gwContext.url}/node/info`
     setAvailability(false)
     fetch(url)
       .then(resp => resp.json())
-      .then(_ => setAvailability(true))
+      .then(resp => {
+        setNetwork(NetworkType[resp.networkIdentifier])
+        setAvailability(true)
+      })
       .catch(error => {
         console.error(error)
         setAvailability(false)
@@ -37,12 +35,12 @@ export const GatewaySelector: React.FC = (
     value={gwContext.url}
     onChange={(ev) => { gwContext.changeUrl(ev.target.value) } }
   >
-    {gwList.map((n: string) => (
+    {gwContext.urlList.map((n: string) => (
       <option key={n} value={n} >{n}</option>
     ))}
   </select>
-  { availability ?
-    <span>Active!</span> :
+  { available ?
+    <span>Active!({network})</span> :
     <span>InActive!</span>
   }
 </div>

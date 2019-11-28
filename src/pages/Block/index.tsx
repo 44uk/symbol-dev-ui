@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import YAML from 'yaml'
 import {
   UInt64,
   ChainHttp,
@@ -13,30 +14,30 @@ import { useBlockInfoListener } from 'hooks/useBlockInfoListener'
 import { TextOutput } from 'components/TextOutput'
 
 function stringifyBlockData(data: IBlockData) {
-  const { blockInfo: bi } = data
-  return `meta:
-  hash: ${bi.hash}
-  totalFee: ${bi.totalFee.toString()}
-  generationHash: ${bi.generationHash}
-  stateHashSubCacheMerkleRoots:
-    -
-  numTransactions: ${bi.numTransactions}
-  numStatements:
-block:
-  signature: ${bi.signature}
-  signerPublicKey: ${bi.signer.publicKey}
-  version: ${bi.version}
-  type: ${bi.type}
-  height: ${bi.height}
-  timestamp: ${bi.timestamp}
-  difficulty: ${bi.difficulty}
-  feeMultiplier: ${bi.feeMultiplier.toString()}
-  previousBlockHash: ${bi.previousBlockHash}
-  transactionsHash:
-  receiptsHash:
-  stateHash: ${bi.stateHash}
-  beneficiaryPublicKey: ${bi.beneficiaryPublicKey}
-`
+  return YAML.stringify(data)
+//   return `meta:
+//   hash: ${bi.hash}
+//   totalFee: ${bi.totalFee.toString()}
+//   generationHash: ${bi.generationHash}
+//   stateHashSubCacheMerkleRoots:
+//     -
+//   numTransactions: ${bi.numTransactions}
+//   numStatements:
+// block:
+//   signature: ${bi.signature}
+//   signerPublicKey: ${bi.signer.publicKey}
+//   version: ${bi.version}
+//   type: ${bi.type}
+//   height: ${bi.height}
+//   timestamp: ${bi.timestamp}
+//   difficulty: ${bi.difficulty}
+//   feeMultiplier: ${bi.feeMultiplier.toString()}
+//   previousBlockHash: ${bi.previousBlockHash}
+//   transactionsHash:
+//   receiptsHash:
+//   stateHash: ${bi.stateHash}
+//   beneficiaryPublicKey: ${bi.beneficiaryPublicKey}
+// `
 }
 
 //const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16);
@@ -47,25 +48,17 @@ export const Block: React.FC = () => {
   const httpContext = useContext(HttpContext)
   const webSockContext = useContext(WebSockContext)
 
-  const { blockHttp } = httpContext.httpInstance
-  const {blockData, setHeight, loading, error} = useBlockData({ blockHttp })
+  const { blockHttp, receiptHttp } = httpContext.httpInstance
+  const {blockData, setHeight, loading, error} = useBlockData({ blockHttp, receiptHttp })
 
-  // const listener = new Listener(gwContext.url.replace(/^http/, "ws"), WebSocket)
   const { listener } = webSockContext.webSockInstance
   const blockListener = useBlockInfoListener(listener)
-  const [prependLoading, setPrependLoading] = useState(false)
 
+  const [prependLoading, setPrependLoading] = useState(false)
   const [blockHeight, setBlockHeight] = useState("")
   const [output, setOutput] = useState("")
 
   useEffect(() => {
-    // let _block = blockListener.following ?
-    //   blockListener.block :
-    //   blockData && blockData.blockInfo
-    // if(_block ) {
-    //   setBlockHeight(_block.height.toString())
-    //   setOutput(stringifyBlockInfo(_block))
-    // }
     if(! blockData) { return }
     setBlockHeight(blockData.blockInfo.height.toString())
     setOutput(stringifyBlockData(blockData))
@@ -108,10 +101,10 @@ export const Block: React.FC = () => {
       >Fetch</button>
       { blockListener.following
         ? <button className="secondary"
-            onClick={() => {setPrependLoading(false); blockListener.setFollowing(false)}}
+            onClick={() => {setPrependLoading(false); fetchBlockInfo(); blockListener.setFollowing(false)}}
           >Stop</button>
         : <button className="primary"
-            onClick={() => {setPrependLoading(true); blockListener.setFollowing(true)}}
+            onClick={() => {setPrependLoading(true); fetchBlockInfo(); blockListener.setFollowing(true)}}
           >Follow</button>
       }
       <p>

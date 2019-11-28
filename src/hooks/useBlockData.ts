@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { BlockHttp, BlockInfo, Statement } from "nem2-sdk"
+import { BlockHttp, BlockInfo, Statement, ReceiptHttp } from "nem2-sdk"
 import { map } from "rxjs/operators"
 import { forkJoin } from "rxjs"
 
@@ -10,6 +10,7 @@ export interface IBlockData {
 
 interface IHttpInstance {
   blockHttp: BlockHttp
+  receiptHttp: ReceiptHttp
 }
 
 export const useBlockData = (httpInstance: IHttpInstance) => {
@@ -19,15 +20,15 @@ export const useBlockData = (httpInstance: IHttpInstance) => {
 
   const [blockData, setBlockData] = useState<IBlockData | null>(null)
 
-  const { blockHttp } = httpInstance
+  const { blockHttp, receiptHttp } = httpInstance
 
   useEffect(() => {
     if(! height) return
 
     setLoading(true)
     forkJoin([
-      blockHttp.getBlockByHeight(height),
-      blockHttp.getBlockReceipts(height)
+      blockHttp.getBlockByHeight(height.toString()),
+      receiptHttp.getBlockReceipts(height.toString())
     ])
       .pipe(
         map(resp => ({

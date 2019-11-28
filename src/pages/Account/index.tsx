@@ -7,38 +7,41 @@ import { Context as GatewayContext } from 'contexts/gateway'
 import { Context as HttpContext } from 'contexts/http'
 
 import { IAccountData, useAccountData } from 'hooks/useAccountData'
+import YAML from 'yaml'
 
 function stringifyAccountData(data: IAccountData) {
-  const {
-    accountInfo: ai,
-    metadata: md,
-    mosaicAmountViews: mav,
-    multisigAccountInfo: mai
-  } = data
-  return `Info:
-  Address: ${ai.address.plain()}
-  HexAddress: ${ai.address.encoded()}
-    Height at: ${ai.addressHeight}
-  PublicKey: ${ai.publicKey}
-    Height at: ${ai.publicKeyHeight}
-  Importance: ${ai.importance}
-    Height at: ${ai.importanceHeight}
-Metadata:
-${md.map(d => "  - " + d.metadataEntry.value).join("\n")}
-Mosaics:
-${mav.map(v => "  - " + `${v.fullName()}:${v.relativeAmount()}`).join("\n")}
-`
+  return YAML.stringify(data)
+//   const {
+//     accountInfo: ai,
+//     metadata: md,
+//     mosaicAmountViews: mav,
+//     multisigAccountInfo: mai
+//   } = data
+//   return `Info:
+//   Address: ${ai.address.plain()}
+//   HexAddress: ${ai.address.encoded()}
+//     Height at: ${ai.addressHeight}
+//   PublicKey: ${ai.publicKey}
+//     Height at: ${ai.publicKeyHeight}
+//   Importance: ${ai.importance}
+//     Height at: ${ai.importanceHeight}
+// Metadata:
+// ${md.map(d => "  - " + d.metadataEntry.value).join("\n")}
+// Mosaics:
+// ${mav.map(v => "  - " + `${v.fullName()}:${v.relativeAmount()}`).join("\n")}
+// `
 }
 
 export const Account: React.FC = () => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
 
-  const { accountHttp, mosaicHttp, metadataHttp } = httpContext.httpInstance
+  const { accountHttp, mosaicHttp, metadataHttp, multisigHttp } = httpContext.httpInstance
   const { accountData, setIdentifier, loading, error } = useAccountData({
     accountHttp,
     mosaicHttp,
-    metadataHttp
+    metadataHttp,
+    multisigHttp
   })
 
   const [output, setOutput] = useState("")

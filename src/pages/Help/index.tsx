@@ -3,6 +3,7 @@ import React from 'react';
 import ImageArmyKnife from './army_knife.png'
 
 export const Help: React.FC = () => {
+  console.info("Do you know of KONAMI Command?")
   return (
 <div className="card fluid">
   <div className="section">
