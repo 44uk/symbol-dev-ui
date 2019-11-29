@@ -2,7 +2,9 @@ import React, { useContext, useState, useEffect } from "react"
 
 import TextOutput from "components/TextOutput"
 
-import { Context as GatewayContext } from "contexts/gateway"
+import {
+  GatewayContext
+} from "contexts"
 
 import { useMultisigData, IMultisigData } from "hooks"
 

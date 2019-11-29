@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react"
-import { Context as GatewayContext } from "contexts/gateway"
+import { GatewayContext } from "contexts"
 import { NetworkType } from "nem2-sdk"
 import { forkJoin, from, of } from "rxjs"
 import { map } from "rxjs/operators"

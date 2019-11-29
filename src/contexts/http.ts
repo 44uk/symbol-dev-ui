@@ -70,9 +70,9 @@ export function createHttpInstance(url: string): IHttpInstance {
   }
 }
 
-export const DEFAULT_URL = "http://localhost:3000"
+export const HTTP_DEFAULT_URL = "http://localhost:3000"
 
-export const Context = createContext({
-  url: DEFAULT_URL,
-  httpInstance: createHttpInstance(DEFAULT_URL)
+export const HttpContext = createContext({
+  url: HTTP_DEFAULT_URL,
+  httpInstance: createHttpInstance(HTTP_DEFAULT_URL)
 })

@@ -1,8 +1,10 @@
 import React, { useState, useContext, useEffect } from "react"
 import YAML from "yaml"
 
-import { Context as GatewayContext } from "contexts/gateway"
-import { Context as HttpContext } from "contexts/http"
+import {
+  GatewayContext,
+  HttpContext
+} from "contexts"
 
 import { useNamespaceData, INamespaceData } from "hooks"
 import { TextOutput } from "components"

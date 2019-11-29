@@ -3,8 +3,10 @@ import React, { useState, useEffect, useContext } from "react"
 import TextOutput from "components/TextOutput"
 import Input from "./Input"
 
-import { Context as GatewayContext } from "contexts/gateway"
-import { Context as HttpContext } from "contexts/http"
+import {
+  GatewayContext,
+  HttpContext
+} from "contexts"
 
 import { IAccountData, useAccountData } from "hooks/useAccountData"
 import YAML from "yaml"

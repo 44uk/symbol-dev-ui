@@ -5,7 +5,9 @@ import {
   Account, NetworkType,
 } from "nem2-sdk"
 
-import { Context as GatewayContext } from "contexts/gateway"
+import {
+  GatewayContext
+ } from "contexts"
 
 import FieldWithLabel from "components/FieldWithLabel"
 
@@ -14,25 +16,25 @@ interface IProps {
   pretty: boolean
 }
 
-function toJson(account: Account, url: string, pretty = false) {
+function toJson(account: Account, url: string, genHash: string, pretty = false) {
   const obj = {
     privateKey: account.privateKey,
     publicKey: account.publicKey,
     address: account.address[pretty ? "pretty" : "plain"](),
     networkType: account.networkType,
     url: url,
-    networkGenerationHash: "--WIP--",
+    networkGenerationHash: genHash,
   }
   return JSON.stringify(obj, null, 4)
 }
 
-function toText(account: Account, url: string, pretty = false) {
+function toText(account: Account, url: string, genHash: string, pretty = false) {
   return `privateKey: ${account.privateKey}
 publicKey: ${account.publicKey}
 address: ${account.address[pretty ? "pretty" : "plain"]()}
 networkType: ${account.networkType}
 url: ${url}
-networkGenerationHash: --WIP--`
+networkGenerationHash: ${genHash}`
 }
 
 function copyToClipboard(text: string) {
@@ -45,7 +47,6 @@ function copyToClipboard(text: string) {
       console.log(text)
     })
     .catch((error) => console.error("Your browser doesn't support copy to clipboard"))
-
 }
 
 export const Output: React.FC<IProps> = ({
@@ -86,10 +87,10 @@ export const Output: React.FC<IProps> = ({
     let text
     switch (format) {
       case "json":
-        text = toJson(account, gwContext.url, pretty)
+        text = toJson(account, gwContext.url, gwContext.genHash, pretty)
         break
       case "text":
-        text = toText(account, gwContext.url, pretty)
+        text = toText(account, gwContext.url, gwContext.genHash, pretty)
         break
       default:
         text = ""

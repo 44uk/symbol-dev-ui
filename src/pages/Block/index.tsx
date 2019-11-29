@@ -5,9 +5,11 @@ import {
   ChainHttp,
 } from "nem2-sdk"
 
-import { Context as GatewayContext } from "contexts/gateway"
-import { Context as HttpContext } from "contexts/http"
-import { Context as WebSockContext } from "contexts/websock"
+import {
+  GatewayContext,
+  HttpContext,
+  WebSockContext
+} from "contexts"
 
 import { useBlockData, IBlockData } from "hooks/useBlockData"
 import { useBlockInfoListener } from "hooks/useBlockInfoListener"

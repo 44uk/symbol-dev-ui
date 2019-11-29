@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useContext } from "react"
 
 import {
-  Account, NetworkType, Address, PublicAccount, TransferTransaction, Deadline, NetworkCurrencyMosaic, EmptyMessage, UInt64, AggregateTransaction, SignedTransaction
+  Account, Address, PublicAccount, TransferTransaction, Deadline, NetworkCurrencyMosaic, EmptyMessage, UInt64, AggregateTransaction, SignedTransaction, TransactionHttp
 } from "nem2-sdk"
 
-import { Context as GatewayContext } from "contexts/gateway"
+import { from } from "rxjs"
+import { mergeMap } from "rxjs/operators"
+
+import {
+  GatewayContext,
+  HttpContext
+} from "contexts"
 
 function filterValidIdentifier(lines: string) {
   const filtered = lines
@@ -15,12 +21,12 @@ function filterValidIdentifier(lines: string) {
   return filtered
 }
 
-function buildTransaction(signer: Account, recipients: string[], aggregated = false) {
+function buildTransactions(signer: Account, recipients: string[], aggregated = false) {
   const addresses = recipients.map(recipient => {
     let address: Address
-    if(/^[SMTN][0-9A-Z]{39}/.test(recipient.replace("-", ""))) {
+    if(/^[SMTN][0-9A-Z]{39}/.test(recipient.replace(/-/g, ""))) {
       address = Address.createFromRawAddress(recipient)
-    } else if(/[0-9A-F]{64}/.test(recipient.replace("-", ""))) {
+    } else if(/[0-9A-F]{64}/.test(recipient)) {
       // TODO:
       const account = PublicAccount.createFromPublicKey(recipient, signer.networkType)
       address = account.address
@@ -61,8 +67,14 @@ function buildTransaction(signer: Account, recipients: string[], aggregated = fa
   return txesToAnnounce
 }
 
+function announce(signedTxes: SignedTransaction[], txHttp: TransactionHttp) {
+  return from(signedTxes)
+    .pipe(mergeMap(t => txHttp.announce(t)))
+}
+
 export const Distribute: React.FC = () => {
   const gwContext = useContext(GatewayContext)
+  const httpContext = useContext(HttpContext)
 
   const [distributerKey, setDistributerKey] = useState("")
   const [distributer, setDistributer] = useState<Account | null>(null)
@@ -70,6 +82,16 @@ export const Distribute: React.FC = () => {
   const [recipients, setRecipients] = useState("")
   const [aggregation, setAggregation] = useState(false)
   const [isReady, setIsReady] = useState(false)
+
+  function distribute() {
+    if (! distributer) return
+    const identifiers = filterValidIdentifier(recipients)
+    const txes = buildTransactions(distributer, identifiers, aggregation)
+    announce(txes, httpContext.httpInstance.transactionHttp)
+      .subscribe(
+        console.log
+      )
+  }
 
   useEffect(() => {
     try {
@@ -129,7 +151,7 @@ export const Distribute: React.FC = () => {
       />
       <label htmlFor="aggregation">Aggregate"em</label>
       <button
-        onClick={() => {}}
+        onClick={() => distribute()}
         disabled={! isReady}
       >Distribute!</button>
     </div>

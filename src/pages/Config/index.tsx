@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react"
 
 import {
-  gateways,
-  Context as GatewayContext
-} from "contexts/gateway"
+  GATEWAY_LIST,
+  GatewayContext
+} from "contexts"
 
 export const Config: React.FC = () => {
   const gwContext = useContext(GatewayContext)
@@ -11,7 +11,7 @@ export const Config: React.FC = () => {
 
   function resetPersistedState() {
     gwContext.setUrlList([])
-    setGwText(gateways.join("\n"))
+    setGwText(GATEWAY_LIST.join("\n"))
   }
 
   function saveGatewayList() {

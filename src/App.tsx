@@ -5,17 +5,13 @@ import {
   GatewaySelector
 } from "components"
 import {
-  gateways,
-  Context as GatewayContext
-} from "contexts/gateway"
-import {
+  GATEWAY_LIST,
+  GatewayContext,
   createHttpInstance,
-  Context as HttpContext
-} from "contexts/http"
-import {
+  HttpContext,
   createWebSockInstance,
-  Context as WebSockContext
-} from "contexts/websock"
+  WebSockContext
+} from "contexts"
 import createPersistedState from "use-persisted-state"
 import { NetworkType } from "nem2-sdk"
 
@@ -23,7 +19,7 @@ const useGatewayListState = createPersistedState("gateway-list")
 const useCurrentGatewayState = createPersistedState("current-gateway")
 
 const App: React.FC = () => {
-  const [urlList, setUrlList] = useGatewayListState(gateways)
+  const [urlList, setUrlList] = useGatewayListState(GATEWAY_LIST)
   const [gw, setGw] = useCurrentGatewayState(urlList[0])
 
   const [url, setUrl] = useState(gw)
