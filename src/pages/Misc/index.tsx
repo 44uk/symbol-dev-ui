@@ -61,7 +61,7 @@ export const Misc: React.FC = () => {
       ></IOField>
 
       <IOField func={encodeNamespace}
-        label="Eecode Namespace"
+        label="Decode Namespace"
         placeholder="ex) cat.currency"
       ></IOField>
 

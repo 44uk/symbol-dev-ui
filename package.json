@@ -2,6 +2,7 @@
   "name": "nem2-dev-ui",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@types/crypto-js": "^3.1.43",
     "@types/jest": "^24.0.23",
