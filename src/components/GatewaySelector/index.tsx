@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react"
 import { GatewayContext } from "contexts"
 import { NetworkType } from "nem2-sdk"
-import { forkJoin, from, of } from "rxjs"
+import { forkJoin, from } from "rxjs"
 import { map } from "rxjs/operators"
 
 interface IProps {
@@ -58,7 +58,7 @@ export const GatewaySelector: React.FC<IProps> = (
     //     setAvailability(false)
     //   })
     //   .finally(() => 0)
-  }, [gwContext.url])
+  }, [gwContext.url, setGenHash, setNetworkType])
 
   return (
 <div className="col-sm">

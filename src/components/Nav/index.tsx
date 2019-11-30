@@ -12,14 +12,12 @@ export const Nav: React.FC = () => (
   <Link className="button" to={paths.mosaic}>Mosaic</Link>
   <Link className="button" to={paths.block}>Block</Link>
   <Link className="button" to={paths.transaction}>Transaction</Link>
-  <Link className="button" to={paths.receipt}>Receipt</Link>
-  <Link className="button" to={paths.meta}>Meta</Link>
   <Link className="button" to={paths.node}>Node</Link>
+  <Link className="button" to={paths.fee}>Fee</Link>
   <Link className="button" to={paths.distribute}>Distribute</Link>
-  <Link className="button" to={paths.announce}>Announce</Link>
   <Link className="button" to={paths.misc}>Misc</Link>
-  <Link className="button" to={paths.reference}>Reference</Link>
   <Link className="button" to={paths.config}>Config</Link>
+  <Link className="button" to={paths.reference}>Reference</Link>
   <Link className="button" to={paths.help}>Help</Link>
 </header>
 )

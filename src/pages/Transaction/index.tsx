@@ -7,7 +7,7 @@ import {
 } from "contexts"
 
 import { TextOutput } from "components"
-import { useTransactionData, ITransactionData } from "hooks"
+import { useTransactionData } from "hooks"
 
 export const Transaction: React.FC = () => {
   const gwContext = useContext(GatewayContext)
@@ -31,7 +31,6 @@ export const Transaction: React.FC = () => {
     if(! transactionData) return
     setOutput(YAML.stringify(transactionData))
   }, [transactionData])
-
 
   return (
 <div>

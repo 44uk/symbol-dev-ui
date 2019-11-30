@@ -12,12 +12,13 @@ import {
   HttpContext
 } from "contexts"
 
+import { useStatusListener } from "hooks"
+
 function filterValidIdentifier(lines: string) {
   const filtered = lines
     .split("\n")
     .map(_ => _.trim())
     .filter(_ => _.length >= 40)
-  console.debug(filtered)
   return filtered
 }
 
@@ -86,6 +87,7 @@ export const Distribute: React.FC = () => {
   function distribute() {
     if (! distributer) return
     const identifiers = filterValidIdentifier(recipients)
+    setRecipients(identifiers.join("\n"))
     const txes = buildTransactions(distributer, identifiers, aggregation)
     announce(txes, httpContext.httpInstance.transactionHttp)
       .subscribe(

@@ -9,7 +9,9 @@ import {
   encodeAddress,
   encodeNamespace,
   convertHexToUInt64,
+  convertHexToNum,
   convertUInt64ToHex,
+  convertUInt64ToNum,
   datetimeStringToNemTimestamp,
   nemTimestampToDatetimeString
 } from "util/convert"
@@ -21,22 +23,29 @@ export const Misc: React.FC = () => {
       <p>Misc Page.</p>
 
       <IOField func={nemTimestampToDatetimeString}
-        label="NEM Timestamp => DateTime"
-        placeholder="ex) 1459468800000"
+        label="NEM Timestamp => DateTime(ISO8601)"
+        placeholder="ex) 110097499"
       ></IOField>
-
       <IOField func={datetimeStringToNemTimestamp}
-        label="DateTime => NEM Timestamp"
-        placeholder="ex) 2016-04-01 00:00:00"
+        label="DateTime(ISO8601) => NEM Timestamp"
+        placeholder="ex) 2016-04-01T00:00:00.000Z"
       ></IOField>
 
       <IOField func={convertHexToUInt64}
         label="Hex => [Lower,Higher]"
         placeholder="ex) 85BBEA6CC462B244"
       ></IOField>
+      <IOField func={convertHexToNum}
+        label="Hex => Number"
+        placeholder="ex) 85BBEA6CC462B244"
+      ></IOField>
 
       <IOField func={convertUInt64ToHex}
         label="[Lower,Higher] => Hex"
+        placeholder="ex) [3294802500,2243684972]"
+      ></IOField>
+      <IOField func={convertUInt64ToNum}
+        label="[Lower,Higher] => Number"
         placeholder="ex) [3294802500,2243684972]"
       ></IOField>
 

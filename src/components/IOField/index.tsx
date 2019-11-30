@@ -7,7 +7,7 @@ interface IProps {
   disabled?: boolean
   value?: string
   note?: string
-  func?: (val: string) => string
+  func?: (val: string) => string | number
 }
 
 export const IOField: React.FC<IProps> = ({
@@ -25,7 +25,7 @@ export const IOField: React.FC<IProps> = ({
 
   useEffect(() => {
     const result = func ? func(input) : input
-    setOutput(result)
+    setOutput(result.toString())
   }, [input, func])
 
   return (

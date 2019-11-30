@@ -13,6 +13,8 @@ import {
   convertIdentifierToNamespaceHex,
   convertIdentifierToMosaicId,
   convertIdentifierToMosaicHex,
+  nemTimestampToDatetimeString,
+  datetimeStringToNemTimestamp,
 } from "util/convert"
 import { NamespaceId, MosaicId } from "nem2-sdk"
 
@@ -100,7 +102,11 @@ test("convertIdentifierToMosaicHex", () => {
 })
 
 test("datetimeStringToNemTimestamp", () => {
+  expect(datetimeStringToNemTimestamp("2016-04-01T00:00:00.000Z")).toEqual("0")
+  expect(datetimeStringToNemTimestamp("2019-09-27T06:38:19.000Z")).toEqual("110097499")
 })
 
 test("nemTimestampToDatetimeString", () => {
+  expect(nemTimestampToDatetimeString("0")).toEqual("2016-04-01T00:00:00.000Z")
+  expect(nemTimestampToDatetimeString("110097499")).toEqual("2019-09-27T06:38:19.000Z")
 })

@@ -157,7 +157,7 @@ export const datetimeStringToNemTimestamp = (input: string) => {
   const msec = Date.parse(input)
   if(Number.isNaN(msec)) return ""
   try {
-    const nemTimestamp = msec - Deadline.timestampNemesisBlock
+    const nemTimestamp = msec / 1000 - Deadline.timestampNemesisBlock
     return nemTimestamp.toString()
   } catch(_) {
     return ""
@@ -166,8 +166,8 @@ export const datetimeStringToNemTimestamp = (input: string) => {
 
 export const nemTimestampToDatetimeString = (input: string) => {
   try {
-    const msec = parseInt(input)
-    return new Date(msec + Deadline.timestampNemesisBlock).toISOString()
+    const sec = parseInt(input) + Deadline.timestampNemesisBlock
+    return new Date(sec * 1000).toISOString()
   } catch(_) {
     return ""
   }
