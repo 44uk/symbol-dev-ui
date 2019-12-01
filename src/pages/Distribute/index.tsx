@@ -22,13 +22,12 @@ function filterValidIdentifier(lines: string) {
   return filtered
 }
 
-function buildTransactions(signer: Account, recipients: string[], aggregated = false) {
+function buildTransactions(signer: Account, recipients: string[], amount: number, aggregated = false) {
   const addresses = recipients.map(recipient => {
     let address: Address
     if(/^[SMTN][0-9A-Z]{39}/.test(recipient.replace(/-/g, ""))) {
       address = Address.createFromRawAddress(recipient)
     } else if(/[0-9A-F]{64}/.test(recipient)) {
-      // TODO:
       const account = PublicAccount.createFromPublicKey(recipient, signer.networkType)
       address = account.address
     } else {
@@ -36,10 +35,7 @@ function buildTransactions(signer: Account, recipients: string[], aggregated = f
     }
     return address
   })
-
-  const amount = 1
   const message = EmptyMessage
-
   const txes = addresses.map(a => (
     TransferTransaction.create(
       Deadline.create(),
@@ -47,7 +43,7 @@ function buildTransactions(signer: Account, recipients: string[], aggregated = f
       [NetworkCurrencyMosaic.createRelative(amount)],
       message,
       signer.networkType,
-      UInt64.fromUint(50000)
+      UInt64.fromUint(100000)
     )
   ))
 
@@ -86,9 +82,16 @@ export const Distribute: React.FC = () => {
 
   function distribute() {
     if (! distributer) return
+    if (! parseInt(amount)) return
     const identifiers = filterValidIdentifier(recipients)
     setRecipients(identifiers.join("\n"))
-    const txes = buildTransactions(distributer, identifiers, aggregation)
+    const txes = buildTransactions(
+      distributer,
+      identifiers,
+      parseInt(amount),
+      aggregation
+    )
+    // TODO:
     announce(txes, httpContext.httpInstance.transactionHttp)
       .subscribe(
         console.log
