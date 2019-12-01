@@ -88,7 +88,7 @@ const renderLine = (buf: string[], entry: IEntry, level: number, end: boolean, r
     : ""
   const nOfm = msig.cosignatoryPublicKeys.length === 0
     ? ""
-    : ` (${msig.minApproval}, ${msig.cosignatoryPublicKeys.length})`
+    : ` (C: ${msig.cosignatoryPublicKeys.length}, A: ${msig.minApproval}, R: ${msig.minRemoval})`
   const identifier = opts.truncated
     ? `${msig.accountPublicKey.slice(0, opts.head)}..${msig.accountPublicKey.slice((opts.tail || 0) * -1)}`
     : msig.accountPublicKey

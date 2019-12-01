@@ -9,7 +9,7 @@ interface IProps {
 }
 
 export const TextOutput: React.FC<IProps> = ({
-  label, value, rows, loading = false, error
+  label, value, rows, loading = false, error, children
 }) => {
   let _value = ""
   if(error) {
@@ -32,6 +32,7 @@ export const TextOutput: React.FC<IProps> = ({
     style={{width: "100%"}}
     value={_value}
   ></textarea>
+  { children }
 </fieldset>
   )
 }

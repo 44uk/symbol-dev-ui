@@ -1,38 +1,38 @@
 import graph2tree, { buildTree } from "util/graph2tree"
 
 test("reference from Root", () => {
-  const expected = `# A01CF346..43E2 (3, 3) <<
-    └ 06193475..0772 (1, 2)
+  const expected = `# A01CF346..43E2 (C: 3, A: 3, R: 1) <<
+    └ 06193475..0772 (C: 2, A: 1, R: 1)
         └ 465D4063..2F68
         └ 4FCBC947..D28D
     └ 92BE08D5..E910
-    └ 9835C3BA..92C2 (2, 3)
+    └ 9835C3BA..92C2 (C: 3, A: 2, R: 1)
         └ 4F722246..B27F
-        └ 8BFDE2C8..93E0 (1, 1)
+        └ 8BFDE2C8..93E0 (C: 1, A: 1, R: 1)
             └ A8443CB1..CC47
         └ 92BE08D5..E910`
   expect(graph2tree(require("./graph/fromLevel0.json"))).toBe(expected)
 })
 
 test("reference from Level1", () => {
-  const expected = `# A01CF346..43E2 (3, 3)
-    └ 06193475..0772 (1, 2) <<
+  const expected = `# A01CF346..43E2 (C: 3, A: 3, R: 1)
+    └ 06193475..0772 (C: 2, A: 1, R: 1) <<
         └ 465D4063..2F68
         └ 4FCBC947..D28D`
   expect(graph2tree(require("./graph/fromLevel1.json"))).toBe(expected)
 })
 
 test("reference from Level2", () => {
-  const expected = `# A01CF346..43E2 (3, 3)
-    └ 06193475..0772 (1, 2)
+  const expected = `# A01CF346..43E2 (C: 3, A: 3, R: 1)
+    └ 06193475..0772 (C: 2, A: 1, R: 1)
         └ 465D4063..2F68 <<`
   expect(graph2tree(require("./graph/fromLevel2.json"))).toBe(expected)
 })
 
 test("reference from Level3", () => {
-  const expected = `# A01CF346..43E2 (3, 3)
-    └ 9835C3BA..92C2 (2, 3)
-        └ 8BFDE2C8..93E0 (1, 1)
+  const expected = `# A01CF346..43E2 (C: 3, A: 3, R: 1)
+    └ 9835C3BA..92C2 (C: 3, A: 2, R: 1)
+        └ 8BFDE2C8..93E0 (C: 1, A: 1, R: 1)
             └ A8443CB1..CC47 <<`
   expect(graph2tree(require("./graph/fromLevel3.json"))).toBe(expected)
 })

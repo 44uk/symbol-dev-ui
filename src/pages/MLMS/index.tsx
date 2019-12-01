@@ -10,8 +10,9 @@ import { useMultisigData, IMultisigData } from "hooks"
 
 import  { graph2tree }from "util/graph2tree"
 
-function stringifyMultisigData(data: IMultisigData) {
-  return graph2tree(data.graphInfo)
+function stringifyMultisigData(data: IMultisigData, truncated = true) {
+  const opts = { truncated }
+  return graph2tree(data.graphInfo, opts)
 }
 
 export const MLMS: React.FC = () => {
@@ -22,6 +23,7 @@ export const MLMS: React.FC = () => {
   const [value, setValue] = useState("")
   const _value = value.replace(/-/g, "")
 
+  const [truncated, setTruncated] = useState(true)
   const [output, setOutput] = useState("")
 
   function submit() {
@@ -32,8 +34,8 @@ export const MLMS: React.FC = () => {
 
   useEffect(() => {
     if(! multisigData) return
-    setOutput(stringifyMultisigData(multisigData))
-  }, [multisigData])
+    setOutput(stringifyMultisigData(multisigData, truncated))
+  }, [multisigData, truncated])
 
   return (
 <div>
@@ -45,12 +47,19 @@ export const MLMS: React.FC = () => {
         autoFocus
         pattern="[a-fA-F\d-]+"
         value={value}
-        onChange={(_) => setValue(_.currentTarget.value)}
-        onKeyPress={(_) => _.key === "Enter" && submit()}
+        onChange={_ => setValue(_.currentTarget.value)}
+        onKeyPress={_ => _.key === "Enter" && submit()}
         placeholder="ex) Address or PublicKey"
         maxLength={64}
       />
       <p className="note"><small>Hit ENTER key to load from Node.</small></p>
+    </div>
+    <div className="input-group">
+      <input type="checkbox" id="truncated"
+        onChange={() => setTruncated(!truncated)}
+        checked={truncated}
+      />
+      <label htmlFor="truncated">Truncated&nbsp;<small>PublicKey is showed truncated.</small></label>
     </div>
     <p>
     { value
@@ -67,7 +76,9 @@ export const MLMS: React.FC = () => {
     value={output}
     loading={loading}
     error={error}
-  ></TextOutput>
+  >
+    <p className="note"><small>Symbols mean -> "#" Root, "└" CoSigner, "&lt;&lt;" Referer, "(C: Cosigners, A: minApproval, R: minRemovable)"</small></p>
+  </TextOutput>
 </div>
   )
 }
