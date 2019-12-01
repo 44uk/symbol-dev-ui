@@ -22,10 +22,6 @@ export interface IMultisigData {
   graphInfo: ILayer[]
 }
 
-// interface IHttpInstance {
-//   accountHttp: AccountHttp
-// }
-
 export const useMultisigData = (url: string) => {
   const [identifier, setIdentifier] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -35,9 +31,9 @@ export const useMultisigData = (url: string) => {
 
   function getJSON<T>(url: string): Observable<T> {
     return from(fetch(url)
-      .then<T>(resp => resp.json()
-      .catch(error => error)
-    ))
+      .then(resp => { if(resp.ok) { return resp } else { throw new Error(resp.statusText) } })
+      .then<T>(resp => resp.json())
+    )
   }
 
   const handler = () => {
@@ -50,7 +46,6 @@ export const useMultisigData = (url: string) => {
       getJSON<ILayer[]>(`${url}/account/${address.plain()}/multisig/graph`)
     ])
       .pipe(
-        tap(console.debug),
         map(resp => ({
           graphInfo: resp[0],
         }))

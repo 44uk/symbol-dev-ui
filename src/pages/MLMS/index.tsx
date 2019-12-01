@@ -31,7 +31,6 @@ export const MLMS: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log("HOGE: %o", multisigData)
     if(! multisigData) return
     setOutput(stringifyMultisigData(multisigData))
   }, [multisigData])
