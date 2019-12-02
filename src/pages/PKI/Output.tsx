@@ -6,7 +6,7 @@ import {
 
 import {
   GatewayContext
- } from "contexts"
+} from "contexts"
 
 import FieldWithLabel from "components/FieldWithLabel"
 
@@ -96,7 +96,7 @@ export const Output: React.FC<IProps> = ({
         break
     }
     setOutput(text)
-  }, [format, account, pretty])
+  }, [format, account, gwContext.url, gwContext.genHash, pretty])
 
   return (
     <fieldset>

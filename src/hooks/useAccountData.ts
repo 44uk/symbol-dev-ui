@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MultisigAccountInfo, MosaicAmountView, Metadata, MultisigHttp } from "nem2-sdk"
-import { forkJoin, of } from "rxjs"
-import { catchError, map } from "rxjs/operators"
+import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MosaicAmountView, Metadata, MultisigHttp } from "nem2-sdk"
+import { forkJoin } from "rxjs"
+import { map } from "rxjs/operators"
 
 function createAddressFromIdentifier(value: string, networkType = NetworkType.MIJIN_TEST) {
   try {

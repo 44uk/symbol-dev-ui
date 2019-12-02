@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { NetworkType, Address } from "nem2-sdk"
 import { forkJoin, from, Observable } from "rxjs"
-import { map, tap } from "rxjs/operators"
+import { map } from "rxjs/operators"
 
 import {
   ILayer,

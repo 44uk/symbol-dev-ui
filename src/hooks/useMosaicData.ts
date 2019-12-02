@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { MosaicInfo, Metadata, MosaicHttp, MetadataHttp, MosaicId, RestrictionMosaicHttp, MosaicGlobalRestriction } from "nem2-sdk"
+import { MosaicInfo, Metadata, MosaicHttp, MetadataHttp, RestrictionMosaicHttp, MosaicGlobalRestriction } from "nem2-sdk"
 import { forkJoin, of } from "rxjs"
 import { map, catchError } from "rxjs/operators"
 import {

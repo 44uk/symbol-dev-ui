@@ -1,8 +1,6 @@
 import React, { FC } from "react"
 import { sumByte } from "util/byte"
-import {
-  UInt64, NetworkCurrencyMosaic
-} from "nem2-sdk"
+import { NetworkCurrencyMosaic } from "nem2-sdk"
 
 export interface IProps {
   label?: string

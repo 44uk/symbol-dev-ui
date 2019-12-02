@@ -12,8 +12,6 @@ import {
   HttpContext
 } from "contexts"
 
-import { useListener } from "hooks"
-
 function filterValidIdentifier(lines: string) {
   const filtered = lines
     .split("\n")
@@ -91,12 +89,8 @@ export const Distribute: React.FC = () => {
       parseInt(amount),
       aggregation
     )
-    // TODO:
-    console.debug(signedTxes)
-    // announce(txes, httpContext.httpInstance.transactionHttp)
-    //   .subscribe(
-    //     console.log
-    //   )
+    // TODO: start stream
+    announce(signedTxes, httpContext.httpInstance.transactionHttp)
   }
 
   useEffect(() => {
@@ -107,7 +101,7 @@ export const Distribute: React.FC = () => {
       setDistributer(null)
       return
     }
-  }, [distributerKey])
+  }, [distributerKey, gwContext.networkType])
 
   useEffect(() => {
     setIsReady(false)

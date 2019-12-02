@@ -82,14 +82,14 @@ export const Block: React.FC = () => {
     if(! blockData) { return }
     setBlockHeight(blockData.blockInfo.height.toString())
     setOutput(stringifyBlockData(blockData))
-  }, [blockData])
+  }, [blockData, setBlockHeight])
 
   useEffect(() => {
     const blockInfo = blockListener.blockInfo
     if(! blockInfo) { return }
     setBlockHeight(blockInfo.height.toString())
     setHeight(blockInfo.height.compact())
-  }, [blockListener.blockInfo])
+  }, [blockListener.blockInfo, setBlockHeight, setHeight])
 
   return (
 <div>

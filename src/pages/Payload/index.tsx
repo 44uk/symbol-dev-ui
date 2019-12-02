@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useState, useEffect } from "react"
 import YAML from "yaml"
 
 import { TextOutput } from "components"

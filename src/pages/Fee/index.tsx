@@ -1,13 +1,13 @@
-import React, { useState, useContext, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import asTable from 'as-table'
 import {
   TransactionType
 } from "nem2-sdk"
 
-import {
-  GatewayContext,
-  HttpContext
-} from "contexts"
+// import {
+//   GatewayContext,
+//   HttpContext
+// } from "contexts"
 
 import * as Byte from "util/byte"
 import { TextOutput } from "components"
@@ -18,8 +18,9 @@ const TRANSACTION_TYPE = {
 } as const
 
 export const Fee: React.FC = () => {
-  const gwContext = useContext(GatewayContext)
-  const httpContext = useContext(HttpContext)
+  // TODO: fetch minFeeMultiplier
+  // const gwContext = useContext(GatewayContext)
+  // const httpContext = useContext(HttpContext)
 
   const [type, setType] = useState("Transfer")
   const [feeMultiplier, setFeeMultiplier] = useState("100")
