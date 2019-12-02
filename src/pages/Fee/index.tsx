@@ -1,10 +1,8 @@
 import React, { useState, useContext, useEffect } from "react"
+import asTable from 'as-table'
 import {
   TransactionType
 } from "nem2-sdk"
-
-import { Segments } from "./segments"
-import { EffectiveFee } from "./effective-fee"
 
 import {
   GatewayContext,
@@ -12,6 +10,8 @@ import {
 } from "contexts"
 
 import * as Byte from "util/byte"
+import { TextOutput } from "components"
+import { EffectiveFee } from "./effective-fee"
 
 const TRANSACTION_TYPE = {
   "Transfer": TransactionType.TRANSFER
@@ -24,6 +24,22 @@ export const Fee: React.FC = () => {
   const [type, setType] = useState("Transfer")
   const [feeMultiplier, setFeeMultiplier] = useState("100")
   const [output, setOutput] = useState("")
+
+  useEffect(() => {
+    const rows =[
+      ...Byte.Transaction,
+      // @ts-ignore
+      ...Byte[type]({})
+    ]
+    const sumRow = [
+      { byte: "----", name: "----------------" },
+      { byte: Byte.sumByte(rows), name: "[TOTAL]" }]
+    const asciiTable = asTable.configure({
+      delimiter: "|",
+      right: true
+    })([...rows, ...sumRow])
+    setOutput(asciiTable)
+  }, [type, feeMultiplier])
 
   return (
 <div>
@@ -56,10 +72,10 @@ export const Fee: React.FC = () => {
     feeMultiplier={parseInt(feeMultiplier) || 0}
   />
 
-  <Segments
-    label="Each Segments"
-    segments={Byte.Transaction}
-  />
+  <TextOutput
+    label="Mosaic Data"
+    value={output}
+  ></TextOutput>
 </div>
   )
 }

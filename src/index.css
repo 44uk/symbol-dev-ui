@@ -2,3 +2,8 @@
   font-family: "FiraCode-Light";
   src: local("FiraCode-Light"), url(./fonts/FiraCode-Light.woff) format("woff");
 }
+
+:root {
+  --universal-padding: .45rem;
+}
+
