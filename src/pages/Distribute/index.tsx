@@ -22,7 +22,7 @@ function filterValidIdentifier(lines: string) {
   return filtered
 }
 
-function buildTransactions(signer: Account, recipients: string[], amount: number, aggregated = false) {
+function buildAndSignTransactions(signer: Account, recipients: string[], amount: number, aggregated = false) {
   const addresses = recipients.map(recipient => {
     let address: Address
     if(/^[SMTN][0-9A-Z]{39}/.test(recipient.replace(/-/g, ""))) {
@@ -47,7 +47,7 @@ function buildTransactions(signer: Account, recipients: string[], amount: number
     )
   ))
 
-  let txesToAnnounce: SignedTransaction[]
+  let signedTxes: SignedTransaction[]
   if(aggregated) {
     const aggTx = AggregateTransaction.createComplete(
       Deadline.create(),
@@ -57,11 +57,11 @@ function buildTransactions(signer: Account, recipients: string[], amount: number
       UInt64.fromUint(50000)
     )
     const signedTx = signer.sign(aggTx, "")
-    txesToAnnounce = [ signedTx ]
+    signedTxes = [ signedTx ]
   } else {
-    txesToAnnounce = txes.map(tx => signer.sign(tx, ""))
+    signedTxes = txes.map(tx => signer.sign(tx, ""))
   }
-  return txesToAnnounce
+  return signedTxes
 }
 
 function announce(signedTxes: SignedTransaction[], txHttp: TransactionHttp) {
@@ -112,7 +112,7 @@ export const Distribute: React.FC = () => {
     setIsReady(false)
     if (distributer === null) return
     if (! /^\d{1,9}\.?\d{0,6}$/.test(amount)) return
-    if (recipients.length === 0) return
+    if (filterValidIdentifier(recipients).length === 0) return
     setIsReady(true)
   }, [distributer, amount, recipients])
 
