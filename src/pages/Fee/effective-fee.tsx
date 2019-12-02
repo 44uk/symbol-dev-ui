@@ -15,6 +15,7 @@ export const EffectiveFee: FC<IProps> = ({ label, feeMultiplier = 0 , segmentsGr
   return (
 <fieldset>
   { label && <legend>{ label }</legend> }
+  { totalByte }(Byte) x { feeMultiplier }(Multiplier)&nbsp;=&nbsp;
   <input readOnly={true}
     value={`${currency} ${NetworkCurrencyMosaic.NAMESPACE_ID.fullName}`}
   />
