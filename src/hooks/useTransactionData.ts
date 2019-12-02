@@ -22,7 +22,7 @@ export const useTransactionData = (httpInstance: IHttpInstance) => {
   const { transactionHttp  } = httpInstance
 
   const handler = () => {
-    if(! (identifier && /([0-9A-Z]{64}|)/.test(identifier))) return
+    if(! (identifier && /[0-9A-Z]{64}/.test(identifier))) return
 
     setLoading(true)
     forkJoin([

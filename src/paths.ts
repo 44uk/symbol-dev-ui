@@ -6,6 +6,7 @@ export const paths = {
   mosaic: "/mosaic",
   block: "/block",
   transaction: "/transaction",
+  payload: "/payload",
   receipt: "/receipt",
   meta: "/meta",
   node: "/node",

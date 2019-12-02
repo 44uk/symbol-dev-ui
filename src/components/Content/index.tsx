@@ -13,6 +13,7 @@ import {
   Mosaic,
   Block,
   Transaction,
+  Payload,
   Node,
   Fee,
   Distribute,
@@ -39,6 +40,7 @@ export const Content: React.FC = () => (
   <Route path={paths.fee}><Fee /></Route>
   <Route path={paths.reference}><Reference /></Route>
   <Route path={paths.transaction}><Transaction /></Route>
+  <Route path={paths.payload}><Payload /></Route>
   <Route path={paths.help}><Help /></Route>
   <Redirect to={paths.pki} />
 </Switch>
