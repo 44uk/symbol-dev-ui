@@ -1,6 +1,6 @@
 {
   "name": "nem2-dev-ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -34,7 +34,7 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "archive": "npm run build && zip -r build/archive.zip build/",
+    "archive": "npm run build && mkdir archives; zip -r archives/$(git rev-parse HEAD).zip build/",
     "netlify": "npm run build"
   },
   "eslintConfig": {
