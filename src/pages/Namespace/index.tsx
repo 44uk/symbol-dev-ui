@@ -10,6 +10,10 @@ import { useNamespaceData, INamespaceData } from "hooks"
 import { TextOutput } from "components"
 import { convertIdentifierToNamespaceHex } from "util/convert"
 
+import { persistedPaths } from "persisted-paths"
+import createPersistedState from "use-persisted-state"
+const useInputState = createPersistedState(persistedPaths.namespace)
+
 function stringifyNamespaceData(data: INamespaceData) {
   return YAML.stringify(data)
 //   const info = (
@@ -64,7 +68,7 @@ export const Namespace: React.FC = () => {
     metadataHttp
   })
 
-  const [value, setValue] = useState("")
+  const [value, setValue] = useInputState("")
   const [output, setOutput] = useState("")
 
   function submit() {

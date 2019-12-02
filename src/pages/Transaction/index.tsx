@@ -9,6 +9,10 @@ import {
 import { TextOutput } from "components"
 import { useTransactionData } from "hooks"
 
+import { persistedPaths } from "persisted-paths"
+import createPersistedState from "use-persisted-state"
+const useInputState = createPersistedState(persistedPaths.transaction)
+
 export const Transaction: React.FC = () => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
@@ -18,7 +22,7 @@ export const Transaction: React.FC = () => {
     transactionHttp
   })
 
-  const [value, setValue] = useState("")
+  const [value, setValue] = useInputState("")
   const [output, setOutput] = useState("")
 
   function submit() {

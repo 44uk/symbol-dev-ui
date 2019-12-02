@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
+
+import { persistedPaths } from "persisted-paths"
+import createPersistedState from "use-persisted-state"
+const useInputState = createPersistedState(persistedPaths.account)
 
 interface IProps {
   url: string
@@ -13,7 +17,7 @@ export const Input: React.FC<IProps> = ({
   identifier,
   handler,
 }) => {
-  const [value, setValue] = useState("")
+  const [value, setValue] = useInputState("")
   const _value = value.replace(/-/g, "")
 
   function submit() {

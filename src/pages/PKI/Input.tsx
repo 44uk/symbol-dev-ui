@@ -5,6 +5,10 @@ import {
   NetworkType
 } from "nem2-sdk"
 
+import { persistedPaths } from "persisted-paths"
+import createPersistedState from "use-persisted-state"
+const useInputState = createPersistedState(persistedPaths.pki)
+
 interface IProps {
   onSetAccount: React.Dispatch<React.SetStateAction<Account | null>>
   onSetPretty: React.Dispatch<React.SetStateAction<boolean>>
@@ -36,7 +40,7 @@ export const Input: React.FC<IProps> = ({
   onSetAccount,
   onSetPretty,
 }) => {
-  const [privateKey, setPrivateKey] = useState("")
+  const [privateKey, setPrivateKey] = useInputState("")
   const [networkType, setNetworkType] = useState(NetworkType.MIJIN_TEST)
   const [pretty, setPretty] = useState(true)
   const [vanity, setVanity] = useState("N")

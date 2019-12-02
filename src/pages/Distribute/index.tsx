@@ -12,7 +12,7 @@ import {
   HttpContext
 } from "contexts"
 
-import { useStatusListener } from "hooks"
+import { useListener } from "hooks"
 
 function filterValidIdentifier(lines: string) {
   const filtered = lines
@@ -85,17 +85,18 @@ export const Distribute: React.FC = () => {
     if (! parseInt(amount)) return
     const identifiers = filterValidIdentifier(recipients)
     setRecipients(identifiers.join("\n"))
-    const txes = buildTransactions(
+    const signedTxes = buildAndSignTransactions(
       distributer,
       identifiers,
       parseInt(amount),
       aggregation
     )
     // TODO:
-    announce(txes, httpContext.httpInstance.transactionHttp)
-      .subscribe(
-        console.log
-      )
+    console.debug(signedTxes)
+    // announce(txes, httpContext.httpInstance.transactionHttp)
+    //   .subscribe(
+    //     console.log
+    //   )
   }
 
   useEffect(() => {

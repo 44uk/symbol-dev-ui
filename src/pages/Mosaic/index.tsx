@@ -10,6 +10,10 @@ import { TextOutput } from "components"
 import { useMosaicData, IMosaicData } from "hooks"
 import { convertIdentifierToMosaicHex } from "util/convert"
 
+import { persistedPaths } from "persisted-paths"
+import createPersistedState from "use-persisted-state"
+const useInputState = createPersistedState(persistedPaths.mosaic)
+
 function stringifyMosaicData(data: IMosaicData) {
   return YAML.stringify(data)
 //   const { mosaicInfo, metadata } = data
@@ -42,7 +46,7 @@ export const Mosaic: React.FC = () => {
     restrictionMosaicHttp
   })
 
-  const [value, setValue] = useState("")
+  const [value, setValue] = useInputState("")
   const [output, setOutput] = useState("")
 
   function submit() {

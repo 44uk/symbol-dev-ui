@@ -10,6 +10,10 @@ import { useMultisigData, IMultisigData } from "hooks"
 
 import  { graph2tree }from "util/graph2tree"
 
+import { persistedPaths } from "persisted-paths"
+import createPersistedState from "use-persisted-state"
+const useInputState = createPersistedState(persistedPaths.mlms)
+
 function stringifyMultisigData(data: IMultisigData, truncated = true) {
   const opts = { truncated }
   return graph2tree(data.graphInfo, opts)
@@ -20,7 +24,7 @@ export const MLMS: React.FC = () => {
 
   const { multisigData, identifier, setIdentifier, handler, loading, error } = useMultisigData(gwContext.url)
 
-  const [value, setValue] = useState("")
+  const [value, setValue] = useInputState("")
   const _value = value.replace(/-/g, "")
 
   const [truncated, setTruncated] = useState(true)

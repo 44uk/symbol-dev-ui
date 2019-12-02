@@ -15,6 +15,10 @@ import { useBlockData, IBlockData } from "hooks/useBlockData"
 import { useBlockInfoListener } from "hooks/useBlockInfoListener"
 import { TextOutput } from "components/TextOutput"
 
+import { persistedPaths } from "persisted-paths"
+import createPersistedState from "use-persisted-state"
+const useInputState = createPersistedState(persistedPaths.block)
+
 function stringifyBlockData(data: IBlockData) {
   return YAML.stringify(data)
 //   return `meta:
@@ -58,7 +62,7 @@ export const Block: React.FC = () => {
   const { listener } = webSockContext.webSockInstance
   const blockListener = useBlockInfoListener(listener)
 
-  const [blockHeight, setBlockHeight] = useState("")
+  const [blockHeight, setBlockHeight] = useInputState("")
   const [output, setOutput] = useState("")
   const [prependLoading, setPrependLoading] = useState(false)
 
