@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
+import { NetworkType } from "nem2-sdk"
+
 import {
   Nav,
   Content,
@@ -10,13 +12,14 @@ import {
   createHttpInstance,
   HttpContext,
   createWebSockInstance,
-  WebSockContext
+  WebSockContext,
 } from "contexts"
-import createPersistedState from "use-persisted-state"
-import { NetworkType } from "nem2-sdk"
 
-const useGatewayListState = createPersistedState("gateway-list")
-const useCurrentGatewayState = createPersistedState("current-gateway")
+import { persistedPaths } from "persisted-paths"
+import createPersistedState from "use-persisted-state"
+
+const useGatewayListState = createPersistedState(persistedPaths.gatewayList)
+const useCurrentGatewayState = createPersistedState(persistedPaths.currentGateway)
 
 const App: React.FC = () => {
   const [urlList, setUrlList] = useGatewayListState(GATEWAY_LIST)
@@ -37,12 +40,11 @@ const App: React.FC = () => {
   }, [url])
 
   const httpContextValue = {
-    url,
-    httpInstance: createHttpInstance(url)
+    url, httpInstance: createHttpInstance(url)
   }
+
   const webSockContextValue = {
-    url,
-    webSockInstance: createWebSockInstance(url)
+    url, webSockInstance: createWebSockInstance(url)
   }
 
   return (
