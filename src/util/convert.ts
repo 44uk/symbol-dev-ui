@@ -23,7 +23,9 @@ export const encodeNamespace = (value: string) => {
   }
 }
 
-export const convertHexToNum = (value: string) => parseInt(value, 16)
+export const convertHexToNum = (value: string) => {
+  return (parseInt(value, 16) || "").toString()
+}
 export const convertHexToUInt64 = (value: string) => {
   try {
     const uint64 = UInt64.fromHex(value.trim())
@@ -33,7 +35,9 @@ export const convertHexToUInt64 = (value: string) => {
   }
 }
 
-export const convertNumToHex = (value: string) => parseInt(value, 10).toString(16).toUpperCase()
+export const convertNumToHex = (value: string) => {
+  return parseInt(value, 10).toString(16).toUpperCase()
+}
 export const convertNumToUInt64 = (value: string) => {
   try {
     const uint64= UInt64.fromNumericString(value)
@@ -117,6 +121,7 @@ export const encodeRawToHex = (value: string) => {
 }
 
 export const decodeHexToRaw = (value: string) => {
+  if(! /^([0-9a-fA-F][0-9a-fA-F])+$/.test(value)) return ""
   return Buffer.from(value, "hex").toString("utf8")
 }
 
