@@ -1,6 +1,6 @@
 import { createContext } from "react"
-import gateways from "resources/gateway.json"
 import { NetworkType } from "nem2-sdk"
+import gateways from "resources/gateway.json"
 
 export const GATEWAY_LIST = gateways
 
