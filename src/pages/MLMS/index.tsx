@@ -1,33 +1,39 @@
 import React, { useContext, useState, useEffect } from "react"
-
-import TextOutput from "components/TextOutput"
+import createPersistedState from "@plq/use-persisted-state"
 
 import {
   GatewayContext
 } from "contexts"
 
 import { useMultisigData, IMultisigData } from "hooks"
-
-import  { graph2tree }from "util/graph2tree"
-
+import { TextOutput } from "components"
 import { persistedPaths } from "persisted-paths"
-import createPersistedState from "use-persisted-state"
-const useInputState = createPersistedState(persistedPaths.mlms)
+import { graph2tree }from "util/graph2tree"
+
+const [useInputState] = createPersistedState(persistedPaths.app)
 
 function stringifyMultisigData(data: IMultisigData, truncated = true) {
   const opts = { truncated }
   return graph2tree(data.graphInfo, opts)
 }
 
-export const MLMS: React.FC = () => {
+interface IProps {
+  query: {
+    identifier?: string
+  }
+}
+
+export const MLMS: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
 
-  const { multisigData, identifier, setIdentifier, handler, loading, error } = useMultisigData(gwContext.url)
-
-  const [value, setValue] = useInputState("")
-  const _value = value.replace(/-/g, "")
-
+  const [value, setValue] = useInputState(persistedPaths.mlms, query.identifier || "")
   const [truncated, setTruncated] = useState(true)
+
+  const { multisigData, identifier, setIdentifier, handler, loading, error } = useMultisigData(
+    gwContext.url,
+    query.identifier || value
+  )
+
   const [output, setOutput] = useState("")
 
   function submit() {
@@ -37,9 +43,12 @@ export const MLMS: React.FC = () => {
   }
 
   useEffect(() => {
-    if(! multisigData) return
-    setOutput(stringifyMultisigData(multisigData, truncated))
+    if(multisigData) setOutput(stringifyMultisigData(multisigData, truncated))
   }, [multisigData, truncated])
+
+  useEffect(() => {
+    if(identifier) setValue(identifier)
+  }, [identifier])
 
   return (
 <div>
@@ -67,9 +76,9 @@ export const MLMS: React.FC = () => {
     </div>
     <p>
     { value
-      ? <a href={`${gwContext.url}/account/${_value}/multisig/graph`}
+      ? <a href={`${gwContext.url}/account/${value.replace(/-/g, "")}/multisig/graph`}
           target="_blank" rel="noopener noreferrer"
-        >{`${gwContext.url}/account/${_value}/multisig/graph`}</a>
+        >{`${gwContext.url}/account/${value.replace(/-/g, "")}/multisig/graph`}</a>
       : <span>{`${gwContext.url}/account/{AddressOrPublicKey}/multisig/graph`}</span>
     }
     </p>

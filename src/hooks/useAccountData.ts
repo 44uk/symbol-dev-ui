@@ -28,8 +28,8 @@ interface IHttpInstance {
   multisigHttp: MultisigHttp
 }
 
-export const useAccountData = (httpInstance: IHttpInstance) => {
-  const [identifier, setIdentifier] = useState<string | null>(null)
+export const useAccountData = (httpInstance: IHttpInstance, initialValue: string | null = null) => {
+  const [identifier, setIdentifier] = useState<string | null>(initialValue)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [accountData, setAccountData] = useState<IAccountData | null>(null)

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react"
 import YAML from "yaml"
+import createPersistedState from "@plq/use-persisted-state"
 import {
   UInt64,
   ChainHttp,
@@ -11,13 +12,16 @@ import {
   WebSockContext
 } from "contexts"
 
-import { useBlockData, IBlockData } from "hooks/useBlockData"
-import { useBlockInfoListener } from "hooks/useBlockInfoListener"
-import { TextOutput } from "components/TextOutput"
+import {
+  useBlockData,
+  IBlockData,
+  useBlockInfoListener
+} from "hooks"
 
+import { TextOutput } from "components"
 import { persistedPaths } from "persisted-paths"
-import createPersistedState from "use-persisted-state"
-const useInputState = createPersistedState(persistedPaths.block)
+
+const [useInputState] = createPersistedState(persistedPaths.app)
 
 function stringifyBlockData(data: IBlockData) {
   return YAML.stringify(data)
@@ -49,47 +53,54 @@ function stringifyBlockData(data: IBlockData) {
 //const networkType = parseInt(blockDTO.block.version.toString(16).substr(0, 2), 16)
 //return new BlockInfo_1.BlockInfo(blockDTO.meta.hash, blockDTO.meta.generationHash, UInt64_1.UInt64.fromNumericString(blockDTO.meta.totalFee), blockDTO.meta.numTransactions, blockDTO.block.signature, PublicAccount_1.PublicAccount.createFromPublicKey(blockDTO.block.signerPublicKey, networkType), networkType, parseInt(blockDTO.block.version.toString(16).substr(2, 2), 16), // Tx version
 
-export const Block: React.FC = () => {
+interface IProps {
+  query: {
+    height?: string
+  }
+}
+
+export const Block: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
   const webSockContext = useContext(WebSockContext)
 
+  const [value, setValue] = useInputState(persistedPaths.block, query.height || "")
+
   const { blockHttp, receiptHttp } = httpContext.httpInstance
-  const { blockData, setHeight, loading, error } = useBlockData({
+  const { blockData, height, setHeight, loading, error } = useBlockData({
     blockHttp,
     receiptHttp
-  })
+  }, query.height || value)
   const { listener } = webSockContext.webSockInstance
   const blockListener = useBlockInfoListener(listener)
 
-  const [blockHeight, setBlockHeight] = useInputState("")
   const [output, setOutput] = useState("")
   const [prependLoading, setPrependLoading] = useState(false)
 
   const fetch = async () => {
     let height: UInt64
-    if(blockHeight.length === 0) {
+    if(value) {
+      height = UInt64.fromNumericString(value)
+    } else {
       const chainHttp = new ChainHttp(gwContext.url)
       height = await chainHttp.getBlockchainHeight().toPromise()
-      setBlockHeight(height.toString())
-    } else {
-      height = UInt64.fromNumericString(blockHeight)
+      setValue(height.toString())
     }
-    setHeight(height.compact())
+    setHeight(height.toString())
   }
 
   useEffect(() => {
-    if(! blockData) { return }
-    setBlockHeight(blockData.blockInfo.height.toString())
-    setOutput(stringifyBlockData(blockData))
-  }, [blockData, setBlockHeight])
+    if(blockData) setOutput(stringifyBlockData(blockData))
+  }, [blockData])
+
+  useEffect(() => {
+    if(height) setValue(height)
+  }, [height])
 
   useEffect(() => {
     const blockInfo = blockListener.blockInfo
-    if(! blockInfo) { return }
-    setBlockHeight(blockInfo.height.toString())
-    setHeight(blockInfo.height.compact())
-  }, [blockListener.blockInfo, setBlockHeight, setHeight])
+    if(blockInfo) setHeight(blockInfo.height.toString())
+  }, [blockListener.blockInfo, setHeight])
 
   return (
 <div>
@@ -99,9 +110,9 @@ export const Block: React.FC = () => {
       <label htmlFor="blockHeight">Block Height</label>
       <input type="number"
         autoFocus
-        value={blockHeight}
-        onChange={(_) => setBlockHeight(_.target.value)}
-        onKeyPress={(_) => _.key === "Enter" && fetch()}
+        value={value}
+        onChange={_ => setValue(_.target.value)}
+        onKeyPress={_ => _.key === "Enter" && fetch()}
         min={1} pattern="[1-9][0-9]*"
         disabled={blockListener.following}
       ></input>
@@ -115,10 +126,10 @@ export const Block: React.FC = () => {
           >Follow</button>
       }
       <p>
-      { blockHeight
-        ? <a href={`${gwContext.url}/block/${blockHeight}`}
+      { value
+        ? <a href={`${gwContext.url}/block/${value}`}
             target="_blank" rel="noopener noreferrer"
-          >{`${gwContext.url}/block/${blockHeight}`}</a>
+          >{`${gwContext.url}/block/${value}`}</a>
         : <span>{`${gwContext.url}/block/`}</span>
       }
       </p>

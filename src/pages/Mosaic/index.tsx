@@ -1,18 +1,18 @@
 import React, { useState, useContext, useEffect } from "react"
 import YAML from "yaml"
+import createPersistedState from "@plq/use-persisted-state"
 
 import {
   GatewayContext,
   HttpContext
 } from "contexts"
 
-import { TextOutput } from "components"
 import { useMosaicData, IMosaicData } from "hooks"
+import { TextOutput } from "components"
 import { convertIdentifierToMosaicHex } from "util/convert"
-
 import { persistedPaths } from "persisted-paths"
-import createPersistedState from "use-persisted-state"
-const useInputState = createPersistedState(persistedPaths.mosaic)
+
+const [useInputState] = createPersistedState(persistedPaths.app)
 
 function stringifyMosaicData(data: IMosaicData) {
   return YAML.stringify(data)
@@ -35,18 +35,25 @@ function stringifyMosaicData(data: IMosaicData) {
 // `
 }
 
-export const Mosaic: React.FC = () => {
+interface IProps {
+  query: {
+    identifier?: string
+  }
+}
+
+export const Mosaic: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
+
+  const [value, setValue] = useInputState(persistedPaths.mosaic, query.identifier || "")
 
   const { mosaicHttp, metadataHttp, restrictionMosaicHttp } = httpContext.httpInstance
   const { mosaicData, identifier, setIdentifier, handler, loading, error } = useMosaicData({
     mosaicHttp,
     metadataHttp,
     restrictionMosaicHttp
-  })
+  }, query.identifier || value)
 
-  const [value, setValue] = useInputState("")
   const [output, setOutput] = useState("")
 
   function submit() {
@@ -60,6 +67,10 @@ export const Mosaic: React.FC = () => {
     setOutput(stringifyMosaicData(mosaicData))
   }, [mosaicData])
 
+  useEffect(() => {
+    if(identifier) setValue(identifier)
+  }, [identifier])
+
   return (
 <div>
   <fieldset>
@@ -69,8 +80,8 @@ export const Mosaic: React.FC = () => {
       <input type="text"
         autoFocus
         value={value}
-        onChange={(_) => setValue(_.currentTarget.value)}
-        onKeyPress={(_) => _.key === "Enter" && submit()}
+        onChange={_ => setValue(_.currentTarget.value)}
+        onKeyPress={_ => _.key === "Enter" && submit()}
         placeholder="ex) [HEX], [Lower,Higher]"
         maxLength={64}
       />

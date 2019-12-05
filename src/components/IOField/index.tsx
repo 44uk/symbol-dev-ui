@@ -36,7 +36,7 @@ export const IOField: React.FC<IProps> = ({
     name={name}
     value={input}
     placeholder={placeholder}
-    onChange={(_) => setInput(_.target.value)}
+    onChange={_ => setInput(_.target.value)}
   />
 
   <input type="text"

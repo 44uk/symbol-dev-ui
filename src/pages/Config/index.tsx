@@ -28,7 +28,7 @@ export const Config: React.FC = () => {
   <fieldset>
     <legend>Gateway URLs</legend>
     <div className="input-group vertical">
-      <textarea rows={6} value={gwText} onChange={(_) => setGwText(_.target.value)}></textarea>
+      <textarea rows={6} value={gwText} onChange={_ => setGwText(_.target.value)}></textarea>
       <p className="note"><small>Put gateway url lines. ex) http://localhost:3000</small></p>
       <button className="primary" onClick={() => saveGatewayList()}>Save</button>
     </div>

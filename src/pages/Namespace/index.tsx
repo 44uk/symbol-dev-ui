@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react"
 import YAML from "yaml"
-
+import createPersistedState from "@plq/use-persisted-state"
 import {
   GatewayContext,
   HttpContext
@@ -9,10 +9,9 @@ import {
 import { useNamespaceData, INamespaceData } from "hooks"
 import { TextOutput } from "components"
 import { convertIdentifierToNamespaceHex } from "util/convert"
-
 import { persistedPaths } from "persisted-paths"
-import createPersistedState from "use-persisted-state"
-const useInputState = createPersistedState(persistedPaths.namespace)
+
+const [useInputState] = createPersistedState(persistedPaths.app)
 
 function stringifyNamespaceData(data: INamespaceData) {
   return YAML.stringify(data)
@@ -58,17 +57,24 @@ function stringifyNamespaceData(data: INamespaceData) {
 //   `
 }
 
-export const Namespace: React.FC = () => {
+interface IProps {
+  query: {
+    identifier?: string
+  }
+}
+
+export const Namespace: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
 
-  const {namespaceHttp, metadataHttp} = httpContext.httpInstance
-  const {namespaceData, identifier, setIdentifier, handler, loading, error} = useNamespaceData({
+  const [value, setValue] = useInputState(persistedPaths.namespace, query.identifier || "")
+
+  const { namespaceHttp, metadataHttp } = httpContext.httpInstance
+  const { namespaceData, identifier, setIdentifier, handler, loading, error} = useNamespaceData({
     namespaceHttp,
     metadataHttp
-  })
+  }, query.identifier || value)
 
-  const [value, setValue] = useInputState("")
   const [output, setOutput] = useState("")
 
   function submit() {
@@ -78,9 +84,12 @@ export const Namespace: React.FC = () => {
   }
 
   useEffect(() => {
-    if(! namespaceData) return
-    setOutput(stringifyNamespaceData(namespaceData))
+    if(namespaceData) setOutput(stringifyNamespaceData(namespaceData))
   }, [namespaceData])
+
+  useEffect(() => {
+    if(identifier) setValue(identifier)
+  }, [identifier])
 
   return (
 <div>
@@ -91,8 +100,8 @@ export const Namespace: React.FC = () => {
       <input type="text"
         autoFocus
         value={value}
-        onChange={(_) => setValue(_.currentTarget.value)}
-        onKeyPress={(_) => _.key === "Enter" && submit()}
+        onChange={_ => setValue(_.currentTarget.value)}
+        onKeyPress={_ => _.key === "Enter" && submit()}
         placeholder="ex) nem, [HEX], [Lower,Higher]"
         maxLength={64}
       />

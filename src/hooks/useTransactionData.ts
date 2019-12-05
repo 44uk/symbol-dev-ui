@@ -13,9 +13,9 @@ interface IHttpInstance {
   transactionHttp: TransactionHttp
 }
 
-export const useTransactionData = (httpInstance: IHttpInstance) => {
+export const useTransactionData = (httpInstance: IHttpInstance, initialValue: string | null = null) => {
   const [transactionData, setTransactionData] = useState<ITransactionData | null>(null)
-  const [identifier, setIdentifier] = useState<string | null>(null)
+  const [identifier, setIdentifier] = useState<string | null>(initialValue)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 

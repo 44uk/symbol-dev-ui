@@ -28,9 +28,9 @@ interface IHttpInstance {
   metadataHttp: MetadataHttp
 }
 
-export const useNamespaceData = (httpInstance: IHttpInstance) => {
+export const useNamespaceData = (httpInstance: IHttpInstance, initialValue: string | null = null) => {
   const [namespaceData, setNamespaceData] = useState<INamespaceData | null>(null)
-  const [identifier, setIdentifier] = useState<string | null>(null)
+  const [identifier, setIdentifier] = useState<string | null>(initialValue)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 

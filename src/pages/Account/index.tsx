@@ -1,15 +1,22 @@
 import React, { useState, useEffect, useContext } from "react"
-
-import TextOutput from "components/TextOutput"
-import Input from "./Input"
+import YAML from "yaml"
+import createPersistedState from "@plq/use-persisted-state"
 
 import {
   GatewayContext,
   HttpContext
 } from "contexts"
 
-import { IAccountData, useAccountData } from "hooks/useAccountData"
-import YAML from "yaml"
+import {
+  IAccountData,
+  useAccountData
+} from "hooks"
+
+import { persistedPaths } from "persisted-paths"
+import { TextOutput } from "components"
+import Input from "./Input"
+
+const [useInputState] = createPersistedState(persistedPaths.app)
 
 function stringifyAccountData(data: IAccountData) {
   return YAML.stringify(data)
@@ -34,9 +41,17 @@ function stringifyAccountData(data: IAccountData) {
 // `
 }
 
-export const Account: React.FC = () => {
+interface IProps {
+  query: {
+    identifier?: string
+  }
+}
+
+export const Account: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
+
+  const [value, setValue] = useInputState(persistedPaths.account, query.identifier)
 
   const { accountHttp, mosaicHttp, metadataHttp, multisigHttp } = httpContext.httpInstance
   const { accountData, identifier, setIdentifier, handler, loading, error } = useAccountData({
@@ -44,20 +59,24 @@ export const Account: React.FC = () => {
     mosaicHttp,
     metadataHttp,
     multisigHttp
-  })
+  }, query.identifier || value)
 
   const [output, setOutput] = useState("")
 
   useEffect(() => {
-    if(! accountData) return
-    setOutput(stringifyAccountData(accountData))
+    if(accountData) setOutput(stringifyAccountData(accountData))
   }, [accountData])
+
+  useEffect(() => {
+    if(identifier) setValue(identifier)
+  }, [identifier])
 
   return (
 <div>
   <Input
     url={gwContext.url}
     onSubmit={setIdentifier}
+    onChange={(value) => setValue(value)}
     identifier={identifier}
     handler={handler}
   ></Input>

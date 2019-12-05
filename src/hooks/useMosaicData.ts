@@ -18,9 +18,9 @@ interface IHttpInstance {
   restrictionMosaicHttp: RestrictionMosaicHttp
 }
 
-export const useMosaicData = (httpInstance: IHttpInstance) => {
+export const useMosaicData = (httpInstance: IHttpInstance, initialValue: string | null = null) => {
   const [mosaicData, setMosaicData] = useState<IMosaicData | null>(null)
-  const [identifier, setIdentifier] = useState<string | null>(null)
+  const [identifier, setIdentifier] = useState<string | null>(initialValue)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 

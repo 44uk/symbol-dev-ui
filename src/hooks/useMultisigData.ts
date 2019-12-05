@@ -22,12 +22,11 @@ export interface IMultisigData {
   graphInfo: ILayer[]
 }
 
-export const useMultisigData = (url: string) => {
-  const [identifier, setIdentifier] = useState<string | null>(null)
+export const useMultisigData = (url: string, initialValue: string | null = null) => {
+  const [multisigData, setMultisigData] = useState<IMultisigData | null>(null)
+  const [identifier, setIdentifier] = useState<string | null>(initialValue)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-
-  const [multisigData, setMultisigData] = useState<IMultisigData | null>(null)
 
   function getJSON<T>(url: string): Observable<T> {
     return from(fetch(url)

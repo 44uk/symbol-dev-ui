@@ -54,7 +54,7 @@ export const Fee: React.FC = () => {
       <label>Fee Multiplier</label>
       <input type="number"
         value={feeMultiplier}
-        onChange={(_) => setFeeMultiplier(_.currentTarget.value)}
+        onChange={_ => setFeeMultiplier(_.currentTarget.value)}
         placeholder=""
         maxLength={64}
       />
@@ -74,7 +74,7 @@ export const Fee: React.FC = () => {
       <label>Mosaic Count</label>
       <input type="number"
         value={mosaicCount}
-        onChange={(_) => setMosaicCount(_.currentTarget.value)}
+        onChange={_ => setMosaicCount(_.currentTarget.value)}
         placeholder=""
         min={0}
         max={99}
@@ -83,7 +83,7 @@ export const Fee: React.FC = () => {
       <label>Message Length</label>
       <input type="number"
         value={payloadLength}
-        onChange={(_) => setPayloadLength(_.currentTarget.value)}
+        onChange={_ => setPayloadLength(_.currentTarget.value)}
         placeholder=""
         min={0}
         max={1023}

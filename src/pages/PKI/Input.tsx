@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import createPersistedState from "@plq/use-persisted-state"
 
 import {
   Account,
@@ -6,8 +7,8 @@ import {
 } from "nem2-sdk"
 
 import { persistedPaths } from "persisted-paths"
-import createPersistedState from "use-persisted-state"
-const useInputState = createPersistedState(persistedPaths.pki)
+
+const [useInputState] = createPersistedState(persistedPaths.app)
 
 interface IProps {
   onSetAccount: React.Dispatch<React.SetStateAction<Account | null>>
@@ -40,7 +41,7 @@ export const Input: React.FC<IProps> = ({
   onSetAccount,
   onSetPretty,
 }) => {
-  const [privateKey, setPrivateKey] = useInputState("")
+  const [privateKey, setPrivateKey] = useInputState(persistedPaths.pki, "")
   const [networkType, setNetworkType] = useState(NetworkType.MIJIN_TEST)
   const [pretty, setPretty] = useState(true)
   const [vanity, setVanity] = useState("N")
@@ -65,14 +66,14 @@ export const Input: React.FC<IProps> = ({
       value={privateKey}
       pattern="[a-fA-F\d]+"
       maxLength={64}
-      onChange={(_) => setPrivateKey(_.target.value)}
-      onKeyPress={(_) => setPrivateKey(_.currentTarget.value)}
+      onChange={_ => setPrivateKey(_.target.value)}
+      onKeyPress={_ => setPrivateKey(_.currentTarget.value)}
       placeholder=""
     />
     <p className="note"><small>Input PrivateKey or click Generate button.</small></p>
     <button
       className="primary"
-      onClick={(_) => setPrivateKey(generateNewPrivateKey(networkType, vanity))}
+      onClick={_ => setPrivateKey(generateNewPrivateKey(networkType, vanity))}
     >Generate New Account</button>
   </div>
 

@@ -1,28 +1,34 @@
 import React, { useContext, useState, useEffect } from "react"
 import YAML from "yaml"
-
+import createPersistedState from "@plq/use-persisted-state"
 import {
   GatewayContext,
   HttpContext
 } from "contexts"
 
-import { TextOutput } from "components"
 import { useTransactionData } from "hooks"
-
+import { TextOutput } from "components"
 import { persistedPaths } from "persisted-paths"
-import createPersistedState from "use-persisted-state"
-const useInputState = createPersistedState(persistedPaths.transaction)
 
-export const Transaction: React.FC = () => {
+const [useInputState] = createPersistedState(persistedPaths.app)
+
+interface IProps {
+  query: {
+    hash?: string
+  }
+}
+
+export const Transaction: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
+
+  const [value, setValue] = useInputState(persistedPaths.transaction, query.hash || "")
 
   const { transactionHttp } = httpContext.httpInstance
   const { transactionData, identifier, setIdentifier, handler, loading, error } = useTransactionData({
     transactionHttp
-  })
+  }, query.hash || value)
 
-  const [value, setValue] = useInputState("")
   const [output, setOutput] = useState("")
 
   function submit() {
@@ -32,9 +38,12 @@ export const Transaction: React.FC = () => {
   }
 
   useEffect(() => {
-    if(! transactionData) return
-    setOutput(YAML.stringify(transactionData))
+    if(transactionData) setOutput(YAML.stringify(transactionData))
   }, [transactionData])
+
+  useEffect(() => {
+    if(identifier) setValue(identifier)
+  }, [identifier])
 
   return (
 <div>
@@ -45,8 +54,8 @@ export const Transaction: React.FC = () => {
       <input type="text"
         autoFocus
         value={value}
-        onChange={(_) => setValue(_.currentTarget.value)}
-        onKeyPress={(_) => _.key === "Enter" && submit()}
+        onChange={_ => setValue(_.currentTarget.value)}
+        onKeyPress={_ => _.key === "Enter" && submit()}
         placeholder="ex) TransactionHash"
         maxLength={64}
       />

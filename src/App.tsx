@@ -6,6 +6,7 @@ import {
   Content,
   GatewaySelector
 } from "components"
+
 import {
   GATEWAY_LIST,
   GatewayContext,
@@ -16,14 +17,14 @@ import {
 } from "contexts"
 
 import { persistedPaths } from "persisted-paths"
-import createPersistedState from "use-persisted-state"
+import createPersistedState from "@plq/use-persisted-state"
 
-const useGatewayListState = createPersistedState(persistedPaths.gatewayList)
-const useCurrentGatewayState = createPersistedState(persistedPaths.currentGateway)
+const [useGatewayListState] = createPersistedState(persistedPaths.app)
+const [useCurrentGatewayState] = createPersistedState(persistedPaths.app)
 
 const App: React.FC = () => {
-  const [urlList, setUrlList] = useGatewayListState(GATEWAY_LIST)
-  const [gw, setGw] = useCurrentGatewayState(urlList[0])
+  const [urlList, setUrlList] = useGatewayListState(persistedPaths.gatewayList, GATEWAY_LIST)
+  const [gw, setGw] = useCurrentGatewayState(persistedPaths.currentGateway, urlList[0])
 
   const [url, setUrl] = useState(gw)
   const [networkType, setNetworkType] = useState<number>(NetworkType.MIJIN_TEST)
