@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react"
 import { NetworkType } from "nem2-sdk"
 
 import {
-  Nav,
+  Navigation,
   Content,
   GatewaySelector
 } from "components"
@@ -54,7 +54,7 @@ const App: React.FC = () => {
 <WebSockContext.Provider value={webSockContextValue}>
   <div className="container">
     <GatewaySelector></GatewaySelector>
-    <Nav></Nav>
+    <Navigation></Navigation>
     <main>
       <Content></Content>
     </main>

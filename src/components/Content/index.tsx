@@ -22,9 +22,9 @@ import {
   Misc,
   Reference,
   Help,
-} from "../../pages"
+} from "pages"
 
-import paths from "../../paths"
+import paths from "paths"
 
 export const Content: React.FC = () => (
 <Switch>
