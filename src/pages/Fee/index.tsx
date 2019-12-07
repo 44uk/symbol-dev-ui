@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react"
 import asTable from 'as-table'
-import {
-  TransactionType
-} from "nem2-sdk"
 
 // import {
 //   GatewayContext,

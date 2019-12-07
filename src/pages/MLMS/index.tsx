@@ -68,11 +68,13 @@ export const MLMS: React.FC<IProps> = ({ query }) => {
       <p className="note"><small>Hit ENTER key to load from Node.</small></p>
     </div>
     <div className="input-group">
-      <input type="checkbox" id="truncated"
-        onChange={() => setTruncated(!truncated)}
-        checked={truncated}
-      />
-      <label htmlFor="truncated">Truncated&nbsp;<small>PublicKey is showed truncated.</small></label>
+      <label>
+        <input type="checkbox"
+          onChange={() => setTruncated(!truncated)}
+          checked={truncated}
+        />
+        Truncated&nbsp;<small>PublicKey is showed truncated.</small>
+      </label>
     </div>
     <p>
     { value

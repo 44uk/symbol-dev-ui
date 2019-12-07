@@ -13,7 +13,8 @@ import {
   ReceiptHttp,
   RestrictionAccountHttp,
   RestrictionMosaicHttp,
-  TransactionHttp
+  TransactionHttp,
+  NetworkType
 } from "nem2-sdk"
 
 interface IHttpInstance {
@@ -33,24 +34,24 @@ interface IHttpInstance {
   transactionHttp: TransactionHttp
 }
 
-export function createHttpInstance(url: string): IHttpInstance {
+export function createHttpInstance(url: string, networkType?: NetworkType): IHttpInstance {
   if(! /^https?:\/\//.test(url)) {
     throw new Error(`Invalid URL Format: ${url}`)
   }
-  const accountHttp = new AccountHttp(url)
-  const blockHttp = new BlockHttp(url)
+  const accountHttp = new AccountHttp(url, networkType)
+  const blockHttp = new BlockHttp(url, networkType)
   const chainHttp = new ChainHttp(url)
   const diagnosticHttp = new DiagnosticHttp(url)
-  const metadataHttp = new MetadataHttp(url)
-  const mosaicHttp = new MosaicHttp(url)
-  const multisigHttp = new MultisigHttp(url)
-  const namespaceHttp = new NamespaceHttp(url)
+  const metadataHttp = new MetadataHttp(url, networkType)
+  const mosaicHttp = new MosaicHttp(url, networkType)
+  const multisigHttp = new MultisigHttp(url, networkType)
+  const namespaceHttp = new NamespaceHttp(url, networkType)
   const networkHttp = new NetworkHttp(url)
   const nodeHttp = new NodeHttp(url)
-  const receiptHttp = new ReceiptHttp(url)
-  const restrictionAccountHttp = new RestrictionAccountHttp(url)
-  const restrictionMosaicHttp = new RestrictionMosaicHttp(url)
-  const transactionHttp = new TransactionHttp(url)
+  const receiptHttp = new ReceiptHttp(url, networkType)
+  const restrictionAccountHttp = new RestrictionAccountHttp(url, networkType)
+  const restrictionMosaicHttp = new RestrictionMosaicHttp(url, networkType)
+  const transactionHttp = new TransactionHttp(url, networkType)
 
   return {
     accountHttp,

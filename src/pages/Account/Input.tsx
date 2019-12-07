@@ -1,10 +1,5 @@
 import React, { useState } from "react"
 
-import { persistedPaths } from "persisted-paths"
-import createPersistedState from "@plq/use-persisted-state"
-
-const [useInputState] = createPersistedState(persistedPaths.app)
-
 interface IProps {
   url: string
   onSubmit: React.Dispatch<React.SetStateAction<string | null>>
@@ -20,7 +15,6 @@ export const Input: React.FC<IProps> = ({
   identifier,
   handler,
 }) => {
-  // const [value, setValue] = useInputState(persistedPaths.account, identifier || "")
   const [value, setValue] = useState(identifier || "")
 
   function submit() {
