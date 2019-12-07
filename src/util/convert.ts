@@ -48,7 +48,7 @@ export const convertNumToUInt64 = (value: string) => {
 }
 
 export const convertUInt64ToHex = (value: string) => {
-  const prepared = `[${value.replace(/[\[\]\s]/g, "")}]`
+  const prepared = `[${value.replace(/[[\]\s]/g, "")}]`
   try {
     const loHi = JSON.parse(prepared)
     return (new UInt64(loHi)).toHex()
@@ -58,7 +58,7 @@ export const convertUInt64ToHex = (value: string) => {
 }
 
 export const convertUInt64ToNum = (value: string) => {
-  const prepared = `[${value.replace(/[\[\]\s]/g, "")}]`
+  const prepared = `[${value.replace(/[[\]\s]/g, "")}]`
   try {
     const loHi = JSON.parse(prepared)
     return parseInt((new UInt64(loHi)).toString(), 10)

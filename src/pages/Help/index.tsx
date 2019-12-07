@@ -9,7 +9,7 @@ export const Help: React.FC = () => {
   <div className="section">
     <h2 className="double-padded">
       nem2(catapult) development Utility Interface
-      <small>This is an Army Knife for nem2.</small>
+      <small>This is a Swiss Army Knife for nem2.</small>
     </h2>
     <p><a href="https://github.com/44uk/nem2-dev-ui" target="_blank" rel="noopener noreferrer">GitHub: 44uk/nem2-dev-ui</a></p>
 
