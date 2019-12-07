@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { MosaicInfo, Metadata, MosaicHttp, MetadataHttp, RestrictionMosaicHttp, MosaicGlobalRestriction } from "nem2-sdk"
+import { MosaicInfo, Metadata, MosaicHttp, MetadataHttp, RestrictionMosaicHttp, MosaicGlobalRestriction, NamespaceHttp, MosaicNames } from "nem2-sdk"
 import { forkJoin, of } from "rxjs"
 import { map, catchError } from "rxjs/operators"
 import {
@@ -8,12 +8,14 @@ import {
 
 export interface IMosaicData {
   mosaicInfo: MosaicInfo
+  mosaicNames: MosaicNames[]
   metadata: Metadata[]
   globalRestriction: MosaicGlobalRestriction | null
 }
 
 interface IHttpInstance {
   mosaicHttp: MosaicHttp,
+  namespaceHttp: NamespaceHttp,
   metadataHttp: MetadataHttp
   restrictionMosaicHttp: RestrictionMosaicHttp
 }
@@ -24,7 +26,7 @@ export const useMosaicData = (httpInstance: IHttpInstance, initialValue: string 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  const { mosaicHttp, metadataHttp, restrictionMosaicHttp } = httpInstance
+  const { mosaicHttp, namespaceHttp, metadataHttp, restrictionMosaicHttp } = httpInstance
 
   const handler = () => {
     if(! identifier) return
@@ -39,14 +41,16 @@ export const useMosaicData = (httpInstance: IHttpInstance, initialValue: string 
     setLoading(true)
     forkJoin([
       mosaicHttp.getMosaic(mosaicId),
+      namespaceHttp.getMosaicsNames([mosaicId]),
       metadataHttp.getMosaicMetadata(mosaicId),
       restrictionMosaicHttp.getMosaicGlobalRestriction(mosaicId).pipe(catchError(() => of(null)))
     ])
       .pipe(
         map(resp => ({
           mosaicInfo: resp[0],
-          metadata: resp[1],
-          globalRestriction: resp[2]
+          mosaicNames: resp[1],
+          metadata: resp[2],
+          globalRestriction: resp[3]
         }))
       )
       .subscribe(

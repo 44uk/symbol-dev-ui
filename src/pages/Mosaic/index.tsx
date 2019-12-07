@@ -47,9 +47,10 @@ export const Mosaic: React.FC<IProps> = ({ query }) => {
 
   const [value, setValue] = useInputState(persistedPaths.mosaic, query.identifier || "")
 
-  const { mosaicHttp, metadataHttp, restrictionMosaicHttp } = httpContext.httpInstance
+  const { mosaicHttp, namespaceHttp, metadataHttp, restrictionMosaicHttp } = httpContext.httpInstance
   const { mosaicData, identifier, setIdentifier, handler, loading, error } = useMosaicData({
     mosaicHttp,
+    namespaceHttp,
     metadataHttp,
     restrictionMosaicHttp
   }, query.identifier || value)

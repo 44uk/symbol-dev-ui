@@ -60,10 +60,11 @@ export const Account: React.FC<IProps> = ({ query }) => {
   const [value, setValue] = useInputState(persistedPaths.account, query.identifier)
   const [selectedChannels, setSelectedChannels] = useInputState(persistedPaths.account + "/channels", [] as ChannelName[])
 
-  const { accountHttp, mosaicHttp, metadataHttp, multisigHttp } = httpContext.httpInstance
+  const { accountHttp, mosaicHttp, namespaceHttp, metadataHttp, multisigHttp } = httpContext.httpInstance
   const { accountData, identifier, setIdentifier, handler, loading, error } = useAccountData({
     accountHttp,
     mosaicHttp,
+    namespaceHttp,
     metadataHttp,
     multisigHttp
   }, query.identifier || value)

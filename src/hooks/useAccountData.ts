@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MosaicAmountView, Metadata, MultisigHttp } from "nem2-sdk"
+import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MosaicAmountView, Metadata, MultisigHttp, NamespaceHttp, AccountNames } from "nem2-sdk"
 import { forkJoin } from "rxjs"
 import { map } from "rxjs/operators"
 
@@ -16,6 +16,7 @@ function createAddressFromIdentifier(value: string, networkType = NetworkType.MI
 
 export interface IAccountData {
   accountInfo: AccountInfo
+  accountNames: AccountNames[]
   mosaicAmountViews: MosaicAmountView[]
   metadata: Metadata[]
   // multisigAccountInfo: MultisigAccountInfo | null
@@ -24,6 +25,7 @@ export interface IAccountData {
 interface IHttpInstance {
   accountHttp: AccountHttp
   mosaicHttp: MosaicHttp
+  namespaceHttp: NamespaceHttp,
   metadataHttp: MetadataHttp
   multisigHttp: MultisigHttp
 }
@@ -34,7 +36,7 @@ export const useAccountData = (httpInstance: IHttpInstance, initialValue: string
   const [error, setError] = useState(null)
   const [accountData, setAccountData] = useState<IAccountData | null>(null)
 
-  const { accountHttp, mosaicHttp, metadataHttp, multisigHttp } = httpInstance
+  const { accountHttp, mosaicHttp, namespaceHttp, metadataHttp, multisigHttp } = httpInstance
   const mosaicService = new MosaicService(accountHttp, mosaicHttp)
 
   const handler = () => {
@@ -46,6 +48,7 @@ export const useAccountData = (httpInstance: IHttpInstance, initialValue: string
     forkJoin([
       accountHttp.getAccountInfo(address),
       mosaicService.mosaicsAmountViewFromAddress(address),
+      namespaceHttp.getAccountsNames([address]),
       metadataHttp.getAccountMetadata(address),
       // multisigHttp.getMultisigAccountInfo(address).pipe(catchError(_ => of(null)))
     ])
@@ -53,7 +56,8 @@ export const useAccountData = (httpInstance: IHttpInstance, initialValue: string
         map(resp => ({
           accountInfo: resp[0],
           mosaicAmountViews: resp[1],
-          metadata: resp[2],
+          accountNames: resp[2],
+          metadata: resp[3],
           // multisigAccountInfo: resp[3],
         }))
       )
