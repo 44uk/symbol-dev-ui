@@ -1,17 +1,26 @@
 import React, { useState, useContext } from "react"
+import createPersistedState from "@plq/use-persisted-state"
 
 import {
   GATEWAY_LIST,
   GatewayContext
 } from "contexts"
 
+import { persistedPaths } from "persisted-paths"
+
+const [, clearPersistedState] = createPersistedState(persistedPaths.app)
+
 export const Config: React.FC = () => {
   const gwContext = useContext(GatewayContext)
   const [gwText, setGwText] = useState(gwContext.urlList.join("\n"))
 
-  function resetPersistedState() {
+  function resetGatewayState() {
     gwContext.setUrlList([])
     setGwText(GATEWAY_LIST.join("\n"))
+  }
+
+  function resetPersistedState() {
+    clearPersistedState()
   }
 
   function saveGatewayList() {
@@ -35,10 +44,14 @@ export const Config: React.FC = () => {
   </fieldset>
 
   <fieldset>
-    <legend>LocalStorage Data</legend>
+    <legend>App Persisted Data</legend>
+    <div className="input-group vertical">
+      <button className="primary" onClick={() => resetGatewayState()}>Reset</button>
+      <p className="note"><small>Reset Gateway URLs.</small></p>
+    </div>
     <div className="input-group vertical">
       <button className="primary" onClick={() => resetPersistedState()}>Clear</button>
-      <p className="note"><small>Reset App Configuration.</small></p>
+      <p className="note"><small>Reset all application state.</small></p>
     </div>
   </fieldset>
 </div>
