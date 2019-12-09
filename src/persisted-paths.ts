@@ -15,5 +15,6 @@ export const persistedPaths = {
   transaction: paths.transaction + "/input",
   payload:     paths.payload     + "/input",
   misc:        paths.misc        + "/input",
+  listener:    "/listener/input",
 }
 

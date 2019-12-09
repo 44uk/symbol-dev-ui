@@ -1,7 +1,23 @@
-import { Listener, Address } from "nem2-sdk"
-import { useState, useEffect } from "react"
+import { Listener, Address, NetworkType } from "nem2-sdk"
+import { useState, useEffect, useCallback } from "react"
 import { Subscription } from "rxjs"
 import YAML from "yaml"
+import createPersistedState from "@plq/use-persisted-state"
+import { persistedPaths } from "persisted-paths"
+
+const [usePersistedState] = createPersistedState(persistedPaths.app)
+
+function createAddressFromIdentifier(value: string, networkType = NetworkType.MIJIN_TEST) {
+  // TODO: ネットワークを渡す方法を考えるまで公開鍵には対応しない
+  try {
+    return Address.createFromRawAddress(value)
+    // return /^[SMTN][0-9A-Z-]{39,45}$/.test(value)
+    //   ? Address.createFromRawAddress(value)
+    //   : Address.createFromPublicKey(value, networkType)
+  } catch(error) {
+    return null
+  }
+}
 
 export const Channels = {
   aggregateBondedAdded:   "aggregateBondedAdded",
@@ -17,33 +33,47 @@ export type ChannelName = keyof typeof Channels
 
 export const useListener = (
   listener: Listener,
-  _address: Address | null = null,
-  channels: ChannelName[] = [],
-  _simple = false
+  initialValue: string = "",
+  initialChannels: ChannelName[] = [],
+  initialSimple = false
 ) => {
-  const [address, setAddress] = useState(_address)
-  const [simple, setSimple] = useState(_simple)
   const [log, setLog] = useState("")
+  const [identifier, setIdentifier] = usePersistedState(persistedPaths.listener, initialValue)
+  const [channels, setChannels] = usePersistedState(persistedPaths.listener + "/channels", initialChannels)
+  const [simple, setSimple] = useState(initialSimple)
   const [following, setFollowing] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const handler = () => {
+  const toggleChannel = useCallback((name: ChannelName) => {
+    const tmpSet = new Set(channels)
+    if(channels.includes(name)) {
+      tmpSet.delete(name)
+    } else {
+      tmpSet.add(name)
+    }
+    setChannels(Array.from(tmpSet))
+  }, [channels, setChannels])
+
+  const handler = useCallback(() => {
+    if(channels.length === 0) return
+    if(! identifier) return
+    // @ts-ignore
+    const address = createAddressFromIdentifier(identifier)
     if(! address) return
     if(following === false) {
       listener.isOpen() && listener.close()
       return
     }
-    if(channels.length === 0) return
 
     let subscriptions: {[key: string]: Subscription} = {}
     listener.open().then(() => {
-      setLog(log => `[connection opened]\n${log}`)
-      setLog(log => `[start listening] ${channels.join(",")}\n${log}`)
+      setLog(prev => `[connection opened]\n${prev}`)
+      setLog(prev => `[start listening] ${channels.join(",")}\n${prev}`)
 
       if(channels.includes(Channels.aggregateBondedAdded)) {
         subscriptions[Channels.aggregateBondedAdded] = listener.aggregateBondedAdded(address)
           .subscribe(
-            _ => setLog(log => `[aggregateBondedAdded]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${log}`),
+            _ => setLog(prev => `[aggregateBondedAdded]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${prev}`),
             (error) => setError(error),
             () => setError(null)
           )
@@ -51,7 +81,7 @@ export const useListener = (
       if(channels.includes(Channels.aggregateBondedRemoved)) {
         subscriptions[Channels.aggregateBondedRemoved] = listener.aggregateBondedRemoved(address)
           .subscribe(
-            _ => setLog(log => `[aggregateBondedRemoved]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${log}`),
+            _ => setLog(prev => `[aggregateBondedRemoved]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${prev}`),
             (error) => setError(error),
             () => setError(null)
           )
@@ -59,7 +89,7 @@ export const useListener = (
       if(channels.includes(Channels.confirmed)) {
         subscriptions[Channels.confirmed] = listener.confirmed(address)
           .subscribe(
-            _ => setLog(log => `[confirmed]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${log}`),
+            _ => setLog(prev => `[confirmed]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${prev}`),
             (error) => setError(error),
             () => setError(null)
           )
@@ -67,7 +97,7 @@ export const useListener = (
       if(channels.includes(Channels.cosignatureAdded)) {
         subscriptions[Channels.cosignatureAdded] = listener.cosignatureAdded(address)
           .subscribe(
-            _ => setLog(log => `[cosignatureAdded]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${log}`),
+            _ => setLog(prev => `[cosignatureAdded]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${prev}`),
             (error) => setError(error),
             () => setError(null)
           )
@@ -75,7 +105,7 @@ export const useListener = (
       if(channels.includes(Channels.unconfirmedAdded)) {
         subscriptions[Channels.unconfirmedAdded] = listener.unconfirmedAdded(address)
           .subscribe(
-            _ => setLog(log => `[unconfirmedAdd]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${log}`),
+            _ => setLog(prev => `[unconfirmedAdd]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${prev}`),
             (error) => setError(error),
             () => setError(null)
           )
@@ -83,7 +113,7 @@ export const useListener = (
       if(channels.includes(Channels.unconfirmedRemoved)) {
         subscriptions[Channels.unconfirmedRemoved] = listener.unconfirmedRemoved(address)
           .subscribe(
-            _ => setLog(log => `[unconfirmedRemoved]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${log}`),
+            _ => setLog(prev => `[unconfirmedRemoved]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${prev}`),
             (error) => setError(error),
             () => setError(null)
           )
@@ -91,7 +121,7 @@ export const useListener = (
       if(channels.includes(Channels.status)) {
         subscriptions[Channels.status] = listener.status(address)
           .subscribe(
-            _ => setLog(log + `[status]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${log}`),
+            _ => setLog(prev => `[status]` + (simple ? "" : `\n${"-".repeat(64)}\n` + YAML.stringify(_)) + `\n${prev}`),
             (error) => setError(error),
             () => setError(null)
           )
@@ -106,21 +136,23 @@ export const useListener = (
 
       if(listener.isOpen()) {
         listener.close()
-        setLog(log => `[connection closed]\n${log}`)
+        setLog(prev => `[connection closed]\n${prev}`)
       }
     }
-  }
+  }, [listener, identifier, channels, following, simple])
 
   useEffect(handler, [
+    listener,
+    identifier,
+    channels,
     following,
     simple,
-    channels,
-    listener
   ])
 
   return {
     log, error,
-    address, setAddress,
+    identifier, setIdentifier,
+    channels, setChannels, toggleChannel,
     following, setFollowing,
     simple, setSimple,
   }

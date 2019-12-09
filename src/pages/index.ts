@@ -1,5 +1,6 @@
 export * from "pages/PKI"
 export * from "pages/Account/"
+export * from "pages/Monitor/"
 export * from "pages/MLMS/"
 export * from "pages/Namespace/"
 export * from "pages/Mosaic/"

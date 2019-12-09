@@ -13,8 +13,8 @@ function createAddressFromIdentifier(value: string, networkType = NetworkType.MI
     return /^[SMTN][0-9A-Z-]{39,45}$/.test(value)
       ? Address.createFromRawAddress(value)
       : Address.createFromPublicKey(value, networkType)
-
   } catch(error) {
+    console.debug(error)
     return null
   }
 }
@@ -46,7 +46,8 @@ export const useAccountData = (httpInstance: IHttpInstance, initialValue: string
 
   const handler = useCallback(() => {
     if(! identifier) return
-    const address = createAddressFromIdentifier(identifier)
+    // @ts-ignore
+    const address = createAddressFromIdentifier(identifier, accountHttp.networkType)
     if(! address) return
 
     setLoading(true)

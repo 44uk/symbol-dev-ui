@@ -9,6 +9,7 @@ import qs from "query-string"
 import {
   PKI,
   Account,
+  Monitor,
   MLMS,
   Namespace,
   Mosaic,
@@ -31,6 +32,7 @@ export const Content: React.FC = () => (
   <Route path={paths.pki}><PKI /></Route>
   <Route path={paths.account}
     render={props => <Account query={qs.parse(props.location.search)}/>}></Route>
+  <Route path={paths.monitor}><Monitor /></Route>
   <Route path={paths.mlms}
     render={props => <MLMS query={qs.parse(props.location.search)}/>}></Route>
   <Route path={paths.namespace}

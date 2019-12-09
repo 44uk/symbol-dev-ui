@@ -12,6 +12,7 @@ export const Navigation: React.FC = () => (
 <header>
   <NavLink activeClassName={clsActive} role="button" to={paths.pki}>PKI</NavLink>
   <NavLink activeClassName={clsActive} role="button" to={paths.account}>Account</NavLink>
+  <NavLink activeClassName={clsActive} role="button" to={paths.monitor}>Monitor</NavLink>
   <NavLink activeClassName={clsActive} role="button" to={paths.mlms}>MLMS</NavLink>
   <NavLink activeClassName={clsActive} role="button" to={paths.namespace}>Namespace</NavLink>
   <NavLink activeClassName={clsActive} role="button" to={paths.mosaic}>Mosaic</NavLink>

@@ -1,6 +1,7 @@
 export const paths = {
   pki: "/pki",
   account: "/account",
+  monitor: "/monitor",
   mlms: "/mlms",
   namespace: "/namespace",
   mosaic: "/mosaic",
