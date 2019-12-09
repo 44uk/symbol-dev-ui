@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { NetworkType, Address } from "nem2-sdk"
 import { forkJoin, from, Observable } from "rxjs"
 import { map } from "rxjs/operators"
+import createPersistedState from "@plq/use-persisted-state"
+import { persistedPaths } from "persisted-paths"
 
 import {
   ILayer,
 } from "util/graph2tree"
+
+const [usePersistedState] = createPersistedState(persistedPaths.app)
 
 function createAddressFromIdentifier(value: string, networkType = NetworkType.MIJIN_TEST) {
   try {
@@ -22,20 +26,20 @@ export interface IMultisigData {
   graphInfo: ILayer[]
 }
 
-export const useMultisigData = (url: string, initialValue: string | null = null) => {
+export const useMultisigData = (url: string, initialValue: string = "") => {
   const [multisigData, setMultisigData] = useState<IMultisigData | null>(null)
-  const [identifier, setIdentifier] = useState<string | null>(initialValue)
+  const [identifier, setIdentifier] = usePersistedState(persistedPaths.mlms, initialValue)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  function getJSON<T>(url: string): Observable<T> {
+  const getJSON = <T>(url: string): Observable<T> => {
     return from(fetch(url)
       .then(resp => { if(resp.ok) { return resp } else { throw new Error(resp.statusText) } })
       .then<T>(resp => resp.json())
     )
   }
 
-  const handler = () => {
+  const handler = useCallback(() => {
     if(! identifier) return
     const address = createAddressFromIdentifier(identifier)
     if(! address) return
@@ -61,7 +65,7 @@ export const useMultisigData = (url: string, initialValue: string | null = null)
           setError(null)
         }
       )
-  }
+  }, [identifier, url])
 
   useEffect(handler, [identifier, url])
 

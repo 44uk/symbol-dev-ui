@@ -1,5 +1,4 @@
-import React, { useContext, useState, useEffect } from "react"
-import createPersistedState from "@plq/use-persisted-state"
+import React, { useContext, useState, useEffect, useCallback } from "react"
 
 import {
   GatewayContext
@@ -7,10 +6,7 @@ import {
 
 import { useMultisigData, IMultisigData } from "hooks"
 import { TextOutput } from "components"
-import { persistedPaths } from "persisted-paths"
 import { graph2tree }from "util/graph2tree"
-
-const [useInputState] = createPersistedState(persistedPaths.app)
 
 function stringifyMultisigData(data: IMultisigData, truncated = true) {
   const opts = { truncated }
@@ -26,29 +22,22 @@ interface IProps {
 export const MLMS: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
 
-  const [value, setValue] = useInputState(persistedPaths.mlms, query.identifier || "")
   const [truncated, setTruncated] = useState(true)
 
   const { multisigData, identifier, setIdentifier, handler, loading, error } = useMultisigData(
     gwContext.url,
-    query.identifier || value
+    query.identifier || ""
   )
 
   const [output, setOutput] = useState("")
 
-  function submit() {
-    identifier === value ?
-      handler() :
-      setIdentifier(value)
-  }
+  const submit = useCallback(() => {
+    handler()
+  }, [handler])
 
   useEffect(() => {
     if(multisigData) setOutput(stringifyMultisigData(multisigData, truncated))
   }, [multisigData, truncated])
-
-  useEffect(() => {
-    if(identifier) setValue(identifier)
-  }, [identifier])
 
   return (
 <div>
@@ -59,8 +48,8 @@ export const MLMS: React.FC<IProps> = ({ query }) => {
       <input type="text" name="addressOrPublicKey"
         autoFocus
         pattern="[a-fA-F\d-]+"
-        value={value}
-        onChange={_ => setValue(_.currentTarget.value)}
+        value={identifier}
+        onChange={_ => setIdentifier(_.currentTarget.value)}
         onKeyPress={_ => _.key === "Enter" && submit()}
         placeholder="ex) Address or PublicKey"
         maxLength={64}
@@ -77,10 +66,10 @@ export const MLMS: React.FC<IProps> = ({ query }) => {
       </label>
     </div>
     <p>
-    { value
-      ? <a href={`${gwContext.url}/account/${value.replace(/-/g, "")}/multisig/graph`}
+    { identifier
+      ? <a href={`${gwContext.url}/account/${identifier.replace(/-/g, "")}/multisig/graph`}
           target="_blank" rel="noopener noreferrer"
-        >{`${gwContext.url}/account/${value.replace(/-/g, "")}/multisig/graph`}</a>
+        >{`${gwContext.url}/account/${identifier.replace(/-/g, "")}/multisig/graph`}</a>
       : <span>{`${gwContext.url}/account/{AddressOrPublicKey}/multisig/graph`}</span>
     }
     </p>

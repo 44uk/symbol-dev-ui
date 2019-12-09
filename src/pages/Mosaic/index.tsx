@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect } from "react"
+import React, { useState, useContext, useEffect, useCallback, ChangeEvent } from "react"
 import YAML from "yaml"
-import createPersistedState from "@plq/use-persisted-state"
 
 import {
   GatewayContext,
@@ -10,29 +9,9 @@ import {
 import { useMosaicData, IMosaicData } from "hooks"
 import { TextOutput } from "components"
 import { convertIdentifierToMosaicHex } from "util/convert"
-import { persistedPaths } from "persisted-paths"
-
-const [useInputState] = createPersistedState(persistedPaths.app)
 
 function stringifyMosaicData(data: IMosaicData) {
   return YAML.stringify(data)
-//   const { mosaicInfo, metadata } = data
-//   return `
-// ${mosaicInfo.id.toHex()}
-// ${mosaicInfo.height}
-// ${mosaicInfo.divisibility}
-// ${mosaicInfo.duration}
-// ${mosaicInfo.flags.restrictable}
-// ${mosaicInfo.flags.supplyMutable}
-// ${mosaicInfo.flags.transferable}
-// ${mosaicInfo.isRestrictable()}
-// ${mosaicInfo.isSupplyMutable()}
-// ${mosaicInfo.isTransferable()}
-// ${mosaicInfo.owner.publicKey}
-// ${mosaicInfo.owner.address.pretty()}
-// ${mosaicInfo.revision}
-// ${mosaicInfo.supply}
-// `
 }
 
 interface IProps {
@@ -45,32 +24,27 @@ export const Mosaic: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
 
-  const [value, setValue] = useInputState(persistedPaths.mosaic, query.identifier || "")
-
   const { mosaicHttp, namespaceHttp, metadataHttp, restrictionMosaicHttp } = httpContext.httpInstance
   const { mosaicData, identifier, setIdentifier, handler, loading, error } = useMosaicData({
     mosaicHttp,
     namespaceHttp,
     metadataHttp,
     restrictionMosaicHttp
-  }, query.identifier || value)
+  }, query.identifier || "")
 
   const [output, setOutput] = useState("")
 
-  function submit() {
-    identifier === value ?
-      handler() :
-      setIdentifier(value)
-  }
+  const submit = useCallback(() => {
+    handler()
+  }, [handler])
+
+  const onChangeInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setIdentifier(event.currentTarget.value)
+  }, [setIdentifier])
 
   useEffect(() => {
-    if(! mosaicData) return
-    setOutput(stringifyMosaicData(mosaicData))
+    if(mosaicData) setOutput(stringifyMosaicData(mosaicData))
   }, [mosaicData])
-
-  useEffect(() => {
-    if(identifier) setValue(identifier)
-  }, [identifier])
 
   return (
 <div>
@@ -80,8 +54,8 @@ export const Mosaic: React.FC<IProps> = ({ query }) => {
       <label>Mosaic</label>
       <input type="text"
         autoFocus
-        value={value}
-        onChange={_ => setValue(_.currentTarget.value)}
+        value={identifier}
+        onChange={onChangeInput}
         onKeyPress={_ => _.key === "Enter" && submit()}
         placeholder="ex) [HEX], [Lower,Higher]"
         maxLength={64}
@@ -89,10 +63,10 @@ export const Mosaic: React.FC<IProps> = ({ query }) => {
       <p className="note"><small>Hit ENTER key to load from Gateway.</small></p>
     </div>
     <p>
-    { value
-      ? <a href={`${gwContext.url}/mosaic/${convertIdentifierToMosaicHex(value)}`}
+    { convertIdentifierToMosaicHex(identifier)
+      ? <a href={`${gwContext.url}/mosaic/${convertIdentifierToMosaicHex(identifier)}`}
           target="_blank" rel="noopener noreferrer"
-        >{`${gwContext.url}/mosaic/${convertIdentifierToMosaicHex(value)}`}</a>
+        >{`${gwContext.url}/mosaic/${convertIdentifierToMosaicHex(identifier)}`}</a>
       : <span>{`${gwContext.url}/mosaic/`}</span>
     }
     </p>

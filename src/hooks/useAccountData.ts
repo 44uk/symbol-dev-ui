@@ -1,7 +1,12 @@
-import { useEffect, useState } from "react"
+import { useState, useCallback } from "react"
 import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MosaicAmountView, Metadata, MultisigHttp, NamespaceHttp, AccountNames } from "nem2-sdk"
 import { forkJoin } from "rxjs"
 import { map } from "rxjs/operators"
+import useDebouncedEffect  from "use-debounced-effect"
+import createPersistedState from "@plq/use-persisted-state"
+import { persistedPaths } from "persisted-paths"
+
+const [usePersistedState] = createPersistedState(persistedPaths.app)
 
 function createAddressFromIdentifier(value: string, networkType = NetworkType.MIJIN_TEST) {
   try {
@@ -30,16 +35,16 @@ interface IHttpInstance {
   multisigHttp: MultisigHttp
 }
 
-export const useAccountData = (httpInstance: IHttpInstance, initialValue: string | null = null) => {
-  const [identifier, setIdentifier] = useState<string | null>(initialValue)
+export const useAccountData = (httpInstance: IHttpInstance, initialValue: string = "") => {
+  const [accountData, setAccountData] = useState<IAccountData | null>(null)
+  const [identifier, setIdentifier] = usePersistedState(persistedPaths.account, initialValue)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [accountData, setAccountData] = useState<IAccountData | null>(null)
 
   const { accountHttp, mosaicHttp, namespaceHttp, metadataHttp, multisigHttp } = httpInstance
   const mosaicService = new MosaicService(accountHttp, mosaicHttp)
 
-  const handler = () => {
+  const handler = useCallback(() => {
     if(! identifier) return
     const address = createAddressFromIdentifier(identifier)
     if(! address) return
@@ -73,9 +78,9 @@ export const useAccountData = (httpInstance: IHttpInstance, initialValue: string
           setError(null)
         }
       )
-  }
+  }, [identifier])
 
-  useEffect(handler, [identifier, accountHttp, mosaicHttp, metadataHttp])
+  useDebouncedEffect(handler, 500, [identifier, accountHttp, mosaicHttp, metadataHttp])
 
   return { accountData, identifier, setIdentifier, handler, loading, error }
 }

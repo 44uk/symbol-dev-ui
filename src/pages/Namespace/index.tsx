@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect } from "react"
+import React, { useState, useContext, useEffect, useCallback, ChangeEvent } from "react"
 import YAML from "yaml"
-import createPersistedState from "@plq/use-persisted-state"
+
 import {
   GatewayContext,
   HttpContext
@@ -9,52 +9,9 @@ import {
 import { useNamespaceData, INamespaceData } from "hooks"
 import { TextOutput } from "components"
 import { convertIdentifierToNamespaceHex } from "util/convert"
-import { persistedPaths } from "persisted-paths"
-
-const [useInputState] = createPersistedState(persistedPaths.app)
 
 function stringifyNamespaceData(data: INamespaceData) {
   return YAML.stringify(data)
-//   const info = (
-// `Meta:
-//   active: ${ni.active}
-//   index: ${ni.index}
-//   id: ${ni.id.toHex()}
-// Info:
-//   Depth: ${ni.depth}
-//   Type: ${ni.isRoot ? "root" : "sub"}
-//   Levels:
-//     ${ni.levels[0]}
-//   Alias
-//     Type: ${ni.alias.type}
-//     Mosaic: ${ni.alias.mosaicId}
-//     Address: ${ni.alias.address}
-//   Owner:
-//     publicKey: ${ni.owner.publicKey}
-//     address: ${ni.owner.address.plain()}
-//   startHeight: ${ni.startHeight.toString()}
-//   endHeight: ${ni.endHeight.toString()}
-// `)
-//
-//   let mosaicInfo = ""
-//   if(mId) {
-//     mosaicInfo = `MosaicId:
-//   ${mId.toHex()}
-// `
-//   }
-//
-//   let address = ""
-//   if(addr) {
-//     address = `Address:
-// ${addr.pretty()}
-// `
-//   }
-//
-//   return `
-//   ${info}
-//   ${mosaicInfo}
-//   ${address}
-//   `
 }
 
 interface IProps {
@@ -67,29 +24,25 @@ export const Namespace: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
 
-  const [value, setValue] = useInputState(persistedPaths.namespace, query.identifier || "")
-
   const { namespaceHttp, metadataHttp } = httpContext.httpInstance
   const { namespaceData, identifier, setIdentifier, handler, loading, error} = useNamespaceData({
     namespaceHttp,
     metadataHttp
-  }, query.identifier || value)
+  }, query.identifier || "")
 
   const [output, setOutput] = useState("")
 
-  function submit() {
-    identifier === value ?
-      handler() :
-      setIdentifier(value)
-  }
+  const submit = useCallback(() => {
+    handler()
+  }, [handler])
+
+  const onChangeInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setIdentifier(event.currentTarget.value)
+  }, [setIdentifier])
 
   useEffect(() => {
     if(namespaceData) setOutput(stringifyNamespaceData(namespaceData))
   }, [namespaceData])
-
-  useEffect(() => {
-    if(identifier) setValue(identifier)
-  }, [identifier])
 
   return (
 <div>
@@ -99,8 +52,8 @@ export const Namespace: React.FC<IProps> = ({ query }) => {
       <label>Namespace</label>
       <input type="text"
         autoFocus
-        value={value}
-        onChange={_ => setValue(_.currentTarget.value)}
+        value={identifier}
+        onChange={onChangeInput}
         onKeyPress={_ => _.key === "Enter" && submit()}
         placeholder="ex) nem, [HEX], [Lower,Higher]"
         maxLength={64}
@@ -108,10 +61,10 @@ export const Namespace: React.FC<IProps> = ({ query }) => {
       <p className="note"><small>Hit ENTER key to load from Gateway.</small></p>
     </div>
     <p>
-    { value
-      ? <a href={`${gwContext.url}/namespace/${convertIdentifierToNamespaceHex(value)}`}
+    { convertIdentifierToNamespaceHex(identifier)
+      ? <a href={`${gwContext.url}/namespace/${convertIdentifierToNamespaceHex(identifier)}`}
           target="_blank" rel="noopener noreferrer"
-        >{`${gwContext.url}/namespace/${convertIdentifierToNamespaceHex(value)}`}</a>
+        >{`${gwContext.url}/namespace/${convertIdentifierToNamespaceHex(identifier)}`}</a>
       : <span>{`${gwContext.url}/namespace/`}</span>
     }
     </p>

@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react"
 import { Transaction, TransactionMapping } from "nem2-sdk"
+import createPersistedState from "@plq/use-persisted-state"
+import { persistedPaths } from "persisted-paths"
 
-export const usePayloadData = (_payload: string) => {
+const [usePersistedState] = createPersistedState(persistedPaths.app)
+
+export const usePayloadData = (initialValue: string) => {
   const [transaction, setTransaction] = useState<Transaction | null>(null)
-  const [payload, setPayload] = useState(_payload)
+  const [payload, setPayload] = usePersistedState(persistedPaths.payload, initialValue)
   const [error, setError] = useState<Error | null>(null)
 
   const handler = () => {

@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext, useState, useEffect, useCallback, ChangeEvent } from "react"
 import YAML from "yaml"
-import createPersistedState from "@plq/use-persisted-state"
+
 import {
   GatewayContext,
   HttpContext
@@ -8,9 +8,6 @@ import {
 
 import { useTransactionData } from "hooks"
 import { TextOutput } from "components"
-import { persistedPaths } from "persisted-paths"
-
-const [useInputState] = createPersistedState(persistedPaths.app)
 
 interface IProps {
   query: {
@@ -22,28 +19,24 @@ export const Transaction: React.FC<IProps> = ({ query }) => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
 
-  const [value, setValue] = useInputState(persistedPaths.transaction, query.hash || "")
-
   const { transactionHttp } = httpContext.httpInstance
   const { transactionData, identifier, setIdentifier, handler, loading, error } = useTransactionData({
     transactionHttp
-  }, query.hash || value)
+  }, query.hash || "")
 
   const [output, setOutput] = useState("")
 
-  function submit() {
-    identifier === value ?
-      handler() :
-      setIdentifier(value)
-  }
+  const submit = useCallback(() => {
+    handler()
+  }, [handler])
+
+  const onChangeInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setIdentifier(event.currentTarget.value)
+  }, [setIdentifier])
 
   useEffect(() => {
     if(transactionData) setOutput(YAML.stringify(transactionData))
   }, [transactionData])
-
-  useEffect(() => {
-    if(identifier) setValue(identifier)
-  }, [identifier])
 
   return (
 <div>
@@ -53,8 +46,8 @@ export const Transaction: React.FC<IProps> = ({ query }) => {
       <label>Transaction</label>
       <input type="text"
         autoFocus
-        value={value}
-        onChange={_ => setValue(_.currentTarget.value)}
+        value={identifier}
+        onChange={onChangeInput}
         onKeyPress={_ => _.key === "Enter" && submit()}
         placeholder="ex) TransactionHash"
         maxLength={64}
@@ -62,10 +55,10 @@ export const Transaction: React.FC<IProps> = ({ query }) => {
       <p className="note"><small>Hit ENTER key to load from Gateway.</small></p>
     </div>
     <p>
-    { value
-      ? <a href={`${gwContext.url}/transaction/${value}`}
+    { identifier
+      ? <a href={`${gwContext.url}/transaction/${identifier}`}
           target="_blank" rel="noopener noreferrer"
-        >{`${gwContext.url}/transaction/${value}`}</a>
+        >{`${gwContext.url}/transaction/${identifier}`}</a>
       : <span>{`${gwContext.url}/transaction/`}</span>
     }
     </p>

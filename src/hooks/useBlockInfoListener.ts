@@ -1,5 +1,5 @@
 import { Listener, BlockInfo } from "nem2-sdk"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Subscription } from "rxjs"
 
 export const useBlockInfoListener = (listener: Listener) => {
@@ -7,7 +7,7 @@ export const useBlockInfoListener = (listener: Listener) => {
   const [following, setFollowing] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const handler = () => {
+  const handler = useCallback(() => {
     if (following === false) {
       listener.isOpen() && listener.close()
       return
@@ -33,7 +33,7 @@ export const useBlockInfoListener = (listener: Listener) => {
       subscription && subscription.unsubscribe()
       listener.isOpen() && listener.close()
     }
-  }
+  }, [following, listener])
 
   useEffect(handler, [following, listener])
 

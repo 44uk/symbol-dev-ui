@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useState, useEffect, useContext, useCallback, useMemo } from "react"
 import YAML from "yaml"
+
 import clsx from "clsx"
 import createPersistedState from "@plq/use-persisted-state"
+import { persistedPaths } from "persisted-paths"
 
 import {
   GatewayContext,
@@ -17,33 +19,13 @@ import {
   useListener
 } from "hooks"
 
-import { persistedPaths } from "persisted-paths"
 import { TextOutput } from "components"
 import Input from "./Input"
 
-const [useInputState] = createPersistedState(persistedPaths.app)
+const [usePersistedState] = createPersistedState(persistedPaths.app)
 
 function stringifyAccountData(data: IAccountData) {
   return YAML.stringify(data)
-//   const {
-//     accountInfo: ai,
-//     metadata: md,
-//     mosaicAmountViews: mav,
-//     multisigAccountInfo: mai
-//   } = data
-//   return `Info:
-//   Address: ${ai.address.plain()}
-//   HexAddress: ${ai.address.encoded()}
-//     Height at: ${ai.addressHeight}
-//   PublicKey: ${ai.publicKey}
-//     Height at: ${ai.publicKeyHeight}
-//   Importance: ${ai.importance}
-//     Height at: ${ai.importanceHeight}
-// Metadata:
-// ${md.map(d => "  - " + d.metadataEntry.value).join("\n")}
-// Mosaics:
-// ${mav.map(v => "  - " + `${v.fullName()}:${v.relativeAmount()}`).join("\n")}
-// `
 }
 
 interface IProps {
@@ -57,8 +39,7 @@ export const Account: React.FC<IProps> = ({ query }) => {
   const httpContext = useContext(HttpContext)
   const webSockContext = useContext(WebSockContext)
 
-  const [value, setValue] = useInputState(persistedPaths.account, query.identifier)
-  const [selectedChannels, setSelectedChannels] = useInputState(persistedPaths.account + "/channels", [] as ChannelName[])
+  const [selectedChannels, setSelectedChannels] = usePersistedState(persistedPaths.account + "/channels", [] as ChannelName[])
 
   const { accountHttp, mosaicHttp, namespaceHttp, metadataHttp, multisigHttp } = httpContext.httpInstance
   const { accountData, identifier, setIdentifier, handler, loading, error } = useAccountData({
@@ -67,7 +48,7 @@ export const Account: React.FC<IProps> = ({ query }) => {
     namespaceHttp,
     metadataHttp,
     multisigHttp
-  }, query.identifier || value)
+  }, query.identifier || "")
 
   const { listener } = webSockContext.webSockInstance
   const {
@@ -83,27 +64,26 @@ export const Account: React.FC<IProps> = ({ query }) => {
 
   const [output, setOutput] = useState("")
 
+  const submit = useCallback(() => {
+    handler()
+  }, [handler])
+
+  const clsIsListening = useMemo(() => (clsx(
+    following ? "secondary" : "primary"
+  )), [following])
+
   useEffect(() => {
     if(accountData) setOutput(stringifyAccountData(accountData))
     if(accountData) setAddress(accountData.accountInfo.address)
   }, [accountData])
 
-  useEffect(() => {
-    if(identifier) setValue(identifier)
-  }, [identifier])
-
-  const clsIsListening = clsx(
-    following ? "secondary" : "primary"
-  )
-
   return (
 <div>
   <Input
     url={gwContext.url}
-    onSubmit={setIdentifier}
-    onChange={(value) => setValue(value)}
     identifier={identifier}
-    handler={handler}
+    setIdentifer={setIdentifier}
+    onSubmit={submit}
   ></Input>
 
   <TextOutput

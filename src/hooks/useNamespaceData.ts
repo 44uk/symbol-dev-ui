@@ -1,7 +1,12 @@
-import { useEffect, useState } from "react"
+import { useState, useCallback } from "react"
 import { NamespaceHttp, NamespaceId, NamespaceInfo, MetadataHttp, Metadata, MosaicId, Address } from "nem2-sdk"
 import { forkJoin, of } from "rxjs"
 import { map, catchError } from "rxjs/operators"
+import useDebouncedEffect  from "use-debounced-effect"
+import createPersistedState from "@plq/use-persisted-state"
+import { persistedPaths } from "persisted-paths"
+
+const [usePersistedState] = createPersistedState(persistedPaths.app)
 
 function createNsIdFromIdentifier(value: string) {
   try {
@@ -28,15 +33,16 @@ interface IHttpInstance {
   metadataHttp: MetadataHttp
 }
 
-export const useNamespaceData = (httpInstance: IHttpInstance, initialValue: string | null = null) => {
+export const useNamespaceData = (httpInstance: IHttpInstance, initialValue: string = "") => {
   const [namespaceData, setNamespaceData] = useState<INamespaceData | null>(null)
-  const [identifier, setIdentifier] = useState<string | null>(initialValue)
+  const [identifier, setIdentifier] = usePersistedState(persistedPaths.namespace, initialValue)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
   const { namespaceHttp, metadataHttp } = httpInstance
 
-  const handler = () => {
+  const handler = useCallback(() => {
+    // if(! /[a-z0-9'_\-\.]{1,64}/.test(identifier)) return
     if(! identifier) return
     const nsId = createNsIdFromIdentifier(identifier)
     if(! nsId) return
@@ -57,7 +63,7 @@ export const useNamespaceData = (httpInstance: IHttpInstance, initialValue: stri
         }))
       )
       .subscribe(
-        data => setNamespaceData(data),
+        setNamespaceData,
         (error) => {
           setLoading(false)
           setError(error)
@@ -68,9 +74,9 @@ export const useNamespaceData = (httpInstance: IHttpInstance, initialValue: stri
           setError(null)
         }
       )
-  }
+  }, [identifier, namespaceHttp, metadataHttp])
 
-  useEffect(handler, [identifier, namespaceHttp, metadataHttp])
+  useDebouncedEffect(handler, 500, [identifier, namespaceHttp, metadataHttp])
 
   return { namespaceData, identifier, setIdentifier, handler, loading, error }
 }

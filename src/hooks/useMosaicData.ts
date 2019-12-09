@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react"
+import { useState, useCallback } from "react"
 import { MosaicInfo, Metadata, MosaicHttp, MetadataHttp, RestrictionMosaicHttp, MosaicGlobalRestriction, NamespaceHttp, MosaicNames } from "nem2-sdk"
 import { forkJoin, of } from "rxjs"
 import { map, catchError } from "rxjs/operators"
+import useDebouncedEffect  from "use-debounced-effect"
 import {
   convertIdentifierToMosaicId
 } from "util/convert"
+import createPersistedState from "@plq/use-persisted-state"
+import { persistedPaths } from "persisted-paths"
+
+const [usePersistedState] = createPersistedState(persistedPaths.app)
 
 export interface IMosaicData {
   mosaicInfo: MosaicInfo
@@ -20,15 +25,15 @@ interface IHttpInstance {
   restrictionMosaicHttp: RestrictionMosaicHttp
 }
 
-export const useMosaicData = (httpInstance: IHttpInstance, initialValue: string | null = null) => {
+export const useMosaicData = (httpInstance: IHttpInstance, initialValue: string = "") => {
   const [mosaicData, setMosaicData] = useState<IMosaicData | null>(null)
-  const [identifier, setIdentifier] = useState<string | null>(initialValue)
+  const [identifier, setIdentifier] = usePersistedState(persistedPaths.mosaic, initialValue)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
   const { mosaicHttp, namespaceHttp, metadataHttp, restrictionMosaicHttp } = httpInstance
 
-  const handler = () => {
+  const handler = useCallback(() => {
     if(! identifier) return
     let mosaicId
     try {
@@ -65,9 +70,9 @@ export const useMosaicData = (httpInstance: IHttpInstance, initialValue: string 
           setError(null)
         }
       )
-  }
+  }, [identifier, mosaicHttp, namespaceHttp, metadataHttp, restrictionMosaicHttp])
 
-  useEffect(handler, [identifier, mosaicHttp, metadataHttp])
+  useDebouncedEffect(handler, 500, [identifier, mosaicHttp, namespaceHttp, metadataHttp, restrictionMosaicHttp])
 
   return { mosaicData, identifier, setIdentifier, handler, loading, error }
 }
