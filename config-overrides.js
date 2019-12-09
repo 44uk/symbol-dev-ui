@@ -62,6 +62,12 @@ module.exports = function override(config, env) {
   //   console.debug('Replace WorkboxWebpackPlugin.GenerateSW instance.');
   //   config.plugins[assignedIndex] = alterWorkboxWebpackPlugin;
   // }
+
+  config.externals = (config.externals || []).concat([
+    "bufferutil",
+    "utf-8-validate"
+  ])
+
   console.debug('Rewired!');
   return config;
 };
