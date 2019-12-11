@@ -43,6 +43,23 @@ export const Reference: React.FC = () => {
       </ul>
     </div>
   </div>
+
+  <div className="card fluid">
+    <div className="section">
+      <p>Artworks</p>
+      <ul>
+        <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/NemProject/nem-artwork">NemProject/nem-artwork: Artwork and graphic design (e.g., logos) for the New Economy Movement.</a></li>
+      </ul>
+      <p>LogoColor Codes</p>
+      <ul>
+        <li><span style={{backgroundColor:"#fff",color: "#f7a800"}}>#f7a800</span></li>
+        <li><span style={{backgroundColor:"#fff",color: "#67b2e7"}}>#67b2e7</span></li>
+        <li><span style={{backgroundColor:"#fff",color: "#00c4b3"}}>#00c4b3</span></li>
+        <li><span style={{backgroundColor:"#fff",color: "#000000"}}>#000000</span></li>
+        <li><span style={{backgroundColor:"#000",color: "#ffffff"}}>#ffffff</span></li>
+      </ul>
+    </div>
+  </div>
 </div>
   )
 }
