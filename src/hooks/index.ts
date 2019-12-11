@@ -1,6 +1,7 @@
 export * from "./useAccountData"
 export * from "./useBlockData"
 export * from "./useBlockInfoListener"
+export * from "./useDistribution"
 export * from "./useMosaicData"
 export * from "./useMultisigData"
 export * from "./useNamespaceData"

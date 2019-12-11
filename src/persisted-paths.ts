@@ -13,6 +13,7 @@ export const persistedPaths = {
   namespace:   paths.namespace   + "/input",
   mosaic:      paths.mosaic      + "/input",
   transaction: paths.transaction + "/input",
+  distribute:  paths.distribute  + "/input",
   payload:     paths.payload     + "/input",
   misc:        paths.misc        + "/input",
   listener:    "/listener/input",

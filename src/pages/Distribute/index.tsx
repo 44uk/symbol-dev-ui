@@ -1,115 +1,37 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useContext, useCallback } from "react"
 
 import {
-  Account, Address, PublicAccount, TransferTransaction, Deadline, NetworkCurrencyMosaic, EmptyMessage, UInt64, AggregateTransaction, SignedTransaction, TransactionHttp
-} from "nem2-sdk"
-
-import { from } from "rxjs"
-import { mergeMap } from "rxjs/operators"
+  useDistribution
+} from "hooks"
 
 import {
   GatewayContext,
   HttpContext
 } from "contexts"
 
-function filterValidIdentifier(lines: string) {
-  const filtered = lines
-    .split("\n")
-    .map(_ => _.trim())
-    .filter(_ => _.length >= 40)
-  return filtered
-}
-
-function buildAndSignTransactions(signer: Account, recipients: string[], amount: number, aggregated = false) {
-  const addresses = recipients.map(recipient => {
-    let address: Address
-    if(/^[SMTN][0-9A-Z]{39}/.test(recipient.replace(/-/g, ""))) {
-      address = Address.createFromRawAddress(recipient)
-    } else if(/[0-9A-F]{64}/.test(recipient)) {
-      const account = PublicAccount.createFromPublicKey(recipient, signer.networkType)
-      address = account.address
-    } else {
-      throw new Error(`Unexpected Recipient Identifier: ${recipient}`)
-    }
-    return address
-  })
-  const message = EmptyMessage
-  const txes = addresses.map(a => (
-    TransferTransaction.create(
-      Deadline.create(),
-      a,
-      [NetworkCurrencyMosaic.createRelative(amount)],
-      message,
-      signer.networkType,
-      UInt64.fromUint(100000)
-    )
-  ))
-
-  let signedTxes: SignedTransaction[]
-  if(aggregated) {
-    const aggTx = AggregateTransaction.createComplete(
-      Deadline.create(),
-      txes.map(t => t.toAggregate(signer.publicAccount)),
-      signer.networkType,
-      [],
-      UInt64.fromUint(50000)
-    )
-    const signedTx = signer.sign(aggTx, "")
-    signedTxes = [ signedTx ]
-  } else {
-    signedTxes = txes.map(tx => signer.sign(tx, ""))
-  }
-  return signedTxes
-}
-
-function announce(signedTxes: SignedTransaction[], txHttp: TransactionHttp) {
-  return from(signedTxes)
-    .pipe(mergeMap(t => txHttp.announce(t)))
-}
-
 export const Distribute: React.FC = () => {
   const gwContext = useContext(GatewayContext)
   const httpContext = useContext(HttpContext)
 
-  const [distributerKey, setDistributerKey] = useState("")
-  const [distributer, setDistributer] = useState<Account | null>(null)
-  const [amount, setAmount] = useState("")
-  const [recipients, setRecipients] = useState("")
-  const [aggregation, setAggregation] = useState(false)
-  const [isReady, setIsReady] = useState(false)
+  const {
+    transactionHttp
+  } = httpContext.httpInstance
+  const {
+    privateKey, setPrivateKey,
+    mosaicHex, setMosaicHex,
+    amount, setAmount,
+    recipients, setRecipients,
+    aggregation, setAggregation,
+    distributer, isReady, announce,
+    loading, error
+  } = useDistribution({
+    transactionHttp,
+  }, gwContext.networkType, gwContext.genHash
+  )
 
-  function distribute() {
-    if (! distributer) return
-    if (! parseInt(amount)) return
-    const identifiers = filterValidIdentifier(recipients)
-    setRecipients(identifiers.join("\n"))
-    const signedTxes = buildAndSignTransactions(
-      distributer,
-      identifiers,
-      parseInt(amount),
-      aggregation
-    )
-    // TODO: start stream
-    announce(signedTxes, httpContext.httpInstance.transactionHttp)
-  }
-
-  useEffect(() => {
-    try {
-      const account = Account.createFromPrivateKey(distributerKey, gwContext.networkType)
-      setDistributer(account)
-    } catch(error) {
-      setDistributer(null)
-      return
-    }
-  }, [distributerKey, gwContext.networkType])
-
-  useEffect(() => {
-    setIsReady(false)
-    if (distributer === null) return
-    if (! /^\d{1,9}\.?\d{0,6}$/.test(amount)) return
-    if (filterValidIdentifier(recipients).length === 0) return
-    setIsReady(true)
-  }, [distributer, amount, recipients])
+  const distribute = useCallback(() => {
+    announce()
+  }, [announce])
 
   return (
 <div>
@@ -119,8 +41,8 @@ export const Distribute: React.FC = () => {
       <label>Distributer PrivateKey</label>
       <input autoFocus
         pattern="[a-fA-F\d]{64}"
-        value={distributerKey}
-        onChange={_ => setDistributerKey(_.target.value)}
+        value={privateKey}
+        onChange={_ => setPrivateKey(_.target.value)}
         placeholder="Input Raw PrivateKey"
         maxLength={64}
       />
@@ -129,11 +51,19 @@ export const Distribute: React.FC = () => {
     </div>
 
     <div className="input-group vertical">
-      <label>Amount (Relative)</label>
+      <label>Mosaic Hex</label>
+      <input name="mosaicHex"
+        value={mosaicHex}
+        onChange={_ => setMosaicHex(_.target.value)}
+        placeholder="ex) 46BE9BC0626F9B1A"
+      />
+    </div>
+    <div className="input-group vertical">
+      <label>Amount (Absolute)</label>
       <input type="number" name="amount"
         value={amount}
         onChange={_ => setAmount(_.target.value)}
-        placeholder="ex) 1 (1 NetworkCurrency, relative value)"
+        placeholder="ex) 1000000 (1 NetworkCurrency, absolute value)"
       />
     </div>
     <div className="input-group vertical">
@@ -149,10 +79,10 @@ export const Distribute: React.FC = () => {
         onChange={() => setAggregation(!aggregation)}
         checked={aggregation}
       />
-      <label htmlFor="aggregation">Aggregate"em</label>
-      <button
-        onClick={() => distribute()}
-        disabled={! isReady}
+      <label htmlFor="aggregation">Aggregate'em</label>
+      <button className="primary"
+        onClick={distribute}
+        disabled={! isReady || loading}
       >Distribute!</button>
     </div>
   </fieldset>
