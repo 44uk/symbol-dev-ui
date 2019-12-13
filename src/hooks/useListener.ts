@@ -1,23 +1,15 @@
-import { Listener, Address, NetworkType } from "nem2-sdk"
+import { Listener } from "nem2-sdk"
 import { useState, useEffect, useCallback } from "react"
 import { Subscription } from "rxjs"
 import YAML from "yaml"
 import createPersistedState from "@plq/use-persisted-state"
 import { persistedPaths } from "persisted-paths"
 
-const [usePersistedState] = createPersistedState(persistedPaths.app)
+import {
+  createAddressFromIdentifier
+} from "util/convert"
 
-function createAddressFromIdentifier(value: string, networkType = NetworkType.MIJIN_TEST) {
-  // TODO: ネットワークを渡す方法を考えるまで公開鍵には対応しない
-  try {
-    return Address.createFromRawAddress(value)
-    // return /^[SMTN][0-9A-Z-]{39,45}$/.test(value)
-    //   ? Address.createFromRawAddress(value)
-    //   : Address.createFromPublicKey(value, networkType)
-  } catch(error) {
-    return null
-  }
-}
+const [usePersistedState] = createPersistedState(persistedPaths.app)
 
 export const Channels = {
   aggregateBondedAdded:   "aggregateBondedAdded",
@@ -57,7 +49,6 @@ export const useListener = (
   const handler = useCallback(() => {
     if(channels.length === 0) return
     if(! identifier) return
-    // @ts-ignore
     const address = createAddressFromIdentifier(identifier)
     if(! address) return
     if(following === false) {
@@ -133,7 +124,6 @@ export const useListener = (
         subscriptions[key].unsubscribe()
         console.debug(`${key} has been unsubscribed.`)
       })
-
       if(listener.isOpen()) {
         listener.close()
         setLog(prev => `[connection closed]\n${prev}`)

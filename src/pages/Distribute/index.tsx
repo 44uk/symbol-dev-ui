@@ -23,7 +23,7 @@ export const Distribute: React.FC = () => {
     recipients, setRecipients,
     aggregation, setAggregation,
     distributer, isReady, announce,
-    loading, error
+    loading
   } = useDistribution({
     transactionHttp,
   }, gwContext.networkType, gwContext.genHash

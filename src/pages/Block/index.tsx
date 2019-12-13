@@ -34,8 +34,6 @@ export const Block: React.FC<IProps> = ({ query }) => {
   const httpContext = useContext(HttpContext)
   const webSockContext = useContext(WebSockContext)
 
-  const [prependLoading, setPrependLoading] = useState(false)
-
   const { blockHttp, receiptHttp } = httpContext.httpInstance
   const { blockData, height, setHeight, handler, loading, error } = useBlockData({
     blockHttp,
@@ -44,6 +42,7 @@ export const Block: React.FC<IProps> = ({ query }) => {
   const { listener } = webSockContext.webSockInstance
   const blockListener = useBlockInfoListener(listener)
 
+  const [prependLoading, setPrependLoading] = useState(false)
   const [output, setOutput] = useState("")
 
   const fetch = useCallback(async () => {
@@ -56,7 +55,7 @@ export const Block: React.FC<IProps> = ({ query }) => {
     }
     setHeight(_height.toString())
     handler()
-  }, [height, setHeight, handler, gwContext.url])
+  }, [height, setHeight, gwContext.url, handler])
 
   useEffect(() => {
     if(blockData) setOutput(stringifyBlockData(blockData))
@@ -64,8 +63,26 @@ export const Block: React.FC<IProps> = ({ query }) => {
 
   useEffect(() => {
     const blockInfo = blockListener.blockInfo
-    if(blockInfo) setHeight(blockInfo.height.toString())
-  }, [blockListener.blockInfo, setHeight])
+    if(blockInfo?.height.toString()) {
+      setHeight(blockInfo.height.toString())
+    }
+  }, [blockListener.blockInfo])
+
+  useEffect(() => {
+    if(blockListener.following) fetch()
+  }, [height])
+
+  const startListening = useCallback(() => {
+    setPrependLoading(true)
+    fetch()
+    blockListener.setFollowing(true)
+  }, [setPrependLoading, fetch, blockListener.setFollowing])
+
+  const stopListening = useCallback(() => {
+    setPrependLoading(false)
+    fetch()
+    blockListener.setFollowing(false)
+  }, [setPrependLoading, fetch, blockListener.setFollowing])
 
   return (
 <div>
@@ -83,12 +100,8 @@ export const Block: React.FC<IProps> = ({ query }) => {
       ></input>
       <p className="note"><small>Hit ENTER key to load from Gateway.</small></p>
       { blockListener.following
-        ? <button className="secondary"
-            onClick={() => {setPrependLoading(false); fetch(); blockListener.setFollowing(false)}}
-          >Stop</button>
-        : <button className="primary"
-            onClick={() => {setPrependLoading(true); fetch(); blockListener.setFollowing(true)}}
-          >Follow</button>
+        ? <button className="secondary" onClick={stopListening}>Stop</button>
+        : <button className="primary" onClick={startListening}>Follow</button>
       }
       <p>
       { height

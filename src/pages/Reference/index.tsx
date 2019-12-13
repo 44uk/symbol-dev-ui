@@ -27,8 +27,10 @@ export const Reference: React.FC = () => {
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemtech/nem2-cli">nemtech/nem2-cli: Catapult command-line tool</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemtech/nem2-camel">nemtech/nem2-camel: A component to turn the asynchronous transaction announcement into synchronous.</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemtech/nem2-prototyping-tool">nemtech/nem2-prototyping-tool: A collection of Node-RED nodes for prototyping NEM blockchain applications.</a></li>
+        <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemfoundation/catapult-testnet-bootstrap">nemfoundation/catapult-testnet-bootstrap: Supported tooling for testnet node and service management</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemfoundation/nem2-desktop-wallet">nemfoundation/nem2-desktop-wallet: Catapult desktop wallet</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemfoundation/nem2-explorer">nemfoundation/nem2-explorer: Catapult blockchain explorer</a></li>
+        <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/tech-bureau/catapult-service-bootstrap">tech-bureau/catapult-service-bootstrap: Starter project to get developers up and running with a running Catapult Service</a></li>
       </ul>
     </div>
   </div>
@@ -37,7 +39,7 @@ export const Reference: React.FC = () => {
     <div className="section">
       <p>Community Links</p>
       <ul>
-        <li><a target="_blank" rel="noopener noreferrer" href="https://jp-nem-dev-wiki.herokuapp.com/">JP NEM-DEV WIKI</a></li>
+        <li><a target="_blank" rel="noopener noreferrer" href="https://jp-nem-dev.growi.cloud/">JP NEM-DEV WIKI</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/44uk/nem2-cli-completion.bash">44uk/nem2-cli-completion.bash: Bash Completion function for https://github.com/nemtech/nem2-cli</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/RossyWhite/nem2-cli-zsh-completion">RossyWhite/nem2-cli-zsh-completion: Completion function for https://github.com/nemtech/nem2-cli</a></li>
       </ul>
@@ -63,5 +65,3 @@ export const Reference: React.FC = () => {
 </div>
   )
 }
-
-export default Reference

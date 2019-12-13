@@ -12,7 +12,8 @@ import {
   UInt64,
   Convert,
   MosaicId,
-  Deadline
+  Deadline,
+  NetworkType
 } from "nem2-sdk"
 
 export const encodeNamespace = (value: string) => {
@@ -24,7 +25,8 @@ export const encodeNamespace = (value: string) => {
 }
 
 export const convertHexToNum = (value: string) => {
-  return (parseInt(value, 16) || "").toString()
+  const parsed = parseInt(value, 16)
+  return Number.isNaN(parsed) ? "" : parsed.toString()
 }
 export const convertHexToUInt64 = (value: string) => {
   try {
@@ -176,4 +178,18 @@ export const nemTimestampToDatetimeString = (input: string) => {
   } catch(_) {
     return ""
   }
+}
+
+export const createAddressFromIdentifier = (value: string, networkType?: NetworkType) => {
+  try {
+    if(/^[SMTN][0-9A-Z]{39}$/.test(value.toUpperCase().replace(/-/g, ""))){
+      return Address.createFromRawAddress(value)
+    }
+    if(networkType && /^[0-9A-Z]{64}$/.test(value.toUpperCase())){
+      return Address.createFromPublicKey(value, networkType)
+    }
+  } catch(error) {
+    console.warn(error)
+  }
+  return null
 }

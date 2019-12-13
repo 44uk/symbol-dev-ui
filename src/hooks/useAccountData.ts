@@ -1,30 +1,23 @@
-import { useState, useCallback } from "react"
-import { NetworkType, Address, AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MosaicAmountView, Metadata, MultisigHttp, NamespaceHttp, AccountNames } from "nem2-sdk"
-import { forkJoin } from "rxjs"
-import { map } from "rxjs/operators"
+import { useState, useCallback, useMemo } from "react"
+import { AccountHttp, AccountInfo, MetadataHttp, MosaicService, MosaicHttp, MosaicAmountView, Metadata, MultisigHttp, NamespaceHttp, AccountNames, MultisigAccountInfo } from "nem2-sdk"
+import { forkJoin, of } from "rxjs"
+import { map, catchError } from "rxjs/operators"
 import useDebouncedEffect  from "use-debounced-effect"
 import createPersistedState from "@plq/use-persisted-state"
 import { persistedPaths } from "persisted-paths"
 
-const [usePersistedState] = createPersistedState(persistedPaths.app)
+import {
+  createAddressFromIdentifier
+} from "util/convert"
 
-function createAddressFromIdentifier(value: string, networkType = NetworkType.MIJIN_TEST) {
-  try {
-    return /^[SMTN][0-9A-Z-]{39,45}$/.test(value)
-      ? Address.createFromRawAddress(value)
-      : Address.createFromPublicKey(value, networkType)
-  } catch(error) {
-    console.debug(error)
-    return null
-  }
-}
+const [usePersistedState] = createPersistedState(persistedPaths.app)
 
 export interface IAccountData {
   accountInfo: AccountInfo
   accountNames: AccountNames[]
   mosaicAmountViews: MosaicAmountView[]
   metadata: Metadata[]
-  // multisigAccountInfo: MultisigAccountInfo | null
+  multisigAccountInfo: MultisigAccountInfo | null
 }
 
 interface IHttpInstance {
@@ -42,7 +35,7 @@ export const useAccountData = (httpInstance: IHttpInstance, initialValue: string
   const [error, setError] = useState(null)
 
   const { accountHttp, mosaicHttp, namespaceHttp, metadataHttp, multisigHttp } = httpInstance
-  const mosaicService = new MosaicService(accountHttp, mosaicHttp)
+  const mosaicService = useMemo(() => new MosaicService(accountHttp, mosaicHttp), [accountHttp, mosaicHttp])
 
   const handler = useCallback(() => {
     if(! identifier) return
@@ -51,12 +44,12 @@ export const useAccountData = (httpInstance: IHttpInstance, initialValue: string
     if(! address) return
 
     setLoading(true)
-    forkJoin([
+    const s$ = forkJoin([
       accountHttp.getAccountInfo(address),
       mosaicService.mosaicsAmountViewFromAddress(address),
       namespaceHttp.getAccountsNames([address]),
       metadataHttp.getAccountMetadata(address),
-      // multisigHttp.getMultisigAccountInfo(address).pipe(catchError(_ => of(null)))
+      multisigHttp.getMultisigAccountInfo(address).pipe(catchError(_ => of(null)))
     ])
       .pipe(
         map(resp => ({
@@ -64,7 +57,7 @@ export const useAccountData = (httpInstance: IHttpInstance, initialValue: string
           mosaicAmountViews: resp[1],
           accountNames: resp[2],
           metadata: resp[3],
-          // multisigAccountInfo: resp[3],
+          multisigAccountInfo: resp[4],
         }))
       )
       .subscribe(
@@ -79,9 +72,13 @@ export const useAccountData = (httpInstance: IHttpInstance, initialValue: string
           setError(null)
         }
       )
-  }, [identifier])
 
-  useDebouncedEffect(handler, 500, [identifier, accountHttp, mosaicHttp, metadataHttp])
+    return () => {
+      s$.unsubscribe()
+    }
+  }, [identifier, accountHttp, namespaceHttp, mosaicService, metadataHttp, multisigHttp])
+
+  useDebouncedEffect(handler, 500, [identifier, accountHttp, namespaceHttp, mosaicService, metadataHttp, multisigHttp])
 
   return { accountData, identifier, setIdentifier, handler, loading, error }
 }

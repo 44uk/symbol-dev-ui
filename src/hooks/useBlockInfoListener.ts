@@ -13,9 +13,9 @@ export const useBlockInfoListener = (listener: Listener) => {
       return
     }
 
-    let subscription: Subscription
+    let s$: Subscription
     listener.open().then(() => {
-      subscription = listener.newBlock()
+      s$ = listener.newBlock()
         .subscribe(
           setBlockInfo,
           (error) => {
@@ -30,8 +30,12 @@ export const useBlockInfoListener = (listener: Listener) => {
     })
 
     return () => {
-      subscription && subscription.unsubscribe()
-      listener.isOpen() && listener.close()
+      if(s$) {
+        s$.unsubscribe()
+      }
+      if(listener.isOpen()) {
+        listener.close()
+      }
     }
   }, [following, listener])
 

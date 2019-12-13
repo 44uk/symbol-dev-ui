@@ -31,8 +31,8 @@ export const useBlockData = (httpInstance: IHttpInstance, initialValue: string =
 
     setLoading(true)
     forkJoin([
-      blockHttp.getBlockByHeight(height.toString()),
-      receiptHttp.getBlockReceipts(height.toString())
+      blockHttp.getBlockByHeight(height),
+      receiptHttp.getBlockReceipts(height)
     ])
       .pipe(
         map(resp => ({
