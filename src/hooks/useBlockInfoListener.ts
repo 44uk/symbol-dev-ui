@@ -12,6 +12,7 @@ export const useBlockInfoListener = (listener: Listener) => {
       listener.isOpen() && listener.close()
       return
     }
+    if (listener.isOpen()) return
 
     let s$: Subscription
     listener.open().then(() => {
@@ -39,7 +40,7 @@ export const useBlockInfoListener = (listener: Listener) => {
     }
   }, [following, listener])
 
-  useEffect(handler, [following, listener])
+  useEffect(handler, [following])
 
   return { blockInfo, setFollowing, handler, following, error }
 }

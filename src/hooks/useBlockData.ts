@@ -1,8 +1,7 @@
 import { useState, useCallback } from "react"
-import { BlockHttp, BlockInfo, Statement, ReceiptHttp } from "nem2-sdk"
+import { BlockHttp, BlockInfo, Statement, ReceiptHttp, Transaction } from "nem2-sdk"
 import { forkJoin } from "rxjs"
 import { map } from "rxjs/operators"
-// import useDebouncedEffect  from "use-debounced-effect"
 import createPersistedState from "@plq/use-persisted-state"
 import { persistedPaths } from "persisted-paths"
 
@@ -10,6 +9,7 @@ const [usePersistedState] = createPersistedState(persistedPaths.app)
 
 export interface IBlockData {
   blockInfo: BlockInfo
+  transactions: Transaction[]
   receipt: Statement
 }
 
@@ -32,12 +32,14 @@ export const useBlockData = (httpInstance: IHttpInstance, initialValue: string =
     setLoading(true)
     forkJoin([
       blockHttp.getBlockByHeight(height),
+      blockHttp.getBlockTransactions(height),
       receiptHttp.getBlockReceipts(height)
     ])
       .pipe(
         map(resp => ({
           blockInfo: resp[0],
-          receipt: resp[1]
+          transactions: resp[1],
+          receipt: resp[2]
         }))
       )
       .subscribe(
@@ -53,8 +55,6 @@ export const useBlockData = (httpInstance: IHttpInstance, initialValue: string =
         }
       )
   }, [height, blockHttp, receiptHttp])
-
-  // useEffect(handler, [height, blockHttp])
 
   return { blockData, height, setHeight, handler, loading, error }
 }
