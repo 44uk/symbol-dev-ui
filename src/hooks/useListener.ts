@@ -132,7 +132,6 @@ export const useListener = (
   }, [listener, identifier, channels, following, simple])
 
   useEffect(handler, [
-    listener,
     identifier,
     channels,
     following,
