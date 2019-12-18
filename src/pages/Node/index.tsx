@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react"
+import React, { useContext, useState, useEffect, useCallback } from "react"
 import YAML from "yaml"
 
 import {
@@ -36,14 +36,17 @@ export const Node: React.FC = () => {
   const httpContext = useContext(HttpContext)
 
   const { nodeHttp, diagnosticHttp } = httpContext.httpInstance
-  const {nodeData, loading, error} = useNodeData({ nodeHttp, diagnosticHttp })
+  const { nodeData, handler, loading, error } = useNodeData({ nodeHttp, diagnosticHttp })
 
   const [output, setOutput] = useState("")
 
   useEffect(() => {
-    if(! nodeData) { return }
-    setOutput(stringifyNodeData(nodeData))
+    if(nodeData) setOutput(stringifyNodeData(nodeData))
   }, [nodeData])
+
+  const submit = useCallback(() => {
+    handler()
+  }, [handler])
 
   return (
 <div>
@@ -58,6 +61,7 @@ export const Node: React.FC = () => {
         : <span>{`${gwContext.url}/block/`}</span>
       }
       </p>
+      <button className="primary" disabled={loading} onClick={submit}>Reload</button>
     </div>
   </fieldset>
 
