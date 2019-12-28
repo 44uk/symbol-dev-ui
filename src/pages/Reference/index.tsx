@@ -7,7 +7,9 @@ export const Reference: React.FC = () => {
     <div className="section">
       <p>TEST_NET Links</p>
       <ul>
-        <li><a target="_blank" rel="noopener noreferrer" href="http://faucet.nemtech.network/">NEM2 Faucet</a></li>
+        <li><a target="_blank" rel="noopener noreferrer" href="http://faucet-01.nemtech.network/">NEM2 Faucet (01)</a></li>
+        <li><a target="_blank" rel="noopener noreferrer" href="http://faucet-02.nemtech.network/">NEM2 Faucet (02)</a></li>
+        <li><a target="_blank" rel="noopener noreferrer" href="https://nem2-faucet.netlify.com/">NEM2 Serverless Faucet</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="http://explorer.nemtech.network/">NEM2 Explorer</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemfoundation/nem2-desktop-wallet/releases">NEM2 Desktop Wallet</a></li>
       </ul>
@@ -30,7 +32,9 @@ export const Reference: React.FC = () => {
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemfoundation/catapult-testnet-bootstrap">nemfoundation/catapult-testnet-bootstrap: Supported tooling for testnet node and service management</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemfoundation/nem2-desktop-wallet">nemfoundation/nem2-desktop-wallet: Catapult desktop wallet</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemfoundation/nem2-explorer">nemfoundation/nem2-explorer: Catapult blockchain explorer</a></li>
+        <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/nemfoundation/catapult-testnet-bootstrap">nemfoundation/catapult-testnet-bootstrap: Supported tooling for testnet node and service management</a></li>
         <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/tech-bureau/catapult-service-bootstrap">tech-bureau/catapult-service-bootstrap: Starter project to get developers up and running with a running Catapult Service</a></li>
+        <li><a target="_blank" rel="noopener noreferrer" href="https://github.com/IoDLT/catapult-devnet">IoDLT/catapult-devnet: A Catapult testnet blockchain run by the NEM community</a></li>
       </ul>
     </div>
   </div>
