@@ -6,6 +6,8 @@ import {
   GatewayContext
 } from "contexts"
 
+import { prettifyGatewayList } from "util/text-processor"
+
 import { persistedPaths } from "persisted-paths"
 
 const [, clearPersistedState] = createPersistedState(persistedPaths.app)
@@ -24,12 +26,9 @@ export const Config: React.FC = () => {
   }
 
   function saveGatewayList() {
-    const _tmp = gwText.split("\n")
-      .map((line) => line.trim())
-      .filter((line) => /https?:\/\/.+?/.test(line))
-    const gwList = Array.from(new Set(_tmp))
-    gwContext.setUrlList(gwList)
-    setGwText(gwList.join("\n"))
+    const _tmp = prettifyGatewayList(gwText)
+    gwContext.setUrlList(_tmp.split("\n"))
+    setGwText(_tmp)
   }
 
   return (
