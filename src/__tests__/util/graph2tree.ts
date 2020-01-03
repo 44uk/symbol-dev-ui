@@ -37,6 +37,18 @@ test("reference from Level3", () => {
   expect(graph2tree(require("./graph/fromLevel3.json"))).toBe(expected)
 })
 
+test("Level3 Multisig Structure", () => {
+  const expected = `# 53E5971F..67AA (C: 2, A: 1, R: 2) <<
+    └ 4F51CCC5..31AA (C: 2, A: 1, R: 2)
+        └ E9E9B98A..8561 (C: 2, A: 1, R: 2)
+            └ 9F4AE6DA..6D2A
+            └ B07DB04C..3C6B
+        └ F082C407..0351 (C: 2, A: 1, R: 2)
+            └ 621D90B5..3CB6
+            └ ADA2847D..2A0F
+    └ E39F3106..673E`
+  expect(graph2tree(require("./graph/level3.json"))).toBe(expected)
+})
 
   // const tree: any = []
   // expect(buildTree(require("./graph/fromLevel0.json"))).toBe(tree)

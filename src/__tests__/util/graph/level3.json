@@ -1,0 +1,140 @@
+[
+  {
+      "level": 0,
+      "multisigEntries": [
+          {
+              "multisig": {
+                  "accountPublicKey": "53E5971FF05C614E56312EC0AAF546DFFB1AFFBE1983D6561DE0D22A68A267AA",
+                  "accountAddress": "980A5729377DB3748D5069FC25BC8CF819D8D0E8C64A9A2183",
+                  "minApproval": 1,
+                  "minRemoval": 2,
+                  "cosignatoryPublicKeys": [
+                      "4F51CCC5907E03C0460F68565892D1277598E5501EE3F4693F87EE2310A731AA",
+                      "E39F3106E79DBF8CEF652CABF69D4059C96D142EF5F65A7531CF74FA225B673E"
+                  ],
+                  "multisigPublicKeys": []
+              }
+          }
+      ]
+  },
+  {
+      "level": 1,
+      "multisigEntries": [
+          {
+              "multisig": {
+                  "accountPublicKey": "4F51CCC5907E03C0460F68565892D1277598E5501EE3F4693F87EE2310A731AA",
+                  "accountAddress": "98FC9AFCF7AD141C8D6784BA5F13BC9CE32D7A0240DFE7FEE6",
+                  "minApproval": 1,
+                  "minRemoval": 2,
+                  "cosignatoryPublicKeys": [
+                      "E9E9B98A559A495985E02A111376A90DDE1689EB596B1E2AFB69691704E68561",
+                      "F082C407E809623D3A85D410B9EAAE01ACD72036E413CEF789E3986E0AE00351"
+                  ],
+                  "multisigPublicKeys": [
+                      "53E5971FF05C614E56312EC0AAF546DFFB1AFFBE1983D6561DE0D22A68A267AA"
+                  ]
+              }
+          },
+          {
+              "multisig": {
+                  "accountPublicKey": "E39F3106E79DBF8CEF652CABF69D4059C96D142EF5F65A7531CF74FA225B673E",
+                  "accountAddress": "9841B210B7EA83D329D343CB50627694C293F85C4B1F4B157C",
+                  "minApproval": 0,
+                  "minRemoval": 0,
+                  "cosignatoryPublicKeys": [],
+                  "multisigPublicKeys": [
+                      "53E5971FF05C614E56312EC0AAF546DFFB1AFFBE1983D6561DE0D22A68A267AA"
+                  ]
+              }
+          }
+      ]
+  },
+  {
+      "level": 2,
+      "multisigEntries": [
+          {
+              "multisig": {
+                  "accountPublicKey": "E9E9B98A559A495985E02A111376A90DDE1689EB596B1E2AFB69691704E68561",
+                  "accountAddress": "981C7A99EFFC9E127B2F67B07F79B219E3ED9372EB567C161C",
+                  "minApproval": 1,
+                  "minRemoval": 2,
+                  "cosignatoryPublicKeys": [
+                      "9F4AE6DA65BB35C5E4DE1088FA097016BCBABBBE1E34F29E6EDD0E109E6C6D2A",
+                      "B07DB04C209404B258B58AC54B1463B35B675E752ADD5EFE577F03EE88873C6B"
+                  ],
+                  "multisigPublicKeys": [
+                      "4F51CCC5907E03C0460F68565892D1277598E5501EE3F4693F87EE2310A731AA"
+                  ]
+              }
+          },
+          {
+              "multisig": {
+                  "accountPublicKey": "F082C407E809623D3A85D410B9EAAE01ACD72036E413CEF789E3986E0AE00351",
+                  "accountAddress": "98C7A28C892E7456B0B9F538C3512C150518FC6A5A94C5DD4D",
+                  "minApproval": 1,
+                  "minRemoval": 2,
+                  "cosignatoryPublicKeys": [
+                      "621D90B591CA3AAF329F8936BD618A92C7D5469F38005BDBB7DDDF8EF0993CB6",
+                      "ADA2847D7176E0F98A98DA0CB5A78AD887D91FABBBC6A5D3C5327D4BAC632A0F"
+                  ],
+                  "multisigPublicKeys": [
+                      "4F51CCC5907E03C0460F68565892D1277598E5501EE3F4693F87EE2310A731AA"
+                  ]
+              }
+          }
+      ]
+  },
+  {
+      "level": 3,
+      "multisigEntries": [
+          {
+              "multisig": {
+                  "accountPublicKey": "621D90B591CA3AAF329F8936BD618A92C7D5469F38005BDBB7DDDF8EF0993CB6",
+                  "accountAddress": "98A8E280573B8ED97163E024253FB9DEECB2D3A89F5D5AD417",
+                  "minApproval": 0,
+                  "minRemoval": 0,
+                  "cosignatoryPublicKeys": [],
+                  "multisigPublicKeys": [
+                      "F082C407E809623D3A85D410B9EAAE01ACD72036E413CEF789E3986E0AE00351"
+                  ]
+              }
+          },
+          {
+              "multisig": {
+                  "accountPublicKey": "9F4AE6DA65BB35C5E4DE1088FA097016BCBABBBE1E34F29E6EDD0E109E6C6D2A",
+                  "accountAddress": "98B4E0A5C12BC5FF148766D376C03E54854C9516A6F04925EF",
+                  "minApproval": 0,
+                  "minRemoval": 0,
+                  "cosignatoryPublicKeys": [],
+                  "multisigPublicKeys": [
+                      "E9E9B98A559A495985E02A111376A90DDE1689EB596B1E2AFB69691704E68561"
+                  ]
+              }
+          },
+          {
+              "multisig": {
+                  "accountPublicKey": "ADA2847D7176E0F98A98DA0CB5A78AD887D91FABBBC6A5D3C5327D4BAC632A0F",
+                  "accountAddress": "983F6E4E474ADC2343BA8E980CAEBE119F1BC9798C031ABE91",
+                  "minApproval": 0,
+                  "minRemoval": 0,
+                  "cosignatoryPublicKeys": [],
+                  "multisigPublicKeys": [
+                      "F082C407E809623D3A85D410B9EAAE01ACD72036E413CEF789E3986E0AE00351"
+                  ]
+              }
+          },
+          {
+              "multisig": {
+                  "accountPublicKey": "B07DB04C209404B258B58AC54B1463B35B675E752ADD5EFE577F03EE88873C6B",
+                  "accountAddress": "98C2BA96F117448DC4BE912F70FDF23401F773340273151C60",
+                  "minApproval": 0,
+                  "minRemoval": 0,
+                  "cosignatoryPublicKeys": [],
+                  "multisigPublicKeys": [
+                      "E9E9B98A559A495985E02A111376A90DDE1689EB596B1E2AFB69691704E68561"
+                  ]
+              }
+          }
+      ]
+  }
+]
