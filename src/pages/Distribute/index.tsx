@@ -24,10 +24,7 @@ export const Distribute: React.FC = () => {
     aggregation, setAggregation,
     distributer, isReady, announce,
     loading
-  } = useDistribution({
-    transactionHttp,
-  }, gwContext.networkType, gwContext.genHash
-  )
+  } = useDistribution({ transactionHttp }, gwContext.networkType, gwContext.genHash)
 
   const distribute = useCallback(() => {
     announce()

@@ -1,11 +1,28 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback, useContext } from "react"
 import YAML from "yaml"
 
 import { TextOutput } from "components"
 import { usePayloadData } from "hooks"
 
+import {
+  GatewayContext,
+  HttpContext
+} from "contexts"
+
 export const Payload: React.FC = () => {
-  const { transaction, payload, setPayload, error } = usePayloadData("")
+  const gwContext = useContext(GatewayContext)
+  const httpContext = useContext(HttpContext)
+
+  const {
+    transactionHttp
+  } = httpContext.httpInstance
+  const {
+    transaction,
+    payload, setPayload,
+    announce,
+    loading,
+    error
+  } = usePayloadData("", { transactionHttp }, gwContext.networkType, gwContext.genHash)
 
   const [output, setOutput] = useState("")
 
@@ -30,6 +47,10 @@ export const Payload: React.FC = () => {
         placeholder="ex) Transaction Payload"
         rows={4}
       ></textarea>
+      <button className="primary"
+        disabled={!!error || loading}
+        onClick={announce}
+      >Announce it!</button>
     </div>
   </fieldset>
 

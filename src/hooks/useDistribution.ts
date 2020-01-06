@@ -101,7 +101,7 @@ export const useDistribution = (httpInstance: IHttpInstance, networkType: Networ
         mergeMap(t => transactionHttp.announce(t))
       )
       .subscribe(
-        (_) => {
+        _ => {
           console.debug(_)
           setLoading(false)
         },
