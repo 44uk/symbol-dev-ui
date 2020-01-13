@@ -4,5 +4,11 @@
   "http://api-harvest-20.ap-southeast-1.nemtech.network:3000",
   "http://api-harvest-20.eu-west-1.nemtech.network:3000",
   "http://api-harvest-20.us-west-1.nemtech.network:3000",
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://catapult-test.opening-line.jp:3001",
+  "https://cat-testnet.44uk.net:3001",
+  "https://jp5.nemesis.land:3001",
+  "https://jp12.nemesis.land:3001",
+  "https://node.symbol-test.net:3001",
+  "https://test-api.48gh23s.xyz:3001"
 ]
